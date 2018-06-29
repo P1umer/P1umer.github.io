@@ -248,7 +248,7 @@
         
           <h1 class="post-title" itemprop="name headline">
                 
-                <a class="post-title-link" href="/2018/06/30/Linux-Glibc-Analysis/" itemprop="url">Untitled</a></h1>
+                <a class="post-title-link" href="/2018/06/30/Linux-Glibc-Analysis/" itemprop="url">linux Glibc Analysis</a></h1>
         
 
         <div class="post-meta">
@@ -260,7 +260,7 @@
               
                 <span class="post-meta-item-text">Posted on</span>
               
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-06-30T03:01:23+08:00">
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-06-30T04:24:35+08:00">
                 2018-06-30
               </time>
             
@@ -300,8 +300,7 @@
       
         
           
-            <p>﻿﻿﻿—<br>title: Linux Glibc Analysisc</p>
-<h2 id="date-2018-06-30"><a href="#date-2018-06-30" class="headerlink" title="date: 2018-06-30"></a>date: 2018-06-30</h2><h2 id="arena"><a href="#arena" class="headerlink" title="arena"></a>arena</h2><hr>
+            <h2 id="arena"><a href="#arena" class="headerlink" title="arena"></a>arena</h2><hr>
 <p><em>对于一个进程来说，arena可作为其堆内存管理的最高层结构。在主进程中，调用malloc函数时，会首先在数据区(.bss)中通过sbrk提升program break location来构造一个arena(此时arena具有一个固定初始空间)，若空间大小不满足进程需求，则系统会在后续调整program break location的位置。而针对其他进程，首次malloc会通过mmap()在未分配的(前篇文章有描述)虚拟空间内开辟出一定大小的空间给该进程的arena管理。</em><br>&nbsp;<br>&nbsp;</p>
 <h2 id="heap-segment"><a href="#heap-segment" class="headerlink" title="heap segment"></a>heap segment</h2><hr>
 <p>heapsegment可以看成是次于arena的内存管理结构。在首次创建arena的时候会相应的生成一个heap segment，而在单个heap segment容量不够的时候，这时候系统就要扩大堆空间。很显然，由于主进程通过sbrk来扩充，因此不会产生多个heap segment。相反的，其他进程通过mmap来扩充空间的时候，由于mmap开辟空间的不连续性，因此需要链表来联系多个heap空间，此时，每个链节便构成了一个heap segment。但是，为了方便管理，一个arena中不管有多少个heap segment，都只能存在一个malloc_state。<br>&nbsp;<br>&nbsp;</p>
@@ -393,139 +392,6 @@
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/06/29/hello-world/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="John Doe">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/avatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Hexo">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2018/06/29/hello-world/" itemprop="url">Untitled</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">Posted on</span>
-              
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-06-29T23:47:37+08:00">
-                2018-06-29
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p>﻿﻿—</p>
-<h2 id="title-Hello-World"><a href="#title-Hello-World" class="headerlink" title="title: Hello World"></a>title: Hello World</h2><p>Welcome to <a href="https://hexo.io/" target="_blank" rel="noopener">Hexo</a>! This is your very first post. Check <a href="https://hexo.io/docs/" target="_blank" rel="noopener">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a href="https://hexo.io/docs/troubleshooting.html" target="_blank" rel="noopener">troubleshooting</a> or you can ask me on <a href="https://github.com/hexojs/hexo/issues" target="_blank" rel="noopener">GitHub</a>.</p>
-<h2 id="Quick-Start"><a href="#Quick-Start" class="headerlink" title="Quick Start"></a>Quick Start</h2><h3 id="Create-a-new-post"><a href="#Create-a-new-post" class="headerlink" title="Create a new post"></a>Create a new post</h3><pre><code class="bash">$ hexo new <span class="string">"My New Post"</span>
-</code></pre>
-<p>More info: <a href="https://hexo.io/docs/writing.html" target="_blank" rel="noopener">Writing</a></p>
-<h3 id="Run-server"><a href="#Run-server" class="headerlink" title="Run server"></a>Run server</h3><pre><code class="bash">$ hexo server
-</code></pre>
-<p>More info: <a href="https://hexo.io/docs/server.html" target="_blank" rel="noopener">Server</a></p>
-<h3 id="Generate-static-files"><a href="#Generate-static-files" class="headerlink" title="Generate static files"></a>Generate static files</h3><pre><code class="bash">$ hexo generate
-</code></pre>
-<p>More info: <a href="https://hexo.io/docs/generating.html" target="_blank" rel="noopener">Generating</a></p>
-<h3 id="Deploy-to-remote-sites"><a href="#Deploy-to-remote-sites" class="headerlink" title="Deploy to remote sites"></a>Deploy to remote sites</h3><pre><code class="bash">$ hexo deploy
-</code></pre>
-<p>More info: <a href="https://hexo.io/docs/deployment.html" target="_blank" rel="noopener">Deployment</a></p>
-
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
   </section>
 
   
@@ -572,7 +438,7 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">2</span>
+                  <span class="site-state-item-count">1</span>
                   <span class="site-state-item-name">posts</span>
                 </a>
               </div>

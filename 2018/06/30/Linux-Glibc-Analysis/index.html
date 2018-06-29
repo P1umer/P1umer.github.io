@@ -79,17 +79,17 @@
 
 
 
-<meta name="description" content="—title: Linux Glibc Analysisc date: 2018-06-30arena 对于一个进程来说，arena可作为其堆内存管理的最高层结构。在主进程中，调用malloc函数时，会首先在数据区(.bss)中通过sbrk提升program break location来构造一个arena(此时arena具有一个固定初始空间)，若空间大小不满足进程需求，则系统会在后续调整p">
+<meta name="description" content="arena 对于一个进程来说，arena可作为其堆内存管理的最高层结构。在主进程中，调用malloc函数时，会首先在数据区(.bss)中通过sbrk提升program break location来构造一个arena(此时arena具有一个固定初始空间)，若空间大小不满足进程需求，则系统会在后续调整program break location的位置。而针对其他进程，首次malloc会通过mmap(">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Hexo">
+<meta property="og:title" content="linux Glibc Analysis">
 <meta property="og:url" content="http://yoursite.com/2018/06/30/Linux-Glibc-Analysis/index.html">
 <meta property="og:site_name" content="Hexo">
-<meta property="og:description" content="—title: Linux Glibc Analysisc date: 2018-06-30arena 对于一个进程来说，arena可作为其堆内存管理的最高层结构。在主进程中，调用malloc函数时，会首先在数据区(.bss)中通过sbrk提升program break location来构造一个arena(此时arena具有一个固定初始空间)，若空间大小不满足进程需求，则系统会在后续调整p">
+<meta property="og:description" content="arena 对于一个进程来说，arena可作为其堆内存管理的最高层结构。在主进程中，调用malloc函数时，会首先在数据区(.bss)中通过sbrk提升program break location来构造一个arena(此时arena具有一个固定初始空间)，若空间大小不满足进程需求，则系统会在后续调整program break location的位置。而针对其他进程，首次malloc会通过mmap(">
 <meta property="og:locale" content="default">
-<meta property="og:updated_time" content="2018-06-29T20:15:03.379Z">
+<meta property="og:updated_time" content="2018-06-29T20:26:44.663Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Hexo">
-<meta name="twitter:description" content="—title: Linux Glibc Analysisc date: 2018-06-30arena 对于一个进程来说，arena可作为其堆内存管理的最高层结构。在主进程中，调用malloc函数时，会首先在数据区(.bss)中通过sbrk提升program break location来构造一个arena(此时arena具有一个固定初始空间)，若空间大小不满足进程需求，则系统会在后续调整p">
+<meta name="twitter:title" content="linux Glibc Analysis">
+<meta name="twitter:description" content="arena 对于一个进程来说，arena可作为其堆内存管理的最高层结构。在主进程中，调用malloc函数时，会首先在数据区(.bss)中通过sbrk提升program break location来构造一个arena(此时arena具有一个固定初始空间)，若空间大小不满足进程需求，则系统会在后续调整program break location的位置。而针对其他进程，首次malloc会通过mmap(">
 
 
 
@@ -125,7 +125,7 @@
 
 
 
-  <title> | Hexo</title>
+  <title>linux Glibc Analysis | Hexo</title>
   
 
 
@@ -249,7 +249,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline"></h1>
+          <h1 class="post-title" itemprop="name headline">linux Glibc Analysis</h1>
         
 
         <div class="post-meta">
@@ -261,7 +261,7 @@
               
                 <span class="post-meta-item-text">Posted on</span>
               
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-06-30T03:01:23+08:00">
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-06-30T04:24:35+08:00">
                 2018-06-30
               </time>
             
@@ -299,8 +299,7 @@
       
 
       
-        <p>﻿﻿﻿—<br>title: Linux Glibc Analysisc</p>
-<h2 id="date-2018-06-30"><a href="#date-2018-06-30" class="headerlink" title="date: 2018-06-30"></a>date: 2018-06-30</h2><h2 id="arena"><a href="#arena" class="headerlink" title="arena"></a>arena</h2><hr>
+        <h2 id="arena"><a href="#arena" class="headerlink" title="arena"></a>arena</h2><hr>
 <p><em>对于一个进程来说，arena可作为其堆内存管理的最高层结构。在主进程中，调用malloc函数时，会首先在数据区(.bss)中通过sbrk提升program break location来构造一个arena(此时arena具有一个固定初始空间)，若空间大小不满足进程需求，则系统会在后续调整program break location的位置。而针对其他进程，首次malloc会通过mmap()在未分配的(前篇文章有描述)虚拟空间内开辟出一定大小的空间给该进程的arena管理。</em><br>&nbsp;<br>&nbsp;</p>
 <h2 id="heap-segment"><a href="#heap-segment" class="headerlink" title="heap segment"></a>heap segment</h2><hr>
 <p>heapsegment可以看成是次于arena的内存管理结构。在首次创建arena的时候会相应的生成一个heap segment，而在单个heap segment容量不够的时候，这时候系统就要扩大堆空间。很显然，由于主进程通过sbrk来扩充，因此不会产生多个heap segment。相反的，其他进程通过mmap来扩充空间的时候，由于mmap开辟空间的不连续性，因此需要链表来联系多个heap空间，此时，每个链节便构成了一个heap segment。但是，为了方便管理，一个arena中不管有多少个heap segment，都只能存在一个malloc_state。<br>&nbsp;<br>&nbsp;</p>
@@ -378,22 +377,6 @@
       
 
       
-        <div class="post-nav">
-          <div class="post-nav-next post-nav-item">
-            
-              <a href="/2018/06/29/hello-world/" rel="next" title="">
-                <i class="fa fa-chevron-left"></i> 
-              </a>
-            
-          </div>
-
-          <span class="post-nav-divider"></span>
-
-          <div class="post-nav-prev post-nav-item">
-            
-          </div>
-        </div>
-      
 
       
       
@@ -466,7 +449,7 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">2</span>
+                  <span class="site-state-item-count">1</span>
                   <span class="site-state-item-name">posts</span>
                 </a>
               </div>
@@ -503,7 +486,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#date-2018-06-30"><span class="nav-number">1.</span> <span class="nav-text">date: 2018-06-30</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#arena"><span class="nav-number">2.</span> <span class="nav-text">arena</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#heap-segment"><span class="nav-number">3.</span> <span class="nav-text">heap segment</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#chunk"><span class="nav-number">4.</span> <span class="nav-text">chunk</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#bins"><span class="nav-number">5.</span> <span class="nav-text">bins</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#init"><span class="nav-number">6.</span> <span class="nav-text">init</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#内存合并"><span class="nav-number">7.</span> <span class="nav-text">内存合并</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#一些重要的话"><span class="nav-number">8.</span> <span class="nav-text">一些重要的话</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#arena"><span class="nav-number">1.</span> <span class="nav-text">arena</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#heap-segment"><span class="nav-number">2.</span> <span class="nav-text">heap segment</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#chunk"><span class="nav-number">3.</span> <span class="nav-text">chunk</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#bins"><span class="nav-number">4.</span> <span class="nav-text">bins</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#init"><span class="nav-number">5.</span> <span class="nav-text">init</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#内存合并"><span class="nav-number">6.</span> <span class="nav-text">内存合并</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#一些重要的话"><span class="nav-number">7.</span> <span class="nav-text">一些重要的话</span></a></li></ol></div>
             
 
           </div>
