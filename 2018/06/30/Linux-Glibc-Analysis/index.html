@@ -79,17 +79,17 @@
 
 
 
-<meta name="description" content="title: Linux Glibc Analysis date: 2018-06-30 03:49:23arena 对于一个进程来说，arena可作为其堆内存管理的最高层结构。在主进程中，调用malloc函数时，会首先在数据区(.bss)中通过sbrk提升program break location来构造一个arena(此时arena具有一个固定初始空间)，若空间大小不满足进程需求，则系统会在">
+<meta name="description" content="—title: Linux Glibc Analysis date: 2018-06-30 03:49:23arena 对于一个进程来说，arena可作为其堆内存管理的最高层结构。在主进程中，调用malloc函数时，会首先在数据区(.bss)中通过sbrk提升program break location来构造一个arena(此时arena具有一个固定初始空间)，若空间大小不满足进程需求，则系统会">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Hexo">
 <meta property="og:url" content="http://yoursite.com/2018/06/30/Linux-Glibc-Analysis/index.html">
 <meta property="og:site_name" content="Hexo">
-<meta property="og:description" content="title: Linux Glibc Analysis date: 2018-06-30 03:49:23arena 对于一个进程来说，arena可作为其堆内存管理的最高层结构。在主进程中，调用malloc函数时，会首先在数据区(.bss)中通过sbrk提升program break location来构造一个arena(此时arena具有一个固定初始空间)，若空间大小不满足进程需求，则系统会在">
+<meta property="og:description" content="—title: Linux Glibc Analysis date: 2018-06-30 03:49:23arena 对于一个进程来说，arena可作为其堆内存管理的最高层结构。在主进程中，调用malloc函数时，会首先在数据区(.bss)中通过sbrk提升program break location来构造一个arena(此时arena具有一个固定初始空间)，若空间大小不满足进程需求，则系统会">
 <meta property="og:locale" content="default">
-<meta property="og:updated_time" content="2018-06-29T19:49:38.802Z">
+<meta property="og:updated_time" content="2018-06-29T20:06:15.151Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Hexo">
-<meta name="twitter:description" content="title: Linux Glibc Analysis date: 2018-06-30 03:49:23arena 对于一个进程来说，arena可作为其堆内存管理的最高层结构。在主进程中，调用malloc函数时，会首先在数据区(.bss)中通过sbrk提升program break location来构造一个arena(此时arena具有一个固定初始空间)，若空间大小不满足进程需求，则系统会在">
+<meta name="twitter:description" content="—title: Linux Glibc Analysis date: 2018-06-30 03:49:23arena 对于一个进程来说，arena可作为其堆内存管理的最高层结构。在主进程中，调用malloc函数时，会首先在数据区(.bss)中通过sbrk提升program break location来构造一个arena(此时arena具有一个固定初始空间)，若空间大小不满足进程需求，则系统会">
 
 
 
@@ -299,8 +299,7 @@
       
 
       
-        <hr>
-<p>title: Linux Glibc Analysis</p>
+        <p>﻿—<br>title: Linux Glibc Analysis</p>
 <h2 id="date-2018-06-30-03-49-23"><a href="#date-2018-06-30-03-49-23" class="headerlink" title="date: 2018-06-30 03:49:23"></a>date: 2018-06-30 03:49:23</h2><h2 id="arena"><a href="#arena" class="headerlink" title="arena"></a>arena</h2><hr>
 <p><em>对于一个进程来说，arena可作为其堆内存管理的最高层结构。在主进程中，调用malloc函数时，会首先在数据区(.bss)中通过sbrk提升program break location来构造一个arena(此时arena具有一个固定初始空间)，若空间大小不满足进程需求，则系统会在后续调整program break location的位置。而针对其他进程，首次malloc会通过mmap()在未分配的(前篇文章有描述)虚拟空间内开辟出一定大小的空间给该进程的arena管理。</em><br>&nbsp;<br>&nbsp;</p>
 <h2 id="heap-segment"><a href="#heap-segment" class="headerlink" title="heap segment"></a>heap segment</h2><hr>
