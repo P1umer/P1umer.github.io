@@ -68,7 +68,7 @@
 
 
 
-  <meta name="keywords" content="Hexo, NexT" />
+  <meta name="keywords" content="CTF," />
 
 
 
@@ -79,16 +79,20 @@
 
 
 
-<meta name="description" content="sakura的小跟班">
-<meta property="og:type" content="website">
-<meta property="og:title" content="P1umerのblog">
-<meta property="og:url" content="http://p1umer.club/index.html">
+<meta name="description" content="写在前面 周末趁着一道note题重新复习了一遍doublefree，现在简单的总结一下。&amp;nbsp; Glibc堆分配方式 详细在我的这篇博客：linux Glibc Analysis&amp;nbsp; DoubleFree 字面意思，free同一块内存两次。实际上，double并非必要条件，核心在于free一块精心构造的chunk。在free的时候，要匹配三项检查：  flag位：这里要构造三块的fl">
+<meta name="keywords" content="CTF">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Review of  DoubleFree">
+<meta property="og:url" content="http://p1umer.club/2018/06/30/Review-of-DoubleFree/index.html">
 <meta property="og:site_name" content="P1umerのblog">
-<meta property="og:description" content="sakura的小跟班">
+<meta property="og:description" content="写在前面 周末趁着一道note题重新复习了一遍doublefree，现在简单的总结一下。&amp;nbsp; Glibc堆分配方式 详细在我的这篇博客：linux Glibc Analysis&amp;nbsp; DoubleFree 字面意思，free同一块内存两次。实际上，double并非必要条件，核心在于free一块精心构造的chunk。在free的时候，要匹配三项检查：  flag位：这里要构造三块的fl">
 <meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="https://img-blog.csdn.net/20180515134500412">
+<meta property="og:updated_time" content="2018-06-30T05:49:40.812Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="P1umerのblog">
-<meta name="twitter:description" content="sakura的小跟班">
+<meta name="twitter:title" content="Review of  DoubleFree">
+<meta name="twitter:description" content="写在前面 周末趁着一道note题重新复习了一遍doublefree，现在简单的总结一下。&amp;nbsp; Glibc堆分配方式 详细在我的这篇博客：linux Glibc Analysis&amp;nbsp; DoubleFree 字面意思，free同一块内存两次。实际上，double并非必要条件，核心在于free一块精心构造的chunk。在free的时候，要匹配三项检查：  flag位：这里要构造三块的fl">
+<meta name="twitter:image" content="https://img-blog.csdn.net/20180515134500412">
 
 
 
@@ -118,13 +122,13 @@
 
 
 
-  <link rel="canonical" href="http://p1umer.club/"/>
+  <link rel="canonical" href="http://p1umer.club/2018/06/30/Review-of-DoubleFree/"/>
 
 
 
 
 
-  <title>P1umerのblog</title>
+  <title>Review of  DoubleFree | P1umerのblog</title>
   
 
 
@@ -143,8 +147,7 @@
     
   
 
-  <div class="container sidebar-position-left 
-  page-home">
+  <div class="container sidebar-position-left page-post-detail">
     <div class="headband"></div>
 
     <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
@@ -237,9 +240,9 @@
         <div class="content-wrap">
           <div id="content" class="content">
             
-  <section id="posts" class="posts-expand">
+
+  <div id="posts" class="posts-expand">
     
-      
 
   
 
@@ -269,9 +272,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2018/06/30/Review-of-DoubleFree/" itemprop="url">Review of  DoubleFree</a></h1>
+          <h1 class="post-title" itemprop="name headline">Review of  DoubleFree</h1>
         
 
         <div class="post-meta">
@@ -354,9 +355,7 @@
       
 
       
-        
-          
-            <h2 id="写在前面"><a href="#写在前面" class="headerlink" title="写在前面"></a>写在前面</h2><hr>
+        <h2 id="写在前面"><a href="#写在前面" class="headerlink" title="写在前面"></a>写在前面</h2><hr>
 <p>周末趁着一道note题重新复习了一遍doublefree，现在简单的总结一下。<br>&nbsp;</p>
 <h2 id="Glibc堆分配方式"><a href="#Glibc堆分配方式" class="headerlink" title="Glibc堆分配方式"></a>Glibc堆分配方式</h2><hr>
 <p>详细在我的这篇博客：<a href="http://p1umer.club/2018/06/30/Linux-Glibc-Analysis/">linux Glibc Analysis</a><br>&nbsp;</p>
@@ -374,8 +373,6 @@
 <p>  <img src="https://img-blog.csdn.net/20180515134500412" alt="image"> </p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">  #free_chunk.pre_chunk</span><br><span class="line">context=&quot;&quot;  </span><br><span class="line">context+=p32(0x0)#free_chunk.pre_chunk.pre_chunk_size=0</span><br><span class="line">context+=p32(0x81)  #free_chunk.pre_chunk=0x80 &amp;&amp; free_chunk.pre_chunk.pre_chunk is in use</span><br><span class="line">context+=p32(heap_addr+sub_heap+0x70-0x4-0xc)#fd = ptr addr which stores free_chunk_addr -0xc</span><br><span class="line">context+=p32(heap_addr+sub_heap+0x70-0x4-0x8)#bk = ptr addr which stores free_chunk_addr -0x8</span><br><span class="line">context+=&apos;a&apos;*(0x80-0x10) #padding </span><br><span class="line"></span><br><span class="line">#free_chunk</span><br><span class="line">context+=p32(0x80)  #free_chunk.pre_chunk_size=0x80</span><br><span class="line">context+=p32(0x88)  #free_chunk_size=0x88 &amp;&amp; free_chunk.pre_chunk is free</span><br><span class="line">context+=&apos;m&apos;*0x80 #padding</span><br><span class="line"></span><br><span class="line">free_chunk.next_chunk</span><br><span class="line">context+=p32(0x88) #free_chunk.next_chunk.pre_chunk_size = free_chunk_size</span><br><span class="line">context+=p32(0x79) #free_chunk.next_chunk_size=0x79 &amp;&amp; free_chunk is in use</span><br><span class="line">#ATTENTION 0x79 matters the free_chunk.next_chunk is use or not,so you have to calc the size to enture the free_chunk.next_chunk.next_chunk.flag is 1!!!</span><br><span class="line">oh,in addition, this_chunk.next_chunk is located by the chunk _size:)</span><br><span class="line">context+=p32(0)</span><br><span class="line">context+=p32(0)</span><br></pre></td></tr></table></figure>
 
-          
-        
       
     </div>
     
@@ -390,218 +387,36 @@
 
     <footer class="post-footer">
       
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-categories" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://p1umer.club/2018/06/30/Linux-Glibc-Analysis/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="P1umer sauce">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/avatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="P1umerのblog">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2018/06/30/Linux-Glibc-Analysis/" itemprop="url">linux Glibc Analysis</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-06-30T04:24:35+08:00">
-                2018-06-30
-              </time>
-            
-
-            
-
-            
-          </span>
-
+        <div class="post-tags">
           
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/CTF/" itemprop="url" rel="index">
-                    <span itemprop="name">CTF</span>
-                  </a>
-                </span>
-
-                
-                
-                  ， 
-                
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/CTF/LINUX/" itemprop="url" rel="index">
-                    <span itemprop="name">LINUX</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
+            <a href="/tags/CTF/" rel="tag"><i class="fa fa-tag"></i> CTF</a>
           
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
         </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h2 id="arena"><a href="#arena" class="headerlink" title="arena"></a>arena</h2><hr>
-<p>对于一个进程来说，arena可作为其堆内存管理的最高层结构。在主进程中调用malloc函数时，会首先在数据段中通过sbrk提升program break location来构造一个arena(此时arena具有一个固定初始空间)，若空间大小不满足进程需求，则系统会在后续调整program break location的位置。而针对其他进程，首次malloc会通过mmap()在未分配的(前篇文章有描述)虚拟空间内开辟出一定大小的空间给该进程的arena管理。<br>&nbsp;<br>&nbsp;</p>
-<h2 id="heap-segment"><a href="#heap-segment" class="headerlink" title="heap segment"></a>heap segment</h2><hr>
-<p>heap segment是次于arena的内存管理结构。在首次创建arena的时候会相应的生成一个heap segment，而在单个heap segment容量不够的时候，系统就要扩大堆空间。显然，由于主进程通过sbrk来扩充，因此不会产生多个heap segment。相反，其他进程通过mmap来扩充空间时，由于mmap开辟空间的不连续性，因此需要链表来联系多个heap空间。此时，每个链节便是heap segment。然鹅，为了方便管理，一个arena中不管有多少个heap segment，都只能存在一个malloc_state。<br>&nbsp;<br>&nbsp;</p>
-<h2 id="chunk"><a href="#chunk" class="headerlink" title="chunk"></a>chunk</h2><hr>
-<p><strong>Chunk共分为4类</strong></p>
-<ul>
-<li>allocated chunk</li>
-<li>free chunk</li>
-<li>top chunk</li>
-<li>Last remainder chunk</li>
-</ul>
-<h3 id="ALLOCATED-chunk"><a href="#ALLOCATED-chunk" class="headerlink" title="ALLOCATED_chunk"></a>ALLOCATED_chunk</h3><ul>
-<li>a part of pre_chunk</li>
-<li>chunk_size(flag included)</li>
-<li>user_data</li>
-<li>padding.<h3 id="FREED-chunk"><a href="#FREED-chunk" class="headerlink" title="FREED_chunk"></a>FREED_chunk</h3>未分配的chunk结构和allcated chunk不相同，其将a part of pre_chunk替换成了pre_size，同时会储存一个前置后向指针，和一个后置前向指针。prev_size在前面的chunk是空闲的时候才是可用的。如果前面的chunk正在被使用，那么这个prev_size的空间则被前面的chunk所征用。</li>
-</ul>
-<p>&nbsp;<br>&nbsp;</p>
-<h2 id="BINS"><a href="#BINS" class="headerlink" title="BINS"></a>BINS</h2><hr>
-<p>glibc malloc分配了若干个bins，为了方便查找，glibc提供了两个数组：fastbinY和bins。fastbinY中存放了10个bins(32位)，每个bin的链节大小从16到80递增（包含chunk_header大小）;bins内存放有若干个表链，按照bin中链节的容量可以分为Small bin(大小严格递增)，Large bin(大小非严格递增)，Unsorted bin(无大小限制)。另外，每个fastbin都采用单项链表的方式组织结构，并采用LIFO。相反的，其余bin则一律采用FIFO的双向链表。<br>&nbsp;<br>&nbsp;</p>
-<h2 id="INIT"><a href="#INIT" class="headerlink" title="INIT"></a>INIT</h2><hr>
-<p>在第一次调用malloc的时候，此时内存中各个bin还未初始化，因此会经历下面的过程：<br><strong>系统执行_int_malloc函数，该函数首先会发现当前fast bin为空，就转交给small bin处理，进而又发现small bin 也为空，就调用malloc_consolidate函数对malloc_state结构体进行初始化，malloc_consolidate函数主要完成以下几个功能</strong></p>
-<ul>
-<li>首先判断当前malloc_state结构体中的fast bin是否为空，如果为空就说明整个malloc_state都没有完成初始化，需要对malloc_state进行初始化。</li>
-<li>malloc_state的初始化操作由函数malloc_init_state(av)完成，该函数先初始化除fast bin之外的所有的bins，再初始化fast bins。</li>
-</ul>
-<p><strong>Warning！！！在初次初始化完成时，unsorted bin是一个空的筐。</strong><br><strong>这里总结一下malloc查找bin顺序：</strong><br>    malloc一个特定大小的内存块，系统会首先从对应长度的bins中查找，若是为空(即未初始化或unlink无剩余)，则回转从unsorted bin中查找符合条件的chunk(非top chunk顶部以及mmap产生的chunk，若大小超过 max_fast，则首先会被放到 unsorted bins中)。如果 unsorted bins 不能满足分配要求，malloc 便会将 unsorted bins中的 chunk 放到 bins 中，然后再在bins中通过binmap来遍历继续进行查找和分配（这里包含了一个清空unsorted bin的过程）。若众多的bins也不满足需求，则系统会返回arena起始段的top chunk。若top chunk也无法满足，则对top chunk采取对应的扩充手段(对主进程来说通过sbrk来直接扩大top chunk；然而针对其他进程，mmap()分配的空间不具有连续性，所以猜测是重新开辟heap segment，并把新开辟的heap的top chunk设置成合适的大小，且free后地址空间完全释放)。</p>
-<p>&nbsp;<br>&nbsp;</p>
-<h2 id="内存合并"><a href="#内存合并" class="headerlink" title="内存合并"></a>内存合并</h2><hr>
-<ul>
-<li>fastbin下的chunk不会采取内存合并，这是为了保证fast bin下的chunk大小能尽可能地碎片化。</li>
-<li>针对除fast bin以外的其他bin表，若是其中某个chunk刚好处于将要释放的chunk的相邻位置，那么会采取解链操作将该chunk从原来的bin中解除，然后和将释放的chunk合并，再将新的chunk(大于max_fast)放置在unsorted bin中。</li>
-</ul>
-<h3 id="向后合并"><a href="#向后合并" class="headerlink" title="向后合并"></a>向后合并</h3><p>首先检测前一个chunk是否为free，这可以通过检测当前free chunk的PREV_INUSE(P)比特位知晓。在默认情况下，堆内存中的第一个chunk总是被设置为allocated的，即使它根本就不存在。如果为free的话，那么就进行向后合并：</p>
-<ul>
-<li>将前一个chunk占用的内存合并到当前chunk</li>
-<li>修改指向当前chunk的指针，改为指向前一个chunk</li>
-<li>使用unlink宏，将前一个free chunk从双向循环链表中移除</li>
-</ul>
-<h3 id="向前合并"><a href="#向前合并" class="headerlink" title="向前合并"></a>向前合并</h3><ul>
-<li>类似</li>
-</ul>
-<p>&nbsp;<br>&nbsp;</p>
-<h2 id="一些重要的话"><a href="#一些重要的话" class="headerlink" title="一些重要的话"></a>一些重要的话</h2><hr>
-<ul>
-<li>在我们第一次调用 malloc 期间， malloc_state 结构中的 small bin 和 large bin 结构也会被初始化，比如指针指向它们自身以表明为空。</li>
-<li>第一次调用 malloc 时， 会初始化 malloc_state 结构中的 small bin 和large bin (bins)。比如，bins 可以指向自身，表明它是空的。 之后当 small bin 不为空， malloc 会从 binlist 中移除最后一块内存块并返回给用户。</li>
-<li>初次malloc时，由于各个链表的初始化并未分配chunk，因此会直接检索到top chunk。</li>
-<li>fast bin的初始化完成于第一次使用malloc，与bins数组元素不同，fast bin不进行内存合并，回收的内存直接放回对应大小的单项链表尾部。</li>
-<li>主进程的main_arena直接储存在libc动态链接库里。</li>
-</ul>
-
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
       
 
       
       
-        <div class="post-eof"></div>
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/06/30/Linux-Glibc-Analysis/" rel="next" title="linux Glibc Analysis">
+                <i class="fa fa-chevron-left"></i> linux Glibc Analysis
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
       
     </footer>
   </div>
@@ -611,10 +426,11 @@
   </article>
 
 
-    
-  </section>
 
-  
+    <div class="post-spread">
+      
+    </div>
+  </div>
 
 
           </div>
@@ -622,6 +438,10 @@
 
 
           
+
+  
+
+
 
         </div>
         
@@ -642,8 +462,17 @@
       
 
       
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
 
-      <section class="site-overview-wrap sidebar-panel sidebar-panel-active">
+      <section class="site-overview-wrap sidebar-panel">
         <div class="site-overview">
           <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
             
@@ -723,6 +552,22 @@
         </div>
       </section>
 
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#写在前面"><span class="nav-number">1.</span> <span class="nav-text">写在前面</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Glibc堆分配方式"><span class="nav-number">2.</span> <span class="nav-text">Glibc堆分配方式</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#DoubleFree"><span class="nav-number">3.</span> <span class="nav-text">DoubleFree</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#内存实例"><span class="nav-number">4.</span> <span class="nav-text">内存实例</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
       
 
       
@@ -883,6 +728,10 @@
 
 
   
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
 
   
 
