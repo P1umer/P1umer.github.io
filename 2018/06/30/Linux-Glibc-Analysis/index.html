@@ -89,7 +89,7 @@
 <meta property="og:site_name" content="P1umerのblog">
 <meta property="og:description" content="arena 对于一个进程来说，arena可作为其堆内存管理的最高层结构。在主进程中调用malloc函数时，会首先在数据段中通过sbrk提升program break location来构造一个arena(此时arena具有一个固定初始空间)，若空间大小不满足进程需求，则系统会在后续调整program break location的位置。而针对其他进程，首次malloc会通过mmap()在未分配的(">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2018-07-01T09:32:49.308Z">
+<meta property="og:updated_time" content="2018-07-01T10:39:20.117Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="linux Glibc Analysis">
 <meta name="twitter:description" content="arena 对于一个进程来说，arena可作为其堆内存管理的最高层结构。在主进程中调用malloc函数时，会首先在数据段中通过sbrk提升program break location来构造一个arena(此时arena具有一个固定初始空间)，若空间大小不满足进程需求，则系统会在后续调整program break location的位置。而针对其他进程，首次malloc会通过mmap()在未分配的(">
@@ -365,10 +365,10 @@
 <li>allocated chunk</li>
 <li>free chunk</li>
 <li>top chunk</li>
-<li>Last remainder chunk</li>
-</ul>
-<h3 id="ALLOCATED-chunk"><a href="#ALLOCATED-chunk" class="headerlink" title="ALLOCATED_chunk"></a>ALLOCATED_chunk</h3><ul>
-<li>a part of pre_chunk</li>
+<li><p>Last remainder chunk</p>
+<h3 id="ALLOCATED-chunk"><a href="#ALLOCATED-chunk" class="headerlink" title="ALLOCATED_chunk"></a>ALLOCATED_chunk</h3></li>
+<li><p>a part of pre_chunk</p>
+</li>
 <li>chunk_size(flag included)</li>
 <li>user_data</li>
 <li>padding.<h3 id="FREED-chunk"><a href="#FREED-chunk" class="headerlink" title="FREED_chunk"></a>FREED_chunk</h3>未分配的chunk结构和allcated chunk不相同，其将a part of pre_chunk替换成了pre_size，同时会储存一个前置后向指针，和一个后置前向指针。prev_size在前面的chunk是空闲的时候才是可用的。如果前面的chunk正在被使用，那么这个prev_size的空间则被前面的chunk所征用。</li>
