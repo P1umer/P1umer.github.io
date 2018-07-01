@@ -74,6 +74,8 @@
 
 
 
+  <link rel="alternate" href="/atom.xml" title="P1umerのblog" type="application/atom+xml" />
+
 
 
 
@@ -87,7 +89,7 @@
 <meta property="og:site_name" content="P1umerのblog">
 <meta property="og:description" content="arena 对于一个进程来说，arena可作为其堆内存管理的最高层结构。在主进程中调用malloc函数时，会首先在数据段中通过sbrk提升program break location来构造一个arena(此时arena具有一个固定初始空间)，若空间大小不满足进程需求，则系统会在后续调整program break location的位置。而针对其他进程，首次malloc会通过mmap()在未分配的(">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2018-06-30T04:47:58.256Z">
+<meta property="og:updated_time" content="2018-07-01T09:32:49.308Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="linux Glibc Analysis">
 <meta name="twitter:description" content="arena 对于一个进程来说，arena可作为其堆内存管理的最高层结构。在主进程中调用malloc函数时，会首先在数据段中通过sbrk提升program break location来构造一个arena(此时arena具有一个固定初始空间)，若空间大小不满足进程需求，则系统会在后续调整program break location的位置。而针对其他进程，首次malloc会通过mmap()在未分配的(">
@@ -248,7 +250,7 @@
   
   
 
-  <article class="post post-type-categories" itemscope itemtype="http://schema.org/Article">
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
   
   
   
@@ -354,7 +356,7 @@
 
       
         <h2 id="arena"><a href="#arena" class="headerlink" title="arena"></a>arena</h2><hr>
-<p>对于一个进程来说，arena可作为其堆内存管理的最高层结构。在主进程中调用malloc函数时，会首先在数据段中通过sbrk提升program break location来构造一个arena(此时arena具有一个固定初始空间)，若空间大小不满足进程需求，则系统会在后续调整program break location的位置。而针对其他进程，首次malloc会通过mmap()在未分配的(前篇文章有描述)虚拟空间内开辟出一定大小的空间给该进程的arena管理。<br>&nbsp;<br>&nbsp;</p>
+<p>对于一个进程来说，arena可作为其堆内存管理的最高层结构。在主进程中调用malloc函数时，会首先在数据段中通过sbrk提升program break location来构造一个arena(此时arena具有一个固定初始空间)，若空间大小不满足进程需求，则系统会在后续调整program break location的位置。而针对其他进程，首次malloc会通过mmap()在未分配的(前篇文章有描述)虚拟空间内开辟出一定大小的空间给该进程的arena管理。<br>&nbsp;<br>&nbsp;<br><a id="more"></a></p>
 <h2 id="heap-segment"><a href="#heap-segment" class="headerlink" title="heap segment"></a>heap segment</h2><hr>
 <p>heap segment是次于arena的内存管理结构。在首次创建arena的时候会相应的生成一个heap segment，而在单个heap segment容量不够的时候，系统就要扩大堆空间。显然，由于主进程通过sbrk来扩充，因此不会产生多个heap segment。相反，其他进程通过mmap来扩充空间时，由于mmap开辟空间的不连续性，因此需要链表来联系多个heap空间。此时，每个链节便是heap segment。然鹅，为了方便管理，一个arena中不管有多少个heap segment，都只能存在一个malloc_state。<br>&nbsp;<br>&nbsp;</p>
 <h2 id="chunk"><a href="#chunk" class="headerlink" title="chunk"></a>chunk</h2><hr>
@@ -524,7 +526,7 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">2</span>
+                  <span class="site-state-item-count">3</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
@@ -535,7 +537,7 @@
               
               <div class="site-state-item site-state-categories">
                 <a href="/categories/index.html">
-                  <span class="site-state-item-count">2</span>
+                  <span class="site-state-item-count">4</span>
                   <span class="site-state-item-name">分类</span>
                 </a>
               </div>
@@ -546,7 +548,7 @@
               
               <div class="site-state-item site-state-tags">
                 <a href="/tags/index.html">
-                  <span class="site-state-item-count">1</span>
+                  <span class="site-state-item-count">2</span>
                   <span class="site-state-item-name">标签</span>
                 </a>
               </div>
@@ -554,6 +556,13 @@
 
           </nav>
 
+          
+            <div class="feed-link motion-element">
+              <a href="/atom.xml" rel="alternate">
+                <i class="fa fa-rss"></i>
+                RSS
+              </a>
+            </div>
           
 
           
@@ -578,6 +587,20 @@
           
 
           
+          
+            <div class="links-of-blogroll motion-element links-of-blogroll-block">
+              <div class="links-of-blogroll-title">
+                <i class="fa  fa-fw fa-link"></i>
+                Links
+              </div>
+              <ul class="links-of-blogroll-list">
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="http://eternalsakura13.com/" title="Sakura" target="_blank">Sakura</a>
+                  </li>
+                
+              </ul>
+            </div>
           
 
           
