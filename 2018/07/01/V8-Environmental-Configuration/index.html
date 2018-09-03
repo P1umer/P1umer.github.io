@@ -1,907 +1,184 @@
+
 <!DOCTYPE html>
-
-
-
-  
-
-
-<html class="theme-next gemini use-motion" lang="zh-Hans">
+<html lang="zh-Hans" class="loading">
 <head>
-  <meta charset="UTF-8"/>
-<script>
-    (function(){
-        if('czsgmm'){
-            if (prompt('请输入文章密码') !== 'czsgmm'){
-                alert('密码错误');
-                history.back();
-            }
-        }
-    })();
-</script>
-<meta http-equiv="X-UA-Compatible" content="IE=edge" />
-<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
-<meta name="theme-color" content="#222">
-
-
-
-
-
-
-
-
-
-<meta http-equiv="Cache-Control" content="no-transform" />
-<meta http-equiv="Cache-Control" content="no-siteapp" />
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-  
-  
-  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
-
-
-
-
-
-
-
-<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
-
-<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
-
-
-  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
-
-
-  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
-
-
-  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
-
-
-  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
-
-
-
-
-
-  <meta name="keywords" content="Browser Explore," />
-
-
-
-
-
-  <link rel="alternate" href="/atom.xml" title="P1umerのblog" type="application/atom+xml" />
-
-
-
-
-
-
-<meta name="description" content="Pre WorkInstall Git 1apt-get install git Install depot_tools 12git clone https://chromium.googlesource.com/chromium/tools/depot_toolsexport PATH=`pwd`/depot_tools:&amp;quot;$PATH&amp;quot;">
-<meta name="keywords" content="Browser Explore">
-<meta property="og:type" content="article">
-<meta property="og:title" content="V8 Environmental Configuration">
-<meta property="og:url" content="http://p1umer.club/2018/07/01/V8-Environmental-Configuration/index.html">
-<meta property="og:site_name" content="P1umerのblog">
-<meta property="og:description" content="Pre WorkInstall Git 1apt-get install git Install depot_tools 12git clone https://chromium.googlesource.com/chromium/tools/depot_toolsexport PATH=`pwd`/depot_tools:&amp;quot;$PATH&amp;quot;">
-<meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2018-07-03T16:02:25.632Z">
-<meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="V8 Environmental Configuration">
-<meta name="twitter:description" content="Pre WorkInstall Git 1apt-get install git Install depot_tools 12git clone https://chromium.googlesource.com/chromium/tools/depot_toolsexport PATH=`pwd`/depot_tools:&amp;quot;$PATH&amp;quot;">
-
-
-
-<script type="text/javascript" id="hexo.configurations">
-  var NexT = window.NexT || {};
-  var CONFIG = {
-    root: '/',
-    scheme: 'Gemini',
-    version: '5.1.4',
-    sidebar: {"position":"left","display":"post","offset":12,"b2t":"ture","scrollpercent":false,"onmobile":false},
-    fancybox: true,
-    tabs: true,
-    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
-    duoshuo: {
-      userId: '0',
-      author: '博主'
-    },
-    algolia: {
-      applicationID: 'QOPH9ID41Z',
-      apiKey: '',
-      indexName: 'sakura',
-      hits: {"per_page":10},
-      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
-    }
-  };
-</script>
-
-
-
-  <link rel="canonical" href="http://p1umer.club/2018/07/01/V8-Environmental-Configuration/"/>
-
-
-
-
-
-  <title>V8 Environmental Configuration | P1umerのblog</title>
-  
-
-
-
-
-
-
-
-
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+    <meta name="viewport" content="width=device-width, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>P1umerのblog</title>
+
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="google" content="notranslate" />
+    <meta name="keywords" content="P1umer,"> 
+    <meta name="description" content="noman,"> 
+    <meta name="author" content="P1umer sauce"> 
+    <link rel="alternative" href="atom.xml" title="P1umerのblog" type="application/atom+xml"> 
+    <link rel="icon" href="http://onc55v8te.bkt.clouddn.com/blog/180904/g7JLj2kDa7.png"> 
+    <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.css">
+    <link rel="stylesheet" href="/css/diaspora.css">
 </head>
 
-<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
-
-  
-  
-    
-  
-
-  <div class="container sidebar-position-left page-post-detail">
-    <div class="headband"></div>
-
-    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
-      <div class="header-inner"><div class="site-brand-wrapper">
-  <div class="site-meta ">
-    
-
-    <div class="custom-logo-site-title">
-      <a href="/"  class="brand" rel="start">
-        <span class="logo-line-before"><i></i></span>
-        <span class="site-title">P1umerのblog</span>
-        <span class="logo-line-after"><i></i></span>
-      </a>
-    </div>
-      
-        <p class="site-subtitle"></p>
-      
-  </div>
-
-  <div class="site-nav-toggle">
-    <button>
-      <span class="btn-bar"></span>
-      <span class="btn-bar"></span>
-      <span class="btn-bar"></span>
-    </button>
-  </div>
-</div>
-
-<nav class="site-nav">
-  
-
-  
-    <ul id="menu" class="menu">
-      
-        
-        <li class="menu-item menu-item-home">
-          <a href="/" rel="section">
-            
-              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
-            
-            首页
-          </a>
-        </li>
-      
-        
-        <li class="menu-item menu-item-about">
-          <a href="/about/" rel="section">
-            
-              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
-            
-            关于
-          </a>
-        </li>
-      
-        
-        <li class="menu-item menu-item-tags">
-          <a href="/tags/" rel="section">
-            
-              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
-            
-            标签
-          </a>
-        </li>
-      
-        
-        <li class="menu-item menu-item-categories">
-          <a href="/categories/" rel="section">
-            
-              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
-            
-            分类
-          </a>
-        </li>
-      
-        
-        <li class="menu-item menu-item-archives">
-          <a href="/archives/" rel="section">
-            
-              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
-            
-            归档
-          </a>
-        </li>
-      
-
-      
-    </ul>
-  
-
-  
-</nav>
-
-
-
- </div>
-    </header>
-
-    <main id="main" class="main">
-      <div class="main-inner">
-        <div class="content-wrap">
-          <div id="content" class="content">
-            
-
-  <div id="posts" class="posts-expand">
-    
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://p1umer.club/2018/07/01/V8-Environmental-Configuration/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="P1umer sauce">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/avatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="P1umerのblog">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">V8 Environmental Configuration</h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-07-01T17:35:44+08:00">
-                2018-07-01
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Browser-Explore/" itemprop="url" rel="index">
-                    <span itemprop="name">Browser Explore</span>
-                  </a>
-                </span>
-
-                
-                
-                  ， 
-                
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Browser-Explore/V8/" itemprop="url" rel="index">
-                    <span itemprop="name">V8</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-            <div class="post-wordcount">
-              
-                
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-file-word-o"></i>
-                </span>
-                
-                  <span class="post-meta-item-text">字数统计&#58;</span>
-                
-                <span title="字数统计">
-                  170
-                </span>
-              
-
-              
-                <span class="post-meta-divider">|</span>
-              
-
-              
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-clock-o"></i>
-                </span>
-                
-                  <span class="post-meta-item-text">阅读时长 &asymp;</span>
-                
-                <span title="阅读时长">
-                  1
-                </span>
-              
+<body class="loading">
+    <div id="loader"></div>
+    <div id="single">
+    <div id="top" style="display: block;">
+    <div class="bar" style="width: 0;"></div>
+    <a class="icon-home image-icon" href="javascript:;"></a>
+    <div title="播放/暂停" class="icon-play"></div>
+    <h3 class="subtitle">V8 Environmental Configuration</h3>
+    <div class="social">
+        <!--<div class="like-icon">-->
+            <!--<a href="javascript:;" class="likeThis active"><span class="icon-like"></span><span class="count">76</span></a>-->
+        <!--</div>-->
+        <div>
+            <div class="share">
+                <a title="获取二维码" class="icon-scan" href="javascript:;"></a>
             </div>
-          
+            <div id="qr"></div>
+        </div>
+    </div>
+    <div class="scrollbar"></div>
+</div>
+    <div class="section">
+        <div class="article">
+    <div class='main'>
+        <h1 class="title">V8 Environmental Configuration</h1>
+        <div class="stuff">
+            <span>七月 01, 2018</span>
+            
+  <ul class="post-tags-list"><li class="post-tags-list-item"><a class="post-tags-list-link" href="/tags/Browser-Explore/">Browser Explore</a></li></ul>
 
-          
 
         </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        <h2 id="Pre-Work"><a href="#Pre-Work" class="headerlink" title="Pre Work"></a>Pre Work</h2><h3 id="Install-Git"><a href="#Install-Git" class="headerlink" title="Install Git"></a>Install Git</h3> <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">apt-get install git</span><br></pre></td></tr></table></figure>
-<h3 id="Install-depot-tools"><a href="#Install-depot-tools" class="headerlink" title="Install depot_tools"></a>Install depot_tools</h3> <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">git clone https://chromium.googlesource.com/chromium/tools/depot_tools</span><br><span class="line">export PATH=`pwd`/depot_tools:&quot;$PATH&quot;</span><br></pre></td></tr></table></figure>
- <a id="more"></a>
-<h3 id="外网配置"><a href="#外网配置" class="headerlink" title="外网配置"></a>外网配置</h3><pre><code>原谅我之前没有用到过终端代理...
-不过通过sstap解决了代理问题：[SSTap](https://www.sockscap64.com/zh-hans/sstap/)能在网络层拦截所有连接并转发给HTTP，SOCKS4，5，SHADOWSOCKS代理。是一种硬核的全局代理。
-&amp;nbsp;
-</code></pre><h2 id="Key-Step"><a href="#Key-Step" class="headerlink" title="Key Step"></a>Key Step</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">gclient</span><br><span class="line">mkdir v8</span><br><span class="line">cd v8</span><br><span class="line">fetch v8</span><br><span class="line">-</span><br><span class="line">tools/dev/v8gen.py x64.debug</span><br><span class="line">ninja -C out.gn/x64.debug</span><br></pre></td></tr></table></figure>
+        <div class="content markdown">
+            <p><img src="http://onc55v8te.bkt.clouddn.com/blog/180904/19ALGmIhjG.png" alt="mark"></p>
+<h2 id="linux"><a href="#linux" class="headerlink" title="linux"></a>linux</h2><h3 id="Pre-Work"><a href="#Pre-Work" class="headerlink" title="Pre Work"></a>Pre Work</h3><ul>
+<li><p>Install Git</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">apt-get install git</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>Install depot_tools</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">git clone https://chromium.googlesource.com/chromium/tools/depot_tools</span><br><span class="line">export PATH=`pwd`/depot_tools:&quot;$PATH&quot;</span><br></pre></td></tr></table></figure>
+<a id="more"></a>
+<h3 id="外网配置"><a href="#外网配置" class="headerlink" title="外网配置"></a>外网配置</h3><p>  原谅我之前没有用到过终端代理…<br>  不过通过sstap解决了代理问题：<a href="https://www.sockscap64.com/zh-hans/sstap/" target="_blank" rel="noopener">SSTap</a>能在网络层拦截所有连接并转发给HTTP，SOCKS4，5，SHADOWSOCKS代理。是一种硬核的全局代理。<br>  &nbsp;</p>
+<h3 id="Key-Step"><a href="#Key-Step" class="headerlink" title="Key Step"></a>Key Step</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">gclient</span><br><span class="line">mkdir v8</span><br><span class="line">cd v8</span><br><span class="line">fetch v8</span><br><span class="line">-</span><br><span class="line">tools/dev/v8gen.py x64.debug</span><br><span class="line">ninja -C out.gn/x64.debug</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
 <p>此时编译的是最新版本的v8<br>若想切换分支，在(-)处执行以下命令：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">git reset --hard +hash</span><br><span class="line">tools/dev/v8gen.py x64.debug</span><br><span class="line">ninja -C out.gn/x64.debug</span><br></pre></td></tr></table></figure></p>
+<h2 id="Windows"><a href="#Windows" class="headerlink" title="Windows"></a>Windows</h2><h3 id="Prework"><a href="#Prework" class="headerlink" title="Prework"></a>Prework</h3><ul>
+<li>Visual Studio 2017</li>
+<li><a href="https://chromium.googlesource.com/new-password" target="_blank" rel="noopener">设置git cookie</a> </li>
+<li><a href="https://link.zhihu.com/?target=https%3A//go.microsoft.com/fwlink/p/%3FLinkId%3D845298" target="_blank" rel="noopener">Windows SDK</a></li>
+</ul>
+<h3 id="外网配置-1"><a href="#外网配置-1" class="headerlink" title="外网配置"></a>外网配置</h3><p>由于对计算机网络的不了解，之前尝试挂sstap来ping google，尝试了很久之后才意识到<strong>ss是基于TCP和UDP的而ping走的是icmp协议</strong>。然后我再sstap中取消对China ip的skip，果然，baidu也ping不通了。因此网络层的拦截是有效的。</p>
+<h3 id="Key-STAP"><a href="#Key-STAP" class="headerlink" title="Key STAP"></a>Key STAP</h3><ul>
+<li>打开适用于 VS 2017 的 X64 本机工具命令提示框</li>
+<li>再次确认上一步已完成，注意不是cmd窗口<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">&gt;git clone https://link.zhihu.com/?target=https%3A//chromium.googlesource.com/chromium/tools/depot_tools.git</span><br><span class="line"></span><br><span class="line">&gt;SET depot_tools 环境变量，将其放在存有python.exe的环境变量前或者直接置顶</span><br><span class="line"></span><br><span class="line">&gt;set DEPOT_TOOLS_WIN_TOOLCHAIN=0</span><br><span class="line"></span><br><span class="line">&gt;set GYP_MSVS_VERSION=2017</span><br><span class="line"></span><br><span class="line">&gt;mkdir v8 &amp;&amp; cd v8</span><br><span class="line"></span><br><span class="line">&gt;fetch v8</span><br><span class="line"></span><br><span class="line">&gt;cd v8</span><br><span class="line"></span><br><span class="line">&gt;gn gen --ide=vs out.gn\x64_solution</span><br><span class="line"></span><br><span class="line">&gt;python tools\dev\v8gen.py x64.release</span><br><span class="line"></span><br><span class="line">&gt;ninja -C out.gn\x64.release</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<p>NOTE:</p>
+<ul>
+<li>卸载之前的SDK，安装版本10.1.15063.468</li>
+<li>安装新版本的SDK时安装位置要与VS默认sdk安装位置一致</li>
+<li>默认SDK安装位置可以在 VS Installer 中查看</li>
+</ul>
 
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-        <div class="post-tags">
-          
-            <a href="/tags/Browser-Explore/" rel="tag"><i class="fa fa-tag"></i> Browser Explore</a>
-          
-        </div>
-      
-
-      
-      
-      
-
-      
-        <div class="post-nav">
-          <div class="post-nav-next post-nav-item">
+            <!--[if lt IE 9]><script>document.createElement('audio');</script><![endif]-->
+            <audio id="audio" loop="1" preload="auto" controls="controls" data-autoplay="false">
+                <source type="audio/mpeg" src="">
+            </audio>
             
-              <a href="/2018/06/30/Review-of-DoubleFree/" rel="next" title="Review of  DoubleFree">
-                <i class="fa fa-chevron-left"></i> Review of  DoubleFree
-              </a>
+                <ul id="audio-list" style="display:none">
+                    
+                        <li title='0' data-url='http://link.hhtjim.com/163/5146554.mp3'></li>
+                    
+                        <li title='1' data-url='http://link.hhtjim.com/qq/001faIUs4M2zna.mp3'></li>
+                    
+                </ul>
             
-          </div>
-
-          <span class="post-nav-divider"></span>
-
-          <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2018/07/17/“主人要闭关”/" rel="prev" title="“主人要闭关”">
-                “主人要闭关” <i class="fa fa-chevron-right"></i>
-              </a>
-            
-          </div>
-        </div>
-      
-
-      
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-
-    <div class="post-spread">
-      
-    </div>
-  </div>
-
-
-          </div>
-          
-
-
-          
-
-  
-    <div class="comments" id="comments">
-      <div id="lv-container" data-id="city" data-uid="MTAyMC8zODMxMi8xNDg0MA=="></div>
-    </div>
-
-  
-
-
-
         </div>
         
-          
-  
-  <div class="sidebar-toggle">
-    <div class="sidebar-toggle-line-wrap">
-      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
-      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
-      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
-    </div>
-  </div>
+    <div id='gitalk-container' class="comment link"
+        data-ae='true'
+        data-ci=''
+        data-cs=''
+        data-r=''
+        data-o=''
+        data-a=''
+        data-d='false'
+    >查看评论</div>
 
-  <aside id="sidebar" class="sidebar">
-    
-    <div class="sidebar-inner">
-
-      
-
-      
-        <ul class="sidebar-nav motion-element">
-          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
-            文章目录
-          </li>
-          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
-            站点概览
-          </li>
-        </ul>
-      
-
-      <section class="site-overview-wrap sidebar-panel">
-        <div class="site-overview">
-          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
-            
-              <img class="site-author-image" itemprop="image"
-                src="/images/avatar.gif"
-                alt="P1umer sauce" />
-            
-              <p class="site-author-name" itemprop="name">P1umer sauce</p>
-              <p class="site-description motion-element" itemprop="description">给dalao们递tea</p>
-          </div>
-
-          <nav class="site-state motion-element">
-
-            
-              <div class="site-state-item site-state-posts">
-              
-                <a href="/archives/">
-              
-                  <span class="site-state-item-count">4</span>
-                  <span class="site-state-item-name">日志</span>
-                </a>
-              </div>
-            
-
-            
-              
-              
-              <div class="site-state-item site-state-categories">
-                <a href="/categories/index.html">
-                  <span class="site-state-item-count">4</span>
-                  <span class="site-state-item-name">分类</span>
-                </a>
-              </div>
-            
-
-            
-              
-              
-              <div class="site-state-item site-state-tags">
-                <a href="/tags/index.html">
-                  <span class="site-state-item-count">2</span>
-                  <span class="site-state-item-name">标签</span>
-                </a>
-              </div>
-            
-
-          </nav>
-
-          
-            <div class="feed-link motion-element">
-              <a href="/atom.xml" rel="alternate">
-                <i class="fa fa-rss"></i>
-                RSS
-              </a>
-            </div>
-          
-
-          
-            <div class="links-of-author motion-element">
-                
-                  <span class="links-of-author-item">
-                    <a href="mailto:1226063714@qq.com" target="_blank" title="E-Mail">
-                      
-                        <i class="fa fa-fw fa-envelope"></i>E-Mail</a>
-                  </span>
-                
-                  <span class="links-of-author-item">
-                    <a href="https://blog.csdn.net/qq_40265677" target="_blank" title="CSDN">
-                      
-                        <i class="fa fa-fw fa-globe"></i>CSDN</a>
-                  </span>
-                
-            </div>
-          
-
-          
-          
-
-          
-          
-            <div class="links-of-blogroll motion-element links-of-blogroll-block">
-              <div class="links-of-blogroll-title">
-                <i class="fa  fa-fw fa-link"></i>
-                Links
-              </div>
-              <ul class="links-of-blogroll-list">
-                
-                  <li class="links-of-blogroll-item">
-                    <a href="https://ctf-wiki.github.io/ctf-wiki/" title="CTF wiki" target="_blank">CTF wiki</a>
-                  </li>
-                
-                  <li class="links-of-blogroll-item">
-                    <a href="http://misty.moe/" title="Misty" target="_blank">Misty</a>
-                  </li>
-                
-                  <li class="links-of-blogroll-item">
-                    <a href="http://eternalsakura13.com/" title="Sakura" target="_blank">Sakura</a>
-                  </li>
-                
-                  <li class="links-of-blogroll-item">
-                    <a href="http://p4nda.top/" title="p4nda" target="_blank">p4nda</a>
-                  </li>
-                
-              </ul>
-            </div>
-          
-
-          
-
-        </div>
-      </section>
-
-      
-      <!--noindex-->
-        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
-          <div class="post-toc">
-
-            
-              
-            
-
-            
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Pre-Work"><span class="nav-number">1.</span> <span class="nav-text">Pre Work</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Install-Git"><span class="nav-number">1.1.</span> <span class="nav-text">Install Git</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Install-depot-tools"><span class="nav-number">1.2.</span> <span class="nav-text">Install depot_tools</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#外网配置"><span class="nav-number">1.3.</span> <span class="nav-text">外网配置</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Key-Step"><span class="nav-number">2.</span> <span class="nav-text">Key Step</span></a></li></ol></div>
-            
-
-          </div>
-        </section>
-      <!--/noindex-->
-      
-
-      
-        <div class="back-to-top">
-          <i class="fa fa-arrow-up"></i>
-          
-        </div>
-      
 
     </div>
-  </aside>
-
-
-        
-      </div>
-    </main>
-
-    <footer id="footer" class="footer">
-      <div class="footer-inner">
-        <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js">
-</script>
-<span id="busuanzi_container_site_pv">
-    TOTALLY VISITED <span id="busuanzi_value_site_pv"></span> TIMES
-</span>
-<div class="copyright">&copy; <span itemprop="copyrightYear">2018</span>
-  <span class="with-love">
-    <i class="fa fa-user"></i>
-  </span>
-  <span class="author" itemprop="copyrightHolder">P1umer sauce</span>
-
-  
-    <span class="post-meta-divider">|</span>
-    <span class="post-meta-item-icon">
-      <i class="fa fa-area-chart"></i>
-    </span>
     
-      <span class="post-meta-item-text">Site words total count&#58;</span>
+        <div class='side'>
+            <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#linux"><span class="toc-number">1.</span> <span class="toc-text">linux</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Pre-Work"><span class="toc-number">1.1.</span> <span class="toc-text">Pre Work</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#外网配置"><span class="toc-number">1.2.</span> <span class="toc-text">外网配置</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Key-Step"><span class="toc-number">1.3.</span> <span class="toc-text">Key Step</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Windows"><span class="toc-number">2.</span> <span class="toc-text">Windows</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Prework"><span class="toc-number">2.1.</span> <span class="toc-text">Prework</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#外网配置-1"><span class="toc-number">2.2.</span> <span class="toc-text">外网配置</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Key-STAP"><span class="toc-number">2.3.</span> <span class="toc-text">Key STAP</span></a></li></ol></li></ol>
+        </div>
     
-    <span title="Site words total count">2.0k</span>
-  
 </div>
 
 
-  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
-
-
-
-  <span class="post-meta-divider">|</span>
-
-
-
-  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Gemini</a> v5.1.4</div>
-
-
-
-
-        
-
-
-
-
-
-
-
-        
-      </div>
-    </footer>
-
-    
-
-    
-
-  </div>
-
-  
-
-<script type="text/javascript">
-  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
-    window.Promise = null;
-  }
-</script>
-
-
-
-
-
-
-
-
-
-  
-
-
-  
-
-
-
-
-
-  
-  
-
-
-
-
-
-
-
-  
-  
-    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
-  
-
-  
-  
-    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
-  
-
-  
-  
-    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
-  
-
-  
-  
-    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
-  
-
-  
-  
-    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
-  
-
-  
-  
-    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
-  
-
-  
-  
-    <script type="text/javascript" src="/lib/canvas-nest/canvas-nest.min.js"></script>
-  
-
-  
-  
-    <script type="text/javascript" src="/lib/three/three.min.js"></script>
-  
-
-  
-  
-    <script type="text/javascript" src="/lib/three/canvas_lines.min.js"></script>
-  
-
-
-  
-
-
-  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
-
-  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
-
-
-
-  
-  
-
-
-  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
-
-  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
-
-
-
-  
-  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
-<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
-
-
-
-  
-
-
-  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
-
-
-
-  
-
-
-  
-
-
-
-
-	
-
-
-
-
-
-  
-
-
-
-
-
-  
-    <script type="text/javascript">
-      (function(d, s) {
-        var j, e = d.getElementsByTagName(s)[0];
-        if (typeof LivereTower === 'function') { return; }
-        j = d.createElement(s);
-        j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
-        j.async = true;
-        e.parentNode.insertBefore(j, e);
-      })(document, 'script');
-    </script>
-  
-
-
-
-
-
-
-
-
-
-
-
-
-  
-
-
-
-
-
-  
-
-  
-
-  
-
-  
-  
-
-  
-
-  
-
-  
-
+    </div>
+</div>
 </body>
+<script src="//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.js"></script>
+<script src="//lib.baomitu.com/jquery/1.8.3/jquery.min.js"></script>
+<script src="/js/plugin.js"></script>
+<script src="/js/diaspora.js"></script>
+<link rel="stylesheet" href="/photoswipe/photoswipe.css">
+<link rel="stylesheet" href="/photoswipe/default-skin/default-skin.css">
+<script src="/photoswipe/photoswipe.min.js"></script>
+<script src="/photoswipe/photoswipe-ui-default.min.js"></script>
+
+<!-- Root element of PhotoSwipe. Must have class pswp. -->
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+    <!-- Background of PhotoSwipe. 
+         It's a separate element as animating opacity is faster than rgba(). -->
+    <div class="pswp__bg"></div>
+    <!-- Slides wrapper with overflow:hidden. -->
+    <div class="pswp__scroll-wrap">
+        <!-- Container that holds slides. 
+            PhotoSwipe keeps only 3 of them in the DOM to save memory.
+            Don't modify these 3 pswp__item elements, data is added later on. -->
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+        <!-- Default (PhotoSwipeUI_Default) interface on top of sliding area. Can be changed. -->
+        <div class="pswp__ui pswp__ui--hidden">
+            <div class="pswp__top-bar">
+                <!--  Controls are self-explanatory. Order can be changed. -->
+                <div class="pswp__counter"></div>
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+                <button class="pswp__button pswp__button--share" title="Share"></button>
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+                <!-- Preloader demo http://codepen.io/dimsemenov/pen/yyBWoR -->
+                <!-- element will get class pswp__preloader--active when preloader is running -->
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                      <div class="pswp__preloader__cut">
+                        <div class="pswp__preloader__donut"></div>
+                      </div>
+                    </div>
+                </div>
+            </div>
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div> 
+            </div>
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
 </html>
