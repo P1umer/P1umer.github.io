@@ -54,9 +54,10 @@
         <div class="content markdown">
             <p><img src="http://onc55v8te.bkt.clouddn.com/blog/180904/Ac6Lmj2mC6.png" alt="mark"></p>
 <h2 id="arena"><a href="#arena" class="headerlink" title="arena"></a>arena</h2><hr>
-<p>对于一个进程来说，arena可作为其堆内存管理的最高层结构。在主进程中调用malloc函数时，会首先在数据段中通过sbrk提升program break location来构造一个arena(此时arena具有一个固定初始空间)，若空间大小不满足进程需求，则系统会在后续调整program break location的位置。而针对其他进程，首次malloc会通过mmap()在未分配的(前篇文章有描述)虚拟空间内开辟出一定大小的空间给该进程的arena管理。<br>&nbsp;<br>&nbsp;<br><a id="more"></a></p>
+<p>对于一个进程来说，arena可作为其堆内存管理的最高层结构。在主进程中调用malloc函数时，会首先在数据段中通过sbrk提升program break location来构造一个arena(此时arena具有一个固定初始空间)，若空间大小不满足进程需求，则系统会在后续调整program break location的位置。而针对其他进程，首次malloc会通过mmap()在未分配的(前篇文章有描述)虚拟空间内开辟出一定大小的空间给该进程的arena管理。</p>
+<a id="more"></a>
 <h2 id="heap-segment"><a href="#heap-segment" class="headerlink" title="heap segment"></a>heap segment</h2><hr>
-<p>heap segment是次于arena的内存管理结构。在首次创建arena的时候会相应的生成一个heap segment，而在单个heap segment容量不够的时候，系统就要扩大堆空间。显然，由于主进程通过sbrk来扩充，因此不会产生多个heap segment。相反，其他进程通过mmap来扩充空间时，由于mmap开辟空间的不连续性，因此需要链表来联系多个heap空间。此时，每个链节便是heap segment。然鹅，为了方便管理，一个arena中不管有多少个heap segment，都只能存在一个malloc_state。<br>&nbsp;<br>&nbsp;</p>
+<p>heap segment是次于arena的内存管理结构。在首次创建arena的时候会相应的生成一个heap segment，而在单个heap segment容量不够的时候，系统就要扩大堆空间。显然，由于主进程通过sbrk来扩充，因此不会产生多个heap segment。相反，其他进程通过mmap来扩充空间时，由于mmap开辟空间的不连续性，因此需要链表来联系多个heap空间。此时，每个链节便是heap segment。然鹅，为了方便管理，一个arena中不管有多少个heap segment，都只能存在一个malloc_state。</p>
 <h2 id="chunk"><a href="#chunk" class="headerlink" title="chunk"></a>chunk</h2><hr>
 <p><strong>Chunk共分为4类</strong></p>
 <ul>
@@ -71,9 +72,8 @@
 <li>user_data</li>
 <li>padding.<h3 id="FREED-chunk"><a href="#FREED-chunk" class="headerlink" title="FREED_chunk"></a>FREED_chunk</h3>未分配的chunk结构和allcated chunk不相同，其将a part of pre_chunk替换成了pre_size，同时会储存一个前置后向指针，和一个后置前向指针。prev_size在前面的chunk是空闲的时候才是可用的。如果前面的chunk正在被使用，那么这个prev_size的空间则被前面的chunk所征用。</li>
 </ul>
-<p>&nbsp;<br>&nbsp;</p>
 <h2 id="BINS"><a href="#BINS" class="headerlink" title="BINS"></a>BINS</h2><hr>
-<p>glibc malloc分配了若干个bins，为了方便查找，glibc提供了两个数组：fastbinY和bins。fastbinY中存放了10个bins(32位)，每个bin的链节大小从16到80递增（包含chunk_header大小）;bins内存放有若干个表链，按照bin中链节的容量可以分为Small bin(大小严格递增)，Large bin(大小非严格递增)，Unsorted bin(无大小限制)。另外，每个fastbin都采用单项链表的方式组织结构，并采用LIFO。相反的，其余bin则一律采用FIFO的双向链表。<br>&nbsp;<br>&nbsp;</p>
+<p>glibc malloc分配了若干个bins，为了方便查找，glibc提供了两个数组：fastbinY和bins。fastbinY中存放了10个bins(32位)，每个bin的链节大小从16到80递增（包含chunk_header大小）;bins内存放有若干个表链，按照bin中链节的容量可以分为Small bin(大小严格递增)，Large bin(大小非严格递增)，Unsorted bin(无大小限制)。另外，每个fastbin都采用单项链表的方式组织结构，并采用LIFO。相反的，其余bin则一律采用FIFO的双向链表。</p>
 <h2 id="INIT"><a href="#INIT" class="headerlink" title="INIT"></a>INIT</h2><hr>
 <p>在第一次调用malloc的时候，此时内存中各个bin还未初始化，因此会经历下面的过程：<br><strong>系统执行_int_malloc函数，该函数首先会发现当前fast bin为空，就转交给small bin处理，进而又发现small bin 也为空，就调用malloc_consolidate函数对malloc_state结构体进行初始化，malloc_consolidate函数主要完成以下几个功能</strong></p>
 <ul>
@@ -81,7 +81,6 @@
 <li>malloc_state的初始化操作由函数malloc_init_state(av)完成，该函数先初始化除fast bin之外的所有的bins，再初始化fast bins。</li>
 </ul>
 <p><strong>Warning！！！在初次初始化完成时，unsorted bin是一个空的筐。</strong><br><strong>这里总结一下malloc查找bin顺序：</strong><br>    malloc一个特定大小的内存块，系统会首先从对应长度的bins中查找，若是为空(即未初始化或unlink无剩余)，则回转从unsorted bin中查找符合条件的chunk(非top chunk顶部以及mmap产生的chunk，若大小超过 max_fast，则首先会被放到 unsorted bins中)。如果 unsorted bins 不能满足分配要求，malloc 便会将 unsorted bins中的 chunk 放到 bins 中，然后再在bins中通过binmap来遍历继续进行查找和分配（这里包含了一个清空unsorted bin的过程）。若众多的bins也不满足需求，则系统会返回arena起始段的top chunk。若top chunk也无法满足，则对top chunk采取对应的扩充手段(对主进程来说通过sbrk来直接扩大top chunk；然而针对其他进程，mmap()分配的空间不具有连续性，所以猜测是重新开辟heap segment，并把新开辟的heap的top chunk设置成合适的大小，且free后地址空间完全释放)。</p>
-<p>&nbsp;<br>&nbsp;</p>
 <h2 id="内存合并"><a href="#内存合并" class="headerlink" title="内存合并"></a>内存合并</h2><hr>
 <ul>
 <li>fastbin下的chunk不会采取内存合并，这是为了保证fast bin下的chunk大小能尽可能地碎片化。</li>
