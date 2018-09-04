@@ -230,7 +230,7 @@
 <li>好无聊啊不想写2333</li>
 </ul>
 <h3 id="10-Optimistic-Transformations"><a href="#10-Optimistic-Transformations" class="headerlink" title="10 Optimistic Transformations"></a>10 Optimistic Transformations</h3><p>Optimistic transformations，例如稀疏条件常数传播（Sparse Conditional Constant Propagation），会在优化过程中做出 optimistic assumptions 并尝试证明，有时可能需要分析整个程序以进行验证一个猜测。因此，我们需要在每条指令中保留有关当前 assumptions 的一些信息。该信息存储在 Type 字段中， Type 字段由前面定义的 Compute 设置。</p>
-<p>我们依靠 <strong>pessimistic analysis</strong> 避免的这种 global analysis 的另一个条件就是需要就是 def-use edges。到目前为止，我们所有的优化都只能在给定一个 instr 和它的直接 uses（即给定 use–&gt;def edges） 条件下执行。对于 <strong>optimistic transformations</strong> ，我们假设所有指令都是 undefined 以及所有的 code 都是 unreachable 。然后从 Start 开始，我们开始逐步验证并修改这些假设。当我们发现一条指令定义了除 “top” 以外的值时，我们就必须 inspect 所有使用该值的指令的 assumptions。因此我们需要 def-use edge。</p>
+<p>我们依靠 <strong>pessimistic analysis</strong> 避免的这种 global analysis 的另一个条件就是需要就是 def-use edges。到目前为止，我们所有的优化都只能在给定一个 instr 和它的直接 uses 成分（即给定 use–&gt;def edges） 条件下执行。对于 <strong>optimistic transformations</strong> ，我们假设所有指令都是 undefined 以及所有的 code 都是 unreachable 。然后从 Start 开始，我们开始逐步验证并修改这些假设。当我们发现一条指令定义了除 “top” 以外的值时，我们就必须 inspect 所有使用该值的指令的 assumptions。因此我们需要 def-use edge。</p>
 <p>因为我们需要全局(批处理)算法的 def-use edges，所以我们要一次性找到它们并将 single insruction 的 def-use edges 按照顺序放入一个大数组中。 要访问 该 instr 的 edges，我们需要指令中的 start 和 length 部分。因此我们为 instrument 引入了两个新的 field ：def_use_edge 和 def_use_cnt（count）。</p>
 <p>我们通过遍历 graph 的 use-def edges 来找到 def-use edge。要进行图形遍历，我们需要一个 visit flag，一个 use-def edge 计数器，以及一个通过 index 访问 use-def edges 的函数。新构建的 instr 如下图所示：</p>
 <p><img src="http://onc55v8te.bkt.clouddn.com/blog/180903/dAbFCBd86m.png" alt="mark"></p>
