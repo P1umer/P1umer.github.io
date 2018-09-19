@@ -26,7 +26,7 @@
     <div class="bar" style="width: 0;"></div>
     <a class="icon-home image-icon" href="javascript:;"></a>
     <div title="播放/暂停" class="icon-play"></div>
-    <h3 class="subtitle">NoMan Write</h3>
+    <h3 class="subtitle">IR's Journey</h3>
     <div class="social">
         <!--<div class="like-icon">-->
             <!--<a href="javascript:;" class="likeThis active"><span class="icon-like"></span><span class="count">76</span></a>-->
@@ -43,7 +43,7 @@
     <div class="section">
         <div class="article">
     <div class='main'>
-        <h1 class="title">NoMan Write</h1>
+        <h1 class="title">IR's Journey</h1>
         <div class="stuff">
             <span>九月 03, 2018</span>
             
@@ -51,7 +51,7 @@
         </div>
         <div class="content markdown">
             <h2 id="From-Quads-to-Graphs-An-Intermediate-Representation’s-Journey"><a href="#From-Quads-to-Graphs-An-Intermediate-Representation’s-Journey" class="headerlink" title="From Quads to Graphs: An Intermediate Representation’s Journey"></a>From Quads to Graphs: An Intermediate Representation’s Journey</h2><p><img src="http://onc55v8te.bkt.clouddn.com/blog/180904/gggeJJi5HJ.png" alt="mark"></p>
-<h3 id="1-介绍"><a href="#1-介绍" class="headerlink" title="1 介绍"></a>1 介绍</h3><p>中间语言不是凭空产生的。中间语言是程序员的表述到具体的机器代码的转换辅助，而且必须弥合大量的语义差异，例如从一个 fortran 90 的机器码操作到一个三地址码表述的 add 语句。在高级语言到机器语言的转化过程中，一个优化编译器会执行很多次的 pass 来优化 IR 。作为使用者，我们希望优化编译器能把这一过程执行的迅速而又准确；而作为编译器的编写者，我们希望我们的优化代码能够尽可能的简单易懂且便于维护。我们的目标是设计轻量级的 IR 来使得简单语句可以得到快速优化。</p>
+<h3 id="1-介绍"><a href="#1-介绍" class="headerlink" title="1 介绍"></a>1 介绍</h3><p>中间语言不是凭空产生的。中间语言是程序员的表述到具体的机器代码的转换辅助，而且必须弥合大量的语义差异，例如从一个 fortran 90 的机器码操作到一个三地址码表述的 add 语句。在高级语言到机器语言的转化过程中，一个优化编译器会执行很多次的 pass 来优化 IR 。使用者希望优化编译器能把这一过程执行的迅速而又准确；而编译器的编写者则希望优化代码能够尽可能的简单易懂且便于维护。我们的目标是设计轻量级的 IR 来使得简单语句可以得到快速优化。</p>
 <p>本文讲述了中间语言从 quad-based form 到 graph-based form 的转化历程。转化的最终格式类似于(当然不是完全相同)一个 operator-level 的 Program Dependence Graph 或者说是 Gated Single Assignment。最终的形式包含执行程序所需要的所有信息。更重要的是，这种图表形式明确地包含 use-def 信息，分析过程中可以直接使用此信息而无需计算。分析过程中 Transformation 会直接在 IR 的基础上修改 use-def 信息，而无需额外的步骤。这种形式的的 graph 是一维的结构，而不是像 CFG 包含两个维度（分别是 basic blocks 和 instructions）。<br>这种一维结构可以在我们的算法中体现出来。</p>
 <p>使编译器快速运行的一个原则是尽可能早地完成尽可能多的工作。这引导我们在 one-pass 的前端加入强大的窥孔优化。我们设计的 IR 允许施行窥孔优化，在某种情况下，这种做法可以和 pessimistic conditional constant propagation 起到相同的效果。</p>
 <p>【窥孔优化】：</p>
@@ -66,11 +66,11 @@
 <ul>
 <li>编译原理课上的常数替换优化</li>
 </ul>
-<p>本文不是教你写成一个完整的编译器，而是分享一种设计思路，可以从传统的 IR 过渡到当前的 graph-based IR。这种转换是一个持续且漫长的过程。</p>
+<p>本文不是关于如何写成一个完整的编译器，而是分享一种设计思路，可以从传统的 IR 过渡到 graph-based IR。</p>
 <h4 id="1-1-Pessimistic-vs-Optimistic"><a href="#1-1-Pessimistic-vs-Optimistic" class="headerlink" title="1.1 Pessimistic-vs-Optimistic"></a>1.1 Pessimistic-vs-Optimistic</h4><p>我们将分析（和转换）分为两大类：Pessimistic &amp; Optimistic。Pessimistic analyses 假设了一种最坏的状况（conservatively correct）并且尝试去证明，而 Optimistic analyses 假设了一种最好地状况。处理“循环”外的情形中，这两种技术产生的结果相同。而在处理“循环”的过程中，Optimistic analyses 会假设一些从循环的 back edge 中产生的“fact”成立，在之后的步骤中可能会得到证明；而 Pessimistic techniques 则在循环进行中不产生任何假设，只使用已经确定的条件。这可能不能产生 do not already have 的事实。</p>
 <p>举个栗子，在常数传播*(上面介绍过)的过程中，optimistic analysis 先假设循环 back edge 上的一些 def_value 等价于 constant，如果假设被证明成立，则可以进行一次 constant propagation。如果假设不成立，也没有害处啊2333…循环体只需要结合更加保守的 information 进行重新分析就可以了。</p>
-<p>而针对 Pessimistic analysis，循环 back-edge 的 def_values 都被看作为变量，当这些所谓的“变量”与 loop 中的常量合并时，根据已有的信息分析器只能确定该个变量是个变量（怪怪的。。。），符合了一开始的假设，因此这种分析无法找到更多的常量。</p>
-<p>但是，如果没有循环，两种分析都可以 view 包含所有已有事实的代码，因此，两种分析都可以找到一组等价的 facts。为了有效地做到这一点，分析需要按拓扑顺序访问代码；关于特定值的信息必须在使用该值之前收集。如果无序访问代码，则一些分析必须在没有所有相关事实的情况下进行。在这种情况下，我们发现 Pessimistic analysis 可以在 one-pass 算法中可以 usefully proceed，因为缺少信息的条件下编译器做出的假设（或者说是具体的优化）会较为保守，而针对 Optimistic analysis 我们必须反复 visit 该块无序代码来验证那些较为积极但“危险”的假设。</p>
+<p>而针对 Pessimistic analysis，循环 back-edge 的 def_values 都被看作为变量，当这些所谓的“变量”与 loop 中的常量合并时，根据已有的信息分析器只能确定该个变量是个变量，符合了一开始的假设，因此这种分析无法找到更多的常量。</p>
+<p>但是，如果没有循环，两种分析都可以访问包含所有已有 fact 的代码，也就是说，两种分析都可以找到一组等价的 facts。为了有效地做到这一点，分析需要按拓扑顺序访问代码；且关于特定值的信息必须在使用该值之前收集。如果无序访问代码，则一些分析必须在没有所有相关 fact 的情况下进行。在这种情况下，我们发现 Pessimistic analysis 可以在 one-pass 算法中可以 usefully proceed，因为缺少信息的条件下编译器做出的假设（或者说是具体的优化）会较为保守，而针对 Optimistic analysis 我们必须反复 visit 该块无序代码来验证那些较为积极但“危险”的假设。</p>
 <h4 id="1-2-Optimizations-in-the-Front-End"><a href="#1-2-Optimizations-in-the-Front-End" class="headerlink" title="1.2 Optimizations-in-the-Front-End"></a>1.2 Optimizations-in-the-Front-End</h4><p>由于我们可以在 one-pass 算法中进行 Pessimistic analysis ，因此我们可以在 Parseing 时执行此操作。当前端解析表达式时，分析器会为表达式指定一个保守值，并尝试根据以前解析的表达式来产生更好的 Parse 结果。只要解析器以拓扑顺序 Parse 代码，Pessimistic analysis 就像 optimistic analysis 一样好。我们观察到 Parser 按照拓扑顺序访问使用 if / then / else 结构构建的代码，在循环头或非结构化代码中，Pessimistic analysis 做出了保守正确的假设，这是非常令人开心的。</p>
 <p>Pessimistic analysis 只需要我们在 Parse 代码时收集的 use-def 信息。编译器查看（并更改）包含某段 IR 的固定 region，在该块 region 外的区域代码在前者的产生和优化（transform）过程中不受影响。region 内的 IR 的转换同样也不依靠其他 IR_region 的信息。类似于窥孔优化的加强版。</p>
 <p>通过在 Parse 中加入 Pessimistic analysis ，我们降低了整个程序的大小，而且减轻了后续优化阶段的工作量。（程序大小的缩减是因为我们通过 Pessimistic analysis 用一些新指令替换了原有的指令，后续优化阶段工作量的减少是由于我们提前完成了）</p>
@@ -83,10 +83,10 @@
 <li>Section 3：将这种表示适配到有明确的 use-def 信息的 SSA 格式</li>
 <li>Section 4：再在其中加入控制依赖（control dependencies）</li>
 <li>Section 5：使用C++的继承为我们的指令提供更多结构并加速其创建和删除</li>
-<li>Section 6：完全放弃了CFG，取而代之的是处理 control 的指令</li>
-<li>Section 7：探索窥孔优化的力量</li>
-<li>Section 8：讨论如何处理各种 problematic 的指令特性，包括子例程、内存和I/O</li>
-<li>Section 9：观察从数据计算中删除所有控制信息的利弊</li>
+<li>Section 6：完全放弃CFG，取而代之的是处理 control 的指令</li>
+<li>Section 7：增强的窥孔优化</li>
+<li>Section 8：讨论如何处理各种 problematic 的指令特性（effect chain &amp; memory dependence 以后有时间总结）</li>
+<li>Section 9：删除所有 control 信息</li>
 <li>Section A：lookat 基于终态 IR 的强大的 optimistic transformations </li>
 </ul>
 <p>当我们在“进化”IR 时，我们也要“进化” pessimistic transformation technique，而且它最终会变成一种极其简单高效的优化技术，仅仅在分析循环和非结构化代码时较弱于 optimistic analysis。</p>
