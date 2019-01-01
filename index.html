@@ -445,68 +445,6 @@ appcache_fuzzer.cc 结构1234567891011121314151617181920212223242526namespace co
         </div>
     </article>
     
-    
-    
-    
-    
-    
-    <article class="index-post">
-        <a class="abstract-title" href = "/2018/06/30/Review-of-DoubleFree/" >
-            
-                <span>Review of  DoubleFree</span>
-        </a>
-        <div class="abstract-content">
-            <p><img src="https://sakura-1252236262.cos.ap-beijing.myqcloud.com/blog/180904/Ej1CJheGiF.png" alt="mark"></p>
-<h2 id="写在前面"><a href="#写在前面" class="headerlink" title="写在前面"></a>写在前面</h2><p>周末趁着一道note题重新复习了一遍doublefree，现在简单的总结一下。</p>
-<h2 id="Glibc堆分配方式"><a href="#Glibc堆分配方式" class="headerlink" title="Glibc堆分配方式"></a>Glibc堆分配方式</h2><p>详细在我的这篇博客：<a href="http://p1umer.club/2018/06/30/Linux-Glibc-Analysis/">linux Glibc Analysis</a><br>
-        </div>
-        <div class="abstract-post-meta">
-            <!-- date  -->
-            <div class="abstract-date">
-                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2018/06/30</span>
-            </div>
-            <!-- tags  -->
-            
-            <div class= abstract-tags >
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags = "CTF">CTF</a>
-    
-</div>
-            
-        </div>
-    </article>
-    
-    
-    
-    
-    
-    
-    <article class="index-post">
-        <a class="abstract-title" href = "/2018/06/30/Linux-Glibc-Analysis/" >
-            
-                <span>linux Glibc Analysis</span>
-        </a>
-        <div class="abstract-content">
-            <p><img src="https://sakura-1252236262.cos.ap-beijing.myqcloud.com/blog/180904/Ac6Lmj2mC6.png" alt="mark"></p>
-<h2 id="arena"><a href="#arena" class="headerlink" title="arena"></a>arena</h2><hr>
-<p>对于一个进程来说，arena可作为其堆内存管理的最高层结构。在主进程中调用malloc函数时，会首先在数据段中通过sbrk提升program break location来构造一个arena(此时arena具有一个固定初始空间)，若空间大小不满足进程需求，则系统会在后续调整program break location的位置。而针对其他进程，首次malloc会通过mmap()在未分配的(前篇文章有描述)虚拟空间内开辟出一定大小的空间给该进程的arena管理。</p>
-        </div>
-        <div class="abstract-post-meta">
-            <!-- date  -->
-            <div class="abstract-date">
-                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2018/06/30</span>
-            </div>
-            <!-- tags  -->
-            
-            <div class= abstract-tags >
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags = "CTF">CTF</a>
-    
-</div>
-            
-        </div>
-    </article>
-    
     <!-- paginator  -->
     
 </main>
@@ -748,23 +686,9 @@ appcache_fuzzer.cc 结构1234567891011121314151617181920212223242526namespace co
     
     
     
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
     <div class="total-and-search">
         <div class="total-archive">
-        Total : 5
+        Total : 3
         </div>
         <!-- search  -->
         
@@ -791,16 +715,6 @@ appcache_fuzzer.cc 结构1234567891011121314151617181920212223242526namespace co
     
         <li class="archive-post-item">
             <span class="archive-post-date">07/01</span><a class="archive-post-title" href= "/2018/07/01/V8-Environmental-Configuration/" >V8 Environmental Configuration</a>
-        </li>
-    
-    
-        <li class="archive-post-item">
-            <span class="archive-post-date">06/30</span><a class="archive-post-title" href= "/2018/06/30/Review-of-DoubleFree/" >Review of  DoubleFree</a>
-        </li>
-    
-    
-        <li class="archive-post-item">
-            <span class="archive-post-date">06/30</span><a class="archive-post-title" href= "/2018/06/30/Linux-Glibc-Analysis/" >linux Glibc Analysis</a>
         </li>
     
     </div>
