@@ -403,6 +403,36 @@ appcache_fuzzer.cc 结构1234567891011121314151617181920212223242526namespace co
     
     
     <article class="index-post">
+        <a class="abstract-title" href = "/2018/07/10/V8-Iginition-Interpreter/" >
+            
+                <span>V8 Iginition Interpreter</span>
+        </a>
+        <div class="abstract-content">
+            什么是字节码解释器？解释器是一种顺序执行源代码的引擎。在过去的V8中，源代码被立即编译到汇编程序并执行，但与之不同，解释器将源代码转换为高级字节指令并按顺序执行字节指令。感觉就像一个 高级汇编程序。
+Ignition概要Ignition是一个基于寄存器的字节码解释器。与Java的堆栈基础不同，它实际上将值分配给CPU的寄存器并执行它们。在Ignition中，预先生成一个名为BytecodeHandler的字节码处理函数，从字节码中获取数组索引，并将生成的处理函数分配给索引，一个接一个地循环Bytecode数组，并使用相应索引的函数执行调用代码。简化版本的js代码如下：1234567891...
+        </div>
+        <div class="abstract-post-meta">
+            <!-- date  -->
+            <div class="abstract-date">
+                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2018/07/10</span>
+            </div>
+            <!-- tags  -->
+            
+            <div class= abstract-tags >
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags = "Browser Explore">Browser Explore</a>
+    
+</div>
+            
+        </div>
+    </article>
+    
+    
+    
+    
+    
+    
+    <article class="index-post">
         <a class="abstract-title" href = "/2018/07/01/V8-Environmental-Configuration/" >
             
                 <span>V8 Environmental Configuration</span>
@@ -554,9 +584,16 @@ appcache_fuzzer.cc 结构1234567891011121314151617181920212223242526namespace co
     
     
     
+    
+    
+    
+    
+    
+    
+    
     <div class="total-and-search">
         <div class="total-archive">
-        Total : 3
+        Total : 4
         </div>
         <!-- search  -->
         
@@ -578,6 +615,11 @@ appcache_fuzzer.cc 结构1234567891011121314151617181920212223242526namespace co
     
         <li class="archive-post-item">
             <span class="archive-post-date">09/03</span><a class="archive-post-title" href= "/2018/09/03/IR's-Journey/" >IR's Journey</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/10</span><a class="archive-post-title" href= "/2018/07/10/V8-Iginition-Interpreter/" >V8 Iginition Interpreter</a>
         </li>
     
     
@@ -636,6 +678,8 @@ jsonContent:
         <span class="sidebar-category-name" data-categories="CTF/LINUX"><span class="iconfont-archer">&#xe60a;</span>CTF/LINUX</span>
     
         <span class="sidebar-category-name" data-categories="Browser-Explore/V8"><span class="iconfont-archer">&#xe60a;</span>Browser-Explore/V8</span>
+    
+        <span class="sidebar-category-name" data-categories="Browser-Explore/Edge"><span class="iconfont-archer">&#xe60a;</span>Browser-Explore/Edge</span>
     
     </div>
     <div class="iconfont-archer sidebar-categories-empty">&#xe678;</div>
