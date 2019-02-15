@@ -272,7 +272,7 @@ height:50vh;
                 
                 
                     <div class="post-intro-read">
-                        <span>字数统计: <span class="post-count word-count">2,107</span>阅读时长: <span class="post-count reading-time">10 min</span></span>
+                        <span>字数统计: <span class="post-count word-count">2,188</span>阅读时长: <span class="post-count reading-time">10 min</span></span>
                     </div>
                 
                 <div class="post-intro-meta">
@@ -480,6 +480,11 @@ height:50vh;
 <h1 id="3-2-2019"><a href="#3-2-2019" class="headerlink" title="3/2/2019"></a>3/2/2019</h1><p>[+] 弄清楚了注册并使用 pass 的流程</p>
 <p>[+] 抄了下入门 pass &amp;&amp; 简单的看了下 llvm IR（挖坑，过了年来填）</p>
 <p>[+] 下午在看番（逃</p>
+<h1 id="13-2-2019"><a href="#13-2-2019" class="headerlink" title="13/2/2019"></a>13/2/2019</h1><p>[+] 整理一下这段时间看的 llvm 相关笔记</p>
+<p>[+] 看了遍 llvm 的 IR</p>
+<p>[+] 找了些 pass 来看，发现有很多的 api 不知道怎么用orz</p>
+<h1 id="15-2-2019"><a href="#15-2-2019" class="headerlink" title="15/2/2019"></a>15/2/2019</h1><p>[+] 重新看了一遍 Asan 源码，对比一下前段时间看的 llvm 的一些点，加深印象</p>
+<p>[+] 继续学 libfuzzer 写法</p>
 
     </article>
     <!-- license  -->
@@ -488,7 +493,7 @@ height:50vh;
             <p>原文作者：<a href="http://p1umer.club">P1umer sauce</a>
             <p>原文链接：<a href="http://p1umer.club/2018/12/27/P1umer-今天又咸鱼了吗/">http://p1umer.club/2018/12/27/P1umer-今天又咸鱼了吗/</a>
             <p>发表日期：<a href="http://p1umer.club/2018/12/27/P1umer-今天又咸鱼了吗/">December 27th 2018, 9:49:42 pm</a>
-            <p>更新日期：<a href="http://p1umer.club/2018/12/27/P1umer-今天又咸鱼了吗/">February 3rd 2019, 11:28:15 pm</a>
+            <p>更新日期：<a href="http://p1umer.club/2018/12/27/P1umer-今天又咸鱼了吗/">February 15th 2019, 12:38:32 pm</a>
             <p>版权声明：本文采用<a rel="license" href="http://creativecommons.org/licenses/by-nc/4.0/">知识共享署名-非商业性使用 4.0 国际许可协议</a>进行许可</p>
         </div>
     
@@ -635,7 +640,7 @@ top:50vh;
         <div class="toc-catalog">
             <span class="iconfont-archer catalog-icon">&#xe613;</span><span>CATALOG</span>
         </div>
-        <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#27-12-2018"><span class="toc-number">1.</span> <span class="toc-text">27/12/2018</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#appcache-fuzzer-cc-结构"><span class="toc-number">1.0.1.</span> <span class="toc-text">appcache_fuzzer.cc 结构</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#所以第一条，先弄明白-google-proto-是怎么工作的"><span class="toc-number">1.0.2.</span> <span class="toc-text">所以第一条，先弄明白 google-proto 是怎么工作的</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#所以第二个问题就是，commend的含义？"><span class="toc-number">1.0.3.</span> <span class="toc-text">所以第二个问题就是，commend的含义？</span></a></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#28-12-2018"><span class="toc-number">2.</span> <span class="toc-text">28/12/2018</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#回到了昨天的问题，所以各个commend具体是什么含义？"><span class="toc-number">2.0.1.</span> <span class="toc-text">回到了昨天的问题，所以各个commend具体是什么含义？</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#mojo"><span class="toc-number">2.0.1.1.</span> <span class="toc-text">mojo</span></a></li></ol></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#31-12-2018"><span class="toc-number">3.</span> <span class="toc-text">31/12/2018</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#抱歉"><span class="toc-number">3.0.1.</span> <span class="toc-text">抱歉</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#TALK-1"><span class="toc-number">3.0.2.</span> <span class="toc-text">TALK-1</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#TALK-2-BY-ned"><span class="toc-number">3.0.3.</span> <span class="toc-text">TALK-2 BY ned</span></a></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#31-1-2018"><span class="toc-number">4.</span> <span class="toc-text">31/1/2018</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#1-2-2019"><span class="toc-number">5.</span> <span class="toc-text">1/2/2019</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#2-2-2019"><span class="toc-number">6.</span> <span class="toc-text">2/2/2019</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#3-2-2019"><span class="toc-number">7.</span> <span class="toc-text">3/2/2019</span></a></li></ol>
+        <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#27-12-2018"><span class="toc-number">1.</span> <span class="toc-text">27/12/2018</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#appcache-fuzzer-cc-结构"><span class="toc-number">1.0.1.</span> <span class="toc-text">appcache_fuzzer.cc 结构</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#所以第一条，先弄明白-google-proto-是怎么工作的"><span class="toc-number">1.0.2.</span> <span class="toc-text">所以第一条，先弄明白 google-proto 是怎么工作的</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#所以第二个问题就是，commend的含义？"><span class="toc-number">1.0.3.</span> <span class="toc-text">所以第二个问题就是，commend的含义？</span></a></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#28-12-2018"><span class="toc-number">2.</span> <span class="toc-text">28/12/2018</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#回到了昨天的问题，所以各个commend具体是什么含义？"><span class="toc-number">2.0.1.</span> <span class="toc-text">回到了昨天的问题，所以各个commend具体是什么含义？</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#mojo"><span class="toc-number">2.0.1.1.</span> <span class="toc-text">mojo</span></a></li></ol></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#31-12-2018"><span class="toc-number">3.</span> <span class="toc-text">31/12/2018</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#抱歉"><span class="toc-number">3.0.1.</span> <span class="toc-text">抱歉</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#TALK-1"><span class="toc-number">3.0.2.</span> <span class="toc-text">TALK-1</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#TALK-2-BY-ned"><span class="toc-number">3.0.3.</span> <span class="toc-text">TALK-2 BY ned</span></a></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#31-1-2018"><span class="toc-number">4.</span> <span class="toc-text">31/1/2018</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#1-2-2019"><span class="toc-number">5.</span> <span class="toc-text">1/2/2019</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#2-2-2019"><span class="toc-number">6.</span> <span class="toc-text">2/2/2019</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#3-2-2019"><span class="toc-number">7.</span> <span class="toc-text">3/2/2019</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#13-2-2019"><span class="toc-number">8.</span> <span class="toc-text">13/2/2019</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#15-2-2019"><span class="toc-number">9.</span> <span class="toc-text">15/2/2019</span></a></li></ol>
     </div>
     
     <div class="back-top iconfont-archer">&#xe639;</div>
