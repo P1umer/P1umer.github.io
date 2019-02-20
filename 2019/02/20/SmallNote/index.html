@@ -1,0 +1,884 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+    <!-- title -->
+
+
+
+
+<!-- keywords -->
+
+
+
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no" >
+    <meta name="author" content="P1umer sauce">
+    <meta name="renderer" content="webkit">
+    <meta name="copyright" content="P1umer sauce">
+    
+    <meta name="keywords" content="Blog">
+    
+    <meta name="description" content="noman">
+    <meta http-equiv="Cache-control" content="no-cache">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
+    <title>SmallNote · P1umerのStudio</title>
+    <style type="text/css">
+    @font-face {
+        font-family: 'Oswald-Regular';
+        src: url("/font/Oswald-Regular.ttf");
+    }
+
+    body {
+        margin: 0;
+    }
+
+    header,
+    footer,
+    .back-top,
+    .sidebar,
+    .container,
+    .site-intro-meta,
+    .toc-wrapper {
+        display: none;
+    }
+
+    .site-intro {
+        position: relative;
+        z-index: 3;
+        width: 100%;
+        /* height: 50vh; */
+        overflow: hidden;
+    }
+
+    .site-intro-placeholder {
+        position: absolute;
+        z-index: -2;
+        top: 0;
+        left: 0;
+        width: calc(100% + 300px);
+        height: 100%;
+        background: repeating-linear-gradient(-45deg, #444 0, #444 80px, #333 80px, #333 160px);
+        background-position: center center;
+        transform: translate3d(-226px, 0, 0);
+        animation: gradient-move 2.5s ease-out 0s infinite;
+    }
+
+    @keyframes gradient-move {
+        0% {
+            transform: translate3d(-226px, 0, 0);
+        }
+        100% {
+            transform: translate3d(0, 0, 0);
+        }
+    }
+
+</style>
+
+    <link rel="preload" href= "/css/style.css?v=20180824" as="style" onload="this.onload=null;this.rel='stylesheet'" />
+    <link rel="stylesheet" href= "/css/mobile.css?v=20180824" media="(max-width: 980px)">
+    
+    <link rel="preload" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.2.5/jquery.fancybox.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'" />
+    
+    <!-- /*! loadCSS. [c]2017 Filament Group, Inc. MIT License */
+/* This file is meant as a standalone workflow for
+- testing support for link[rel=preload]
+- enabling async CSS loading in browsers that do not support rel=preload
+- applying rel preload css once loaded, whether supported or not.
+*/ -->
+<script>
+(function( w ){
+	"use strict";
+	// rel=preload support test
+	if( !w.loadCSS ){
+		w.loadCSS = function(){};
+	}
+	// define on the loadCSS obj
+	var rp = loadCSS.relpreload = {};
+	// rel=preload feature support test
+	// runs once and returns a function for compat purposes
+	rp.support = (function(){
+		var ret;
+		try {
+			ret = w.document.createElement( "link" ).relList.supports( "preload" );
+		} catch (e) {
+			ret = false;
+		}
+		return function(){
+			return ret;
+		};
+	})();
+
+	// if preload isn't supported, get an asynchronous load by using a non-matching media attribute
+	// then change that media back to its intended value on load
+	rp.bindMediaToggle = function( link ){
+		// remember existing media attr for ultimate state, or default to 'all'
+		var finalMedia = link.media || "all";
+
+		function enableStylesheet(){
+			link.media = finalMedia;
+		}
+
+		// bind load handlers to enable media
+		if( link.addEventListener ){
+			link.addEventListener( "load", enableStylesheet );
+		} else if( link.attachEvent ){
+			link.attachEvent( "onload", enableStylesheet );
+		}
+
+		// Set rel and non-applicable media type to start an async request
+		// note: timeout allows this to happen async to let rendering continue in IE
+		setTimeout(function(){
+			link.rel = "stylesheet";
+			link.media = "only x";
+		});
+		// also enable media after 3 seconds,
+		// which will catch very old browsers (android 2.x, old firefox) that don't support onload on link
+		setTimeout( enableStylesheet, 3000 );
+	};
+
+	// loop through link elements in DOM
+	rp.poly = function(){
+		// double check this to prevent external calls from running
+		if( rp.support() ){
+			return;
+		}
+		var links = w.document.getElementsByTagName( "link" );
+		for( var i = 0; i < links.length; i++ ){
+			var link = links[ i ];
+			// qualify links to those with rel=preload and as=style attrs
+			if( link.rel === "preload" && link.getAttribute( "as" ) === "style" && !link.getAttribute( "data-loadcss" ) ){
+				// prevent rerunning on link
+				link.setAttribute( "data-loadcss", true );
+				// bind listeners to toggle media back
+				rp.bindMediaToggle( link );
+			}
+		}
+	};
+
+	// if unsupported, run the polyfill
+	if( !rp.support() ){
+		// run once at least
+		rp.poly();
+
+		// rerun poly on an interval until onload
+		var run = w.setInterval( rp.poly, 500 );
+		if( w.addEventListener ){
+			w.addEventListener( "load", function(){
+				rp.poly();
+				w.clearInterval( run );
+			} );
+		} else if( w.attachEvent ){
+			w.attachEvent( "onload", function(){
+				rp.poly();
+				w.clearInterval( run );
+			} );
+		}
+	}
+
+
+	// commonjs
+	if( typeof exports !== "undefined" ){
+		exports.loadCSS = loadCSS;
+	}
+	else {
+		w.loadCSS = loadCSS;
+	}
+}( typeof global !== "undefined" ? global : this ) );
+</script>
+
+    <link rel="icon" href= "/assets/favicon.ico" />
+    <link rel="preload" href="https://cdn.jsdelivr.net/npm/webfontloader@1.6.28/webfontloader.min.js" as="script" />
+    <link rel="preload" href="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js" as="script" />
+    <link rel="preload" href="/scripts/main.js" as="script" />
+    <link rel="preload" as="font" href="/font/Oswald-Regular.ttf" crossorigin>
+    <link rel="preload" as="font" href="https://at.alicdn.com/t/font_327081_1dta1rlogw17zaor.woff" crossorigin>
+    
+    <!-- fancybox -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.2.5/jquery.fancybox.min.js" defer></script>
+    <!-- 百度统计  -->
+    
+    <!-- 谷歌统计  -->
+    
+</head>
+
+    
+        <body class="post-body">
+    
+    
+<header class="header">
+
+    <div class="read-progress"></div>
+    <div class="header-sidebar-menu">&#xe775;</div>
+    <!-- post页的toggle banner  -->
+    
+    <div class="banner">
+            <div class="blog-title">
+                <a href="/" >P1umerのStudio.</a>
+            </div>
+            <div class="post-title">
+                <a href="#" class="post-name">SmallNote</a>
+            </div>
+    </div>
+    
+    <a class="home-link" href=/>P1umerのStudio.</a>
+</header>
+    <div class="wrapper">
+        <div class="site-intro" style="
+
+
+
+
+
+
+
+height:50vh;
+">
+    
+    <!-- 主页  -->
+    
+    
+    <!-- 404页  -->
+            
+    <div class="site-intro-placeholder"></div>
+    <div class="site-intro-img" style="background-image: url(/intro/post-bg.jpg)"></div>
+    <div class="site-intro-meta">
+        <!-- 标题  -->
+        <h1 class="intro-title">
+            <!-- 主页  -->
+            
+            SmallNote
+            <!-- 404 -->
+            
+        </h1>
+        <!-- 副标题 -->
+        <p class="intro-subtitle">
+            <!-- 主页副标题  -->
+            
+            
+            <!-- 404 -->
+            
+        </p>
+        <!-- 文章页meta -->
+        
+            <div class="post-intros">
+                <!-- 文章页标签  -->
+                
+                
+                    <div class="post-intro-read">
+                        <span>字数统计: <span class="post-count word-count">4,240</span>阅读时长: <span class="post-count reading-time">24 min</span></span>
+                    </div>
+                
+                <div class="post-intro-meta">
+                    <span class="post-intro-calander iconfont-archer">&#xe676;</span>
+                    <span class="post-intro-time">2019/02/20</span>
+                    
+                    <span id="busuanzi_container_page_pv" class="busuanzi-pv">
+                        <span class="iconfont-archer">&#xe602;</span>
+                        <span id="busuanzi_value_page_pv"></span>
+                    </span>
+                    
+                    <span class="shareWrapper">
+                        <span class="iconfont-archer shareIcon">&#xe71d;</span>
+                        <span class="shareText">Share</span>
+                        <ul class="shareList">
+                            <li class="iconfont-archer share-qr" data-type="qr">&#xe75b;
+                                <div class="share-qrcode"></div>
+                            </li>
+                            <li class="iconfont-archer" data-type="weibo">&#xe619;</li>
+                            <li class="iconfont-archer" data-type="qzone">&#xe62e;</li>
+                            <li class="iconfont-archer" data-type="twitter">&#xe634;</li>
+                            <li class="iconfont-archer" data-type="facebook">&#xe67a;</li>
+                        </ul>
+                    </span>
+                </div>
+            </div>
+        
+    </div>
+</div>
+        <script>
+ 
+  // get user agent
+  var browser = {
+    versions: function () {
+      var u = window.navigator.userAgent;
+      return {
+        userAgent: u,
+        trident: u.indexOf('Trident') > -1, //IE内核
+        presto: u.indexOf('Presto') > -1, //opera内核
+        webKit: u.indexOf('AppleWebKit') > -1, //苹果、谷歌内核
+        gecko: u.indexOf('Gecko') > -1 && u.indexOf('KHTML') == -1, //火狐内核
+        mobile: !!u.match(/AppleWebKit.*Mobile.*/), //是否为移动终端
+        ios: !!u.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/), //ios终端
+        android: u.indexOf('Android') > -1 || u.indexOf('Linux') > -1, //android终端或者uc浏览器
+        iPhone: u.indexOf('iPhone') > -1 || u.indexOf('Mac') > -1, //是否为iPhone或者安卓QQ浏览器
+        iPad: u.indexOf('iPad') > -1, //是否为iPad
+        webApp: u.indexOf('Safari') == -1, //是否为web应用程序，没有头部与底部
+        weixin: u.indexOf('MicroMessenger') == -1, //是否为微信浏览器
+        uc: u.indexOf('UCBrowser') > -1 //是否为android下的UC浏览器
+      };
+    }()
+  }
+  console.log("userAgent:" + browser.versions.userAgent);
+
+  // callback
+  function fontLoaded() {
+    console.log('font loaded');
+    if (document.getElementsByClassName('site-intro-meta')) {
+      document.getElementsByClassName('intro-title')[0].classList.add('intro-fade-in');
+      document.getElementsByClassName('intro-subtitle')[0].classList.add('intro-fade-in');
+      var postIntros = document.getElementsByClassName('post-intros')[0]
+      if (postIntros) {
+        postIntros.classList.add('post-fade-in');
+      }
+    }
+  }
+
+  // UC不支持跨域，所以直接显示
+  function asyncCb(){
+    if (browser.versions.uc) {
+      console.log("UCBrowser");
+      fontLoaded();
+    } else {
+      WebFont.load({
+        custom: {
+          families: ['Oswald-Regular']
+        },
+        loading: function () {  //所有字体开始加载
+          // console.log('loading');
+        },
+        active: function () {  //所有字体已渲染
+          fontLoaded();
+        },
+        inactive: function () { //字体预加载失败，无效字体或浏览器不支持加载
+          console.log('inactive: timeout');
+          fontLoaded();
+        },
+        timeout: 5000 // Set the timeout to two seconds
+      });
+    }
+  }
+
+  function asyncErr(){
+    console.warn('script load from CDN failed, will load local script')
+  }
+
+  // load webfont-loader async, and add callback function
+  function async(u, cb, err) {
+    var d = document, t = 'script',
+      o = d.createElement(t),
+      s = d.getElementsByTagName(t)[0];
+    o.src = u;
+    if (cb) { o.addEventListener('load', function (e) { cb(null, e); }, false); }
+    if (err) { o.addEventListener('error', function (e) { err(null, e); }, false); }
+    s.parentNode.insertBefore(o, s);
+  }
+
+  var asyncLoadWithFallBack = function(arr, success, reject) {
+      var currReject = function(){
+        reject()
+        arr.shift()
+        if(arr.length)
+          async(arr[0], success, currReject)
+        }
+
+      async(arr[0], success, currReject)
+  }
+
+  asyncLoadWithFallBack([
+    "https://cdn.jsdelivr.net/npm/webfontloader@1.6.28/webfontloader.min.js", 
+    "https://cdn.bootcss.com/webfont/1.6.28/webfontloader.js",
+    "/lib/webfontloader.min.js"
+  ], asyncCb, asyncErr)
+</script>        
+        <img class="loading" src="/assets/loading.svg" style="display: block; margin: 6rem auto 0 auto; width: 6rem; height: 6rem;" />
+        <div class="container container-unloaded">
+            <main class="main post-page">
+    <article class="article-entry">
+        <h2 id="note"><a href="#note" class="headerlink" title="note"></a>note</h2><h2 id="libfuzzer-build"><a href="#libfuzzer-build" class="headerlink" title="libfuzzer build"></a>libfuzzer build</h2><h3 id="编译流程"><a href="#编译流程" class="headerlink" title="编译流程"></a>编译流程</h3><p>环境Ubuntu16.04<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">git clone https://github.com/Dor1s/libfuzzer-workshop.git</span><br><span class="line">sudo sh checkout_build_install_llvm.sh</span><br><span class="line">sudo apt-get install -ymake autoconf automake libtool pkg-config zlib1g-dev</span><br><span class="line">cd libfuzzer-workshop/libFuzzer</span><br><span class="line">Fuzzer/build.sh</span><br></pre></td></tr></table></figure></p>
+<p><a href="https://github.com/Dor1s/libfuzzer-workshop/" target="_blank" rel="noopener">libfuzzer-workship</a></p>
+<h3 id="趁着编译的时候去详细了解一下libfuzzer其中的内存监控算法"><a href="#趁着编译的时候去详细了解一下libfuzzer其中的内存监控算法" class="headerlink" title="趁着编译的时候去详细了解一下libfuzzer其中的内存监控算法"></a>趁着编译的时候去详细了解一下libfuzzer其中的内存监控算法</h3><p><a href="http://clang.llvm.org/docs/AddressSanitizer.html" target="_blank" rel="noopener">AddressSanitizer</a></p>
+<p><a href="https://github.com/google/sanitizers/wiki/AddressSanitizerAlgorithm" target="_blank" rel="noopener">AddressSanitizer 分析</a></p>
+<p><a href="https://blog.csdn.net/pang241/article/details/76137969" target="_blank" rel="noopener">AddressSanitizer 国产熟肉</a></p>
+<p>The run-time library replaces the malloc and free functions. The memory around malloc-ed regions (red zones) is poisoned. The free-ed memory is placed in quarantine and also poisoned. ==Every memory access in the program is transformed by the compiler in the following way:==</p>
+<p>Before: 变量赋值<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">*address = ...;  // or: ... = *address;</span><br></pre></td></tr></table></figure></p>
+<p>After：加上检测<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">if (IsPoisoned(address)) &#123;</span><br><span class="line">  ReportError(address, kAccessSize, kIsWrite);</span><br><span class="line">&#125;</span><br><span class="line">*address = ...;  // or: ... = *address;</span><br></pre></td></tr></table></figure></p>
+<p>Memory mapping and Instrumentation</p>
+<ul>
+<li>shadwos 和 main memory</li>
+<li>编译器进行了如下插桩<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">shadow_address = MemToShadow(address);</span><br><span class="line">if (ShadowIsPoisoned(shadow_address)) &#123;</span><br><span class="line">  Repozhuang&apos;tai&apos;yrtError(address, kAccessSize, kIsWrite);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<p>并且针对shadows的one byte进行了与main memory的状态映射<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">byte *shadow_address = MemToShadow(address);</span><br><span class="line">byte shadow_value = *shadow_address;</span><br><span class="line">if (shadow_value) &#123;</span><br><span class="line">  if (SlowPathCheck(shadow_value, address, kAccessSize)) &#123;</span><br><span class="line">    ReportError(address, kAccessSize, kIsWrite);</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">// Check the cases where we access first k bytes of the qword</span><br><span class="line">// and these k bytes are unpoisoned.</span><br><span class="line">bool SlowPathCheck(shadow_value, address, kAccessSize) &#123;</span><br><span class="line">  last_accessed_byte = (address &amp; 7) + kAccessSize - 1;</span><br><span class="line">  return (last_accessed_byte &gt;= shadow_value);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>针对全内存，判断poison==0 ：fastpath</p>
+<p>针对非全内存，SlowPathCheck，(last_accessed_byte:最后写入的数据大小；shadow_value：能写入的数据大小)</p>
+<p>针对部分fastpath不能满足的非对齐oob访问，我的想法是干脆放弃fastpath转用slowpath，结果看了issue发现确实是这样，但是有一定的性能损耗，得不偿失。</p>
+<p>研究这部分算法也是得不偿失然鹅。。</p>
+<p>对于栈做了如下插桩：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">void foo() &#123;</span><br><span class="line">  char redzone1[32];  // 32-byte aligned</span><br><span class="line">  char a[8];          // 32-byte aligned</span><br><span class="line">  char redzone2[24];</span><br><span class="line">  char redzone3[32];  // 32-byte aligned</span><br><span class="line">  int  *shadow_base = MemToShadow(redzone1);</span><br><span class="line">  shadow_base[0] = 0xffffffff;  // poison redzone1</span><br><span class="line">  shadow_base[1] = 0xffffff00;  // poison redzone2, unpoison &apos;a&apos;</span><br><span class="line">  shadow_base[2] = 0xffffffff;  // poison redzone3</span><br><span class="line">  ...</span><br><span class="line">  shadow_base[0] = shadow_base[1] = shadow_base[2] = 0; // unpoison all</span><br><span class="line">  return;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<h2 id="addresssanitize-源码分析："><a href="#addresssanitize-源码分析：" class="headerlink" title="addresssanitize 源码分析："></a>addresssanitize 源码分析：</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br></pre></td><td class="code"><pre><span class="line">bool AddressSanitizerModule::runOnModule(Module &amp;M) &#123;</span><br><span class="line">  C = &amp;(M.getContext());</span><br><span class="line">  int LongSize = M.getDataLayout().getPointerSizeInBits();</span><br><span class="line">  IntptrTy = Type::getIntNTy(*C, LongSize);</span><br><span class="line">  TargetTriple = Triple(M.getTargetTriple());</span><br><span class="line">  Mapping = getShadowMapping(TargetTriple, LongSize, CompileKernel);</span><br><span class="line">  initializeCallbacks(M);</span><br><span class="line"></span><br><span class="line">  if (CompileKernel)</span><br><span class="line">    return false;</span><br><span class="line"></span><br><span class="line">  // Create a module constructor. A destructor is created lazily because not all</span><br><span class="line">  // platforms, and not all modules need it.</span><br><span class="line">  std::string VersionCheckName =</span><br><span class="line">      kAsanVersionCheckNamePrefix + std::to_string(GetAsanVersion(M));</span><br><span class="line">  std::tie(AsanCtorFunction, std::ignore) = createSanitizerCtorAndInitFunctions(</span><br><span class="line">      M, kAsanModuleCtorName, kAsanInitName, /*InitArgTypes=*/&#123;&#125;,</span><br><span class="line">      /*InitArgs=*/&#123;&#125;, VersionCheckName);</span><br><span class="line"></span><br><span class="line">  bool CtorComdat = true;</span><br><span class="line">  bool Changed = false;</span><br><span class="line">  // TODO(glider): temporarily disabled globals instrumentation for KASan.</span><br><span class="line">  if (ClGlobals) &#123;</span><br><span class="line">    IRBuilder&lt;&gt; IRB(AsanCtorFunction-&gt;getEntryBlock().getTerminator());</span><br><span class="line">    Changed |= InstrumentGlobals(IRB, M, &amp;CtorComdat);</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  // Put the constructor and destructor in comdat if both</span><br><span class="line">  // (1) global instrumentation is not TU-specific</span><br><span class="line">  // (2) target is ELF.</span><br><span class="line">  if (UseCtorComdat &amp;&amp; TargetTriple.isOSBinFormatELF() &amp;&amp; CtorComdat) &#123;</span><br><span class="line">    AsanCtorFunction-&gt;setComdat(M.getOrInsertComdat(kAsanModuleCtorName));</span><br><span class="line">    appendToGlobalCtors(M, AsanCtorFunction, kAsanCtorAndDtorPriority,</span><br><span class="line">                        AsanCtorFunction);</span><br><span class="line">    if (AsanDtorFunction) &#123;</span><br><span class="line">      AsanDtorFunction-&gt;setComdat(M.getOrInsertComdat(kAsanModuleDtorName));</span><br><span class="line">      appendToGlobalDtors(M, AsanDtorFunction, kAsanCtorAndDtorPriority,</span><br><span class="line">                          AsanDtorFunction);</span><br><span class="line">    &#125;</span><br><span class="line">  &#125; else &#123;</span><br><span class="line">    appendToGlobalCtors(M, AsanCtorFunction, kAsanCtorAndDtorPriority);</span><br><span class="line">    if (AsanDtorFunction)</span><br><span class="line">      appendToGlobalDtors(M, AsanDtorFunction, kAsanCtorAndDtorPriority);</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  return Changed;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="sum"><a href="#sum" class="headerlink" title="sum"></a>sum</h2><ul>
+<li>内存监控围绕 RZ 插桩来实现</li>
+<li>对一些内存的状态进行shadow的映射，访问的时候进行状态检测</li>
+</ul>
+<p>libfuzzer貌似编译完了，我去看看</p>
+<h2 id="radamsa"><a href="#radamsa" class="headerlink" title="radamsa"></a>radamsa</h2><p><a href="http://www.cs.tut.fi/tapahtumat/testaus12/kalvot/Wieser_20120606radamsa-coverage.pdf" target="_blank" rel="noopener">radamsa</a></p>
+<h2 id="学习libfuzzer中遇到的种种："><a href="#学习libfuzzer中遇到的种种：" class="headerlink" title="学习libfuzzer中遇到的种种："></a>学习libfuzzer中遇到的种种：</h2><ul>
+<li>有corpus</li>
+<li>LLVMFuzzerTestOneInput(const uint8_t *data, size_t size)的data是随机的，但size需要自己设置 max_len.</li>
+<li><a href="https://clang.llvm.org/docs/SanitizerCoverage.html" target="_blank" rel="noopener">libfuzzer option 指北</a></li>
+<li>编译时用到的参数可以在 clang -help 中查看</li>
+<li>-fsanitize=address： 表示使用 AddressSanitizer</li>
+<li>-fsanitize-coverage=trace-pc-guard: 为 libfuzzer 提供代码覆盖率信息</li>
+<li>Seed: 1608565063 说明这次的种子数据</li>
+<li>-max_len is not provided, using 64 ， -max_len 用于设置最大的数据长度，默认为 64</li>
+<li>ASAN_OPTIONS=symbolize=1 ./first_fuzzer ./crash-id 显示栈</li>
+<li>简单来说，如果我们要 fuzz 一个程序，找到一个入口函数，然后利用LLVMFuzzerTestOneInput就可以完成基本功能，然鹅：</li>
+<li>我发现libfuzzer-interface还有几个接口类似于LLVMFuzzerCustomMutator。</li>
+</ul>
+<h2 id="练习写第一个fuzzer"><a href="#练习写第一个fuzzer" class="headerlink" title="练习写第一个fuzzer"></a>练习写第一个fuzzer</h2><h3 id="代码："><a href="#代码：" class="headerlink" title="代码："></a>代码：</h3><p>测试最基本的溢出</p>
+<h3 id="编译选项："><a href="#编译选项：" class="headerlink" title="编译选项："></a>编译选项：</h3><p>【+】 -fsanitize=fuzzer: 代码覆盖率</p>
+<p>【+】 -fsanitize=address：启用 AddressSanitizer</p>
+<p>【+】 -g：详细调试信息</p>
+<h3 id="运行选项："><a href="#运行选项：" class="headerlink" title="运行选项："></a>运行选项：</h3><p>【+】 -seed：制定随机数 </p>
+<p>【+】 -max_len：指定 Data 最大长度</p>
+<p>【+】 +dir: 指定 corpus</p>
+<h2 id="第二个"><a href="#第二个" class="headerlink" title="第二个"></a>第二个</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line">constexpr auto kMagicHeader = &quot;ZN_2016&quot;;</span><br><span class="line">constexpr std::size_t kMaxPacketLen = 1024;</span><br><span class="line">constexpr std::size_t kMaxBodyLength = 1024 - sizeof(kMagicHeader);</span><br><span class="line"></span><br><span class="line">bool VulnerableFunction2(const uint8_t* data, size_t size, bool verify_hash) &#123;</span><br><span class="line">  if (size &lt; sizeof(kMagicHeader))</span><br><span class="line">    return false;</span><br><span class="line"></span><br><span class="line">  std::string header(reinterpret_cast&lt;const char*&gt;(data), sizeof(kMagicHeader));</span><br><span class="line"></span><br><span class="line">  std::array&lt;uint8_t, kMaxBodyLength&gt; body;</span><br><span class="line"></span><br><span class="line">  if (strcmp(kMagicHeader, header.c_str()))</span><br><span class="line">    return false;</span><br><span class="line"></span><br><span class="line">  auto target_hash = data[--size];</span><br><span class="line"></span><br><span class="line">  if (size &gt; kMaxPacketLen)</span><br><span class="line">    return false;</span><br><span class="line"></span><br><span class="line">  if (!verify_hash)</span><br><span class="line">    return true;</span><br><span class="line"></span><br><span class="line">  std::copy(data, data + size, body.data());</span><br><span class="line">  auto real_hash = DummyHash(body);</span><br><span class="line">  return real_hash == target_hash;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>fuzzer_code：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">#include &quot;vulnerable_functions.h&quot;</span><br><span class="line"></span><br><span class="line">extern &quot;C&quot; int LLVMFuzzerTestOneInput(const uint8_t *data, size_t size) &#123;</span><br><span class="line">  VulnerableFunction2(data, size, true);</span><br><span class="line">  VulnerableFunction2(data, size, false);</span><br><span class="line">  return 0;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>这里有个tip：bool类型的变量太好遍历了，为了覆盖率测试两次就好:)</p>
+<p>但是会如何影响覆盖率呢？是不是覆盖的呢？</p>
+<p>试一试把原函数中return true去掉，fuzzer.cc换成：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">#include &quot;vulnerable_functions.h&quot;</span><br><span class="line"></span><br><span class="line">extern &quot;C&quot; int LLVMFuzzerTestOneInput(const uint8_t *data, size_t size) &#123;</span><br><span class="line">  VulnerableFunction2(data, size, false);</span><br><span class="line">  return 0;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>覆盖率25，上一个覆盖率也是25（均crash）</p>
+<p>再去掉<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">if (!verify_hash)</span><br></pre></td></tr></table></figure></p>
+<p>覆盖率降为24</p>
+<p>wow很清晰：覆盖率就是整个fuzzer一趟测试触及的 basic-block 总个数。</p>
+<h2 id="第三个"><a href="#第三个" class="headerlink" title="第三个"></a>第三个</h2><p>加了一个&amp; :<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">constexpr std::size_t kZn2016VerifyHashFlag = 0x0001000;</span><br><span class="line"></span><br><span class="line">bool VulnerableFunction3(const uint8_t* data, size_t size, std::size_t flags) &#123;</span><br><span class="line">  bool verify_hash = flags &amp; kZn2016VerifyHashFlag;</span><br><span class="line">  return VulnerableFunction2(data, size, verify_hash);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>那么还是遍历一下：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">extern &quot;C&quot; int LLVMFuzzerTestOneInput(const uint8_t *data, size_t size) &#123;</span><br><span class="line"></span><br><span class="line">  VulnerableFunction3(data, size, 0x00);</span><br><span class="line">  VulnerableFunction3(data, size, 0x1001);</span><br><span class="line">  return 0;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>crash:)</p>
+<h2 id="第四个"><a href="#第四个" class="headerlink" title="第四个"></a>第四个</h2><p>写到这里想到，写fuzz的目的就是crashcrashcrash，所以尽可能调整fuzz代码达到crash即可，没必要局限于格式。</p>
+<p>开始第四个CVE-2014-0160:</p>
+<h4 id="build"><a href="#build" class="headerlink" title="build"></a>build</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">tar xzf openssl1.0.1f.tgz</span><br><span class="line">cd openssl1.0.1f/</span><br><span class="line"></span><br><span class="line">./config</span><br><span class="line">make clean</span><br><span class="line">make CC=&quot;clang -O2 -fno-omit-frame-pointer -g -fsanitize=address -fsanitize-coverage=trace-pc-guard,trace-cmp,trace-gep,trace-div&quot; -j$(nproc)</span><br></pre></td></tr></table></figure>
+<p>fuzzer.cc:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line">// Copyright 2016 Google Inc. All Rights Reserved.</span><br><span class="line">// Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);</span><br><span class="line">#include &lt;openssl/ssl.h&gt;</span><br><span class="line">#include &lt;openssl/err.h&gt;</span><br><span class="line">#include &lt;assert.h&gt;</span><br><span class="line">#include &lt;stdint.h&gt;</span><br><span class="line">#include &lt;stddef.h&gt;</span><br><span class="line"></span><br><span class="line">#ifndef CERT_PATH</span><br><span class="line"># define CERT_PATH</span><br><span class="line">#endif</span><br><span class="line"></span><br><span class="line">extern &quot;C&quot; int LLVMFuzzerTestOneInput(const uint8_t *Data, size_t Size) &#123;</span><br><span class="line">  SSL_library_init();</span><br><span class="line">  SSL_load_error_strings();</span><br><span class="line">  ERR_load_BIO_strings();</span><br><span class="line">  OpenSSL_add_all_algorithms();</span><br><span class="line">  SSL_CTX *sctx;</span><br><span class="line">  assert (sctx = SSL_CTX_new(TLSv1_method()));</span><br><span class="line">  assert(SSL_CTX_use_certificate_file(sctx, CERT_PATH &quot;server.pem&quot;,</span><br><span class="line">                                      SSL_FILETYPE_PEM));</span><br><span class="line">  assert(SSL_CTX_use_PrivateKey_file(sctx, CERT_PATH &quot;server.key&quot;,</span><br><span class="line">                                     SSL_FILETYPE_PEM));</span><br><span class="line">  SSL *server = SSL_new(sctx);</span><br><span class="line">  BIO *sinbio = BIO_new(BIO_s_mem());</span><br><span class="line">  BIO *soutbio = BIO_new(BIO_s_mem());</span><br><span class="line">  SSL_set_bio(server, sinbio, soutbio);</span><br><span class="line">  SSL_set_accept_state(server);</span><br><span class="line">  BIO_write(sinbio, Data, Size);</span><br><span class="line">  SSL_do_handshake(server);</span><br><span class="line">  SSL_free(server);</span><br><span class="line">  return 0;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>编译选项：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">clang++ -g openssl_fuzzer.cc -O2 -fno-omit-frame-pointer -fsanitize=address -fsanitize-coverage=trace-pc-guard,trace-cmp,trace-gep,trace-div     -I openssl1.0.1f/include openssl1.0.1f/libssl.a openssl1.0.1f/libcrypto.a     ../../libFuzzer/libFuzzer.a -o openssl_fuzzer</span><br></pre></td></tr></table></figure></p>
+<p>跑出来了好几次 oom 和 leakmem ？</p>
+<ul>
+<li>去掉 leak</li>
+<li>扩大内存<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">./openssl_fuzzer -detect_leaks=0 -rss_limit_mb=4096</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<p>花了一分钟才跑出来crash，why？？？</p>
+<p>如果把初始化api分开来看呢？<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br></pre></td><td class="code"><pre><span class="line">// Copyright 2016 Google Inc. All Rights Reserved.</span><br><span class="line">// Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);</span><br><span class="line">#include &lt;openssl/ssl.h&gt;</span><br><span class="line">#include &lt;openssl/err.h&gt;</span><br><span class="line">#include &lt;assert.h&gt;</span><br><span class="line">#include &lt;stdint.h&gt;</span><br><span class="line">#include &lt;stddef.h&gt;</span><br><span class="line"></span><br><span class="line">#ifndef CERT_PATH</span><br><span class="line"># define CERT_PATH</span><br><span class="line">#endif</span><br><span class="line"></span><br><span class="line">SSL_CTX *Init() &#123;</span><br><span class="line">  SSL_library_init();</span><br><span class="line">  SSL_load_error_strings();</span><br><span class="line">  ERR_load_BIO_strings();</span><br><span class="line">  OpenSSL_add_all_algorithms();</span><br><span class="line">  SSL_CTX *sctx;</span><br><span class="line">  assert (sctx = SSL_CTX_new(TLSv1_method()));</span><br><span class="line">  /* These two file were created with this command:</span><br><span class="line">      openssl req -x509 -newkey rsa:512 -keyout server.key \</span><br><span class="line">     -out server.pem -days 9999 -nodes -subj /CN=a/</span><br><span class="line">  */</span><br><span class="line">  assert(SSL_CTX_use_certificate_file(sctx, CERT_PATH &quot;server.pem&quot;,</span><br><span class="line">                                      SSL_FILETYPE_PEM));</span><br><span class="line">  assert(SSL_CTX_use_PrivateKey_file(sctx, CERT_PATH &quot;server.key&quot;,</span><br><span class="line">                                     SSL_FILETYPE_PEM));</span><br><span class="line">  return sctx;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">extern &quot;C&quot; int LLVMFuzzerTestOneInput(const uint8_t *Data, size_t Size) &#123;</span><br><span class="line">  static SSL_CTX *sctx = Init();</span><br><span class="line">  SSL *server = SSL_new(sctx);</span><br><span class="line">  BIO *sinbio = BIO_new(BIO_s_mem());</span><br><span class="line">  BIO *soutbio = BIO_new(BIO_s_mem());</span><br><span class="line">  SSL_set_bio(server, sinbio, soutbio);</span><br><span class="line">  SSL_set_accept_state(server);</span><br><span class="line">  BIO_write(sinbio, Data, Size);</span><br><span class="line">  SSL_do_handshake(server);</span><br><span class="line">  SSL_free(server);</span><br><span class="line">  return 0;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>五秒钟？？？</p>
+<p>到底是那点会影响 fuzz 效率呢。。。</p>
+<h2 id="llvm-PASS"><a href="#llvm-PASS" class="headerlink" title="llvm PASS"></a>llvm PASS</h2><p>这一段当成是插入的知识，再看 ASAN 源码过程中意识到编写llvm pass 一定会对以后独自编写 fuzzer 框架有用的，因此今天除了接着研究ASAN源码之余要学习一下llvm pass的编写，目标是熟练掌握 ModulePass 以及 FunctionPass。</p>
+<h3 id="资料"><a href="#资料" class="headerlink" title="资料"></a>资料</h3><p><a href="http://www.voidcn.com/article/p-mgwevrjr-brn.html" target="_blank" rel="noopener">http://www.voidcn.com/article/p-mgwevrjr-brn.html</a><br><a href="http://llvm.org/docs/WritingAnLLVMPass.html#the-modulepass-class" target="_blank" rel="noopener">http://llvm.org/docs/WritingAnLLVMPass.html#the-modulepass-class</a><br><a href="https://zhuanlan.zhihu.com/p/26129264" target="_blank" rel="noopener">https://zhuanlan.zhihu.com/p/26129264</a><br><a href="https://blog.csdn.net/Mr_Megamind/article/details/78896717" target="_blank" rel="noopener">https://blog.csdn.net/Mr_Megamind/article/details/78896717</a></p>
+<h3 id="环境配置"><a href="#环境配置" class="headerlink" title="环境配置"></a>环境配置</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">apt-get install git</span><br><span class="line">mkdir LLVM &amp;&amp; cd LLVM</span><br><span class="line">git clone https://github.com/llvm-mirror/llvm.git</span><br><span class="line">cd llvm</span><br><span class="line"></span><br><span class="line">cd tools</span><br><span class="line">git clone https://github.com/llvm-mirror/clang.git</span><br><span class="line">cd ..</span><br><span class="line">mkdir build &amp;&amp; cd build</span><br><span class="line"></span><br><span class="line">cd ~</span><br><span class="line">mkdir KLLVM</span><br><span class="line">cd LLVM/llvm/build</span><br><span class="line">cmake -DLLVM_TARGETS_TO_BUILD=host -DCMAKE_INSTALL_PREFIX=~/KLLVM -DCMAKE_BUILD_TYPE=MinSizeRel -DLLVM_EXPERIMENTAL_TARGETS_TO_BUILD=WebAssembly -DLLVM_INCLUDE_EXAMPLES=OFF -DLLVM_INCLUDE_TESTS=OFF -DCLANG_INCLUDE_TESTS=OFF ..</span><br><span class="line"></span><br><span class="line">cmake --build . --target install -- -j3</span><br></pre></td></tr></table></figure>
+<h3 id="使用clang"><a href="#使用clang" class="headerlink" title="使用clang"></a>使用clang</h3><p>hello.c<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">#include &lt;stdio.h&gt;</span><br><span class="line"> </span><br><span class="line">int main() &#123;</span><br><span class="line">  printf(&quot;hello worldn&quot;);</span><br><span class="line">  return 0;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>complier it<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">clang hello.c -o hello</span><br></pre></td></tr></table></figure></p>
+<p>输出llvmbitcode<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">clang -O3 -emit-llvm hello.c -c -o hello.bc</span><br></pre></td></tr></table></figure></p>
+<p>-emit-llvm选项可与-S或-c选项一起使用，以分别为代码生成LLVM .ll或.bc文件。两者都是LLVM Bitcode，区别在于前者是可读的文本，后者是不可读的二进制格式。</p>
+<p>使用lli执行.bc<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">lli hello.bc</span><br></pre></td></tr></table></figure></p>
+<p>使用llvm-dis对.bc反汇编<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">llvm-dis &lt; hello.bc</span><br></pre></td></tr></table></figure></p>
+<p>使用llc将.bc生成.s<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">llc hello.bc -o hello.s</span><br></pre></td></tr></table></figure></p>
+<h4 id="常用的编译选项："><a href="#常用的编译选项：" class="headerlink" title="常用的编译选项："></a>常用的编译选项：</h4><ul>
+<li>-c： 只激活预处理,编译,和汇编,也就是他只把程序做成obj文件</li>
+<li>-S： 只激活预处理和编译，就是指把文件编译成为汇编代码。</li>
+<li>-O+num：优化等级</li>
+<li>-emit-llvm：llvmbitcode 可与-c或-S 一同使用，但不能有链接</li>
+</ul>
+<h4 id="llvm-IR"><a href="#llvm-IR" class="headerlink" title="llvm IR"></a>llvm IR</h4><p><a href="https://releases.llvm.org/2.6/docs/tutorial/JITTutorial1.html" target="_blank" rel="noopener">https://releases.llvm.org/2.6/docs/tutorial/JITTutorial1.html</a><br><a href="https://releases.llvm.org/2.6/docs/LangRef.html" target="_blank" rel="noopener">https://releases.llvm.org/2.6/docs/LangRef.html</a></p>
+<p>这块先挖个坑，过年后填回来。</p>
+<p>我来填坑了：</p>
+<h5 id="Identifiers"><a href="#Identifiers" class="headerlink" title="Identifiers"></a>Identifiers</h5><ul>
+<li>全局变量：@</li>
+<li>局部有命名的变量：%+string</li>
+<li>局部未命名的变量：%+num</li>
+<li>注释：；</li>
+<li>如果计算结果未分配给命名值，则会创建未命名的临时值。</li>
+<li>未命名的临时数据按顺序编号</li>
+</ul>
+<h5 id="High-Level-Structure"><a href="#High-Level-Structure" class="headerlink" title="High Level Structure"></a>High Level Structure</h5><ul>
+<li>Module 是llvm的翻译单元</li>
+<li>每个Module包含functions，全局变量以及符号表</li>
+<li>module可以被llvm-linker操作</li>
+<li>function和全局变量都可以被看作global value</li>
+</ul>
+<h5 id="指令"><a href="#指令" class="headerlink" title="指令"></a>指令</h5><ul>
+<li><p>ret: </p>
+  <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ret &lt;type&gt; &lt;value&gt;</span><br></pre></td></tr></table></figure>
+  <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">ret i32 5                       </span><br><span class="line">ret void                        </span><br><span class="line">ret &#123; i32, i8 &#125; &#123; i32 4, i8 2 &#125; ; Return a struct of values 4 and 2</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>br:  </p>
+  <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">br i1 &lt;cond&gt;, label &lt;iftrue&gt;, label &lt;iffalse&gt;</span><br></pre></td></tr></table></figure>
+  <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">Test:</span><br><span class="line">  %cond = icmp eq i32 %a, %b</span><br><span class="line">  br i1 %cond, label %IfEqual, label %IfUnequal</span><br><span class="line">IfEqual:</span><br><span class="line">  ret i32 1</span><br><span class="line">IfUnequal:</span><br><span class="line">  ret i32 0</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>switch:  </p>
+  <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">switch &lt;intty&gt; &lt;value&gt;, label &lt;defaultdest&gt; [ &lt;intty&gt; &lt;val&gt;, label &lt;dest&gt; ... ]</span><br></pre></td></tr></table></figure>
+  <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">; Emulate a conditional br instruction</span><br><span class="line"> %Val = zext i1 %value to i32</span><br><span class="line"> switch i32 %Val, label %truedest [ i32 0, label %falsedest ]</span><br><span class="line"></span><br><span class="line"> ; Emulate an unconditional br instruction</span><br><span class="line"> switch i32 0, label %dest [ ]</span><br><span class="line"></span><br><span class="line"> ; Implement a jump table:</span><br><span class="line"> switch i32 %val, label %otherwise [ i32 0, label %onzero</span><br><span class="line">                                     i32 1, label %onone</span><br><span class="line">                                     i32 2, label %ontwo ]</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>invoke： </p>
+  <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&lt;result&gt; = invoke [cconv] [ret attrs] &lt;ptr to function ty&gt; &lt;function ptr val&gt;(&lt;function args&gt;) [fn attrs]</span><br><span class="line">            to label &lt;normal label&gt; unwind label &lt;exception label&gt;</span><br></pre></td></tr></table></figure>
+  <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">  %retval = invoke i32 @Test(i32 15) to label %Continue</span><br><span class="line">            unwind label %TestCleanup              ; &#123;i32&#125;:retval set</span><br><span class="line">%retval = invoke coldcc i32 %Testfnptr(i32 15) to label %Continue</span><br><span class="line">            unwind label %TestCleanup              ; &#123;i32&#125;:retval set</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<h5 id="熟悉-LLVM-API-使用"><a href="#熟悉-LLVM-API-使用" class="headerlink" title="熟悉 LLVM API 使用"></a>熟悉 LLVM API 使用</h5><p>code1：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br></pre></td><td class="code"><pre><span class="line">using namespace llvm;</span><br><span class="line"></span><br><span class="line">Module* makeLLVMModule() &#123;</span><br><span class="line">  // Module Construction</span><br><span class="line">  Module* mod = new Module(&quot;test&quot;, getGlobalContext());</span><br><span class="line">  Constant* c = mod-&gt;getOrInsertFunction(&quot;mul_add&quot;,</span><br><span class="line">  /*ret type*/                           IntegerType::get(32),</span><br><span class="line">  /*args*/                               IntegerType::get(32),</span><br><span class="line">                                         IntegerType::get(32),</span><br><span class="line">                                         IntegerType::get(32),</span><br><span class="line">  /*varargs terminated with null*/       NULL);</span><br><span class="line">  </span><br><span class="line">  Function* mul_add = cast&lt;Function&gt;(c);</span><br><span class="line">  mul_add-&gt;setCallingConv(CallingConv::C);</span><br><span class="line">  </span><br><span class="line">  Function::arg_iterator args = mul_add-&gt;arg_begin();</span><br><span class="line">  Value* x = args++;</span><br><span class="line">  x-&gt;setName(&quot;x&quot;);</span><br><span class="line">  Value* y = args++;</span><br><span class="line">  y-&gt;setName(&quot;y&quot;);</span><br><span class="line">  Value* z = args++;</span><br><span class="line">  z-&gt;setName(&quot;z&quot;);</span><br><span class="line">  </span><br><span class="line">  BasicBlock* block = BasicBlock::Create(getGlobalContext(), &quot;entry&quot;, mul_add);</span><br><span class="line">  IRBuilder&lt;&gt; builder(block);</span><br><span class="line">  </span><br><span class="line">  Value* tmp = builder.CreateBinOp(Instruction::Mul,</span><br><span class="line">                                   x, y, &quot;tmp&quot;);</span><br><span class="line">  Value* tmp2 = builder.CreateBinOp(Instruction::Add,</span><br><span class="line">                                    tmp, z, &quot;tmp2&quot;);</span><br><span class="line"></span><br><span class="line">  builder.CreateRet(tmp2);</span><br><span class="line">  </span><br><span class="line">  return mod;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">int main(int argc, char**argv) &#123;</span><br><span class="line">  Module* Mod = makeLLVMModule();</span><br><span class="line"></span><br><span class="line">  verifyModule(*Mod, PrintMessageAction);</span><br><span class="line"></span><br><span class="line">  PassManager PM;</span><br><span class="line">  PM.add(createPrintModulePass(&amp;outs()));</span><br><span class="line">  PM.run(*Mod);</span><br><span class="line"></span><br><span class="line">  delete Mod;</span><br><span class="line">  return 0;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>code2:</p>
+<p><note>:llvm 有自动的名称唯一性<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br></pre></td><td class="code"><pre><span class="line">Module* makeLLVMModule() &#123;</span><br><span class="line">    // constract module</span><br><span class="line">    Module* mod = new Module(&quot;test&quot;, getGlobalContext());</span><br><span class="line">    </span><br><span class="line">    // constract func </span><br><span class="line">    Constant* c = mod-&gt;getOrInsertFunction(&quot;mul_add&quot;,</span><br><span class="line">    /*ret type*/                           IntegerType::get(32),</span><br><span class="line">    /*args*/                               IntegerType::get(32),</span><br><span class="line">                                           IntegerType::get(32),</span><br><span class="line">    /*varargs terminated with null*/       NULL);</span><br><span class="line">    </span><br><span class="line">    // cast this function</span><br><span class="line">    Function* gcd = cast&lt;Function&gt;(c);</span><br><span class="line">    </span><br><span class="line">    //set arg</span><br><span class="line">    Function::arg_iterator args = gcd-&gt;arg_begin();</span><br><span class="line">    Value* x = args++;</span><br><span class="line">    x-&gt;setName(&quot;x&quot;);</span><br><span class="line">    Value* y = args++;</span><br><span class="line">    y-&gt;setName(&quot;y&quot;);</span><br><span class="line">    </span><br><span class="line">    //set basic blocks</span><br><span class="line">    BasicBlock* entry = BasicBlock::Create(getGlobalContext(), (&quot;entry&quot;, gcd);</span><br><span class="line">    BasicBlock* ret = BasicBlock::Create(getGlobalContext(), (&quot;return&quot;, gcd);</span><br><span class="line">    BasicBlock* cond_false = BasicBlock::Create(getGlobalContext(), (&quot;cond_false&quot;, gcd);</span><br><span class="line">    BasicBlock* cond_true = BasicBlock::Create(getGlobalContext(), (&quot;cond_true&quot;, gcd);</span><br><span class="line">    BasicBlock* cond_false_2 = BasicBlock::Create(getGlobalContext(), (&quot;cond_false&quot;, gcd);</span><br><span class="line">    </span><br><span class="line">    //use  IRBuild to fill the &lt;entry&gt; basicblocks</span><br><span class="line">    IRBuilder&lt;&gt; builder(entry);</span><br><span class="line">    </span><br><span class="line">    //fill</span><br><span class="line">    Value* xEqualsY = builder.CreateICmpEQ(x, y, &quot;tmp&quot;);</span><br><span class="line">    builder.CreateCondBr(xEqualsY, ret, cond_false);</span><br><span class="line">    </span><br><span class="line">    //use &lt;SetInsertPoint&gt; to retarget the targetBB</span><br><span class="line">    builder.SetInsertPoint(ret);</span><br><span class="line">    </span><br><span class="line">    //fill</span><br><span class="line">    builder.CreateRet(x);</span><br><span class="line">    </span><br><span class="line">    </span><br><span class="line">    builder.SetInsertPoint(cond_true);</span><br><span class="line">    Value* yMinusX = builder.CreateSub(y, x, &quot;tmp&quot;);</span><br><span class="line">    std::vector&lt;Value*&gt; args1;</span><br><span class="line">    args1.push_back(x);</span><br><span class="line">    args1.push_back(yMinusX);</span><br><span class="line">    Value* recur_1 = builder.CreateCall(gcd, args1.begin(), args1.end(), &quot;tmp&quot;);</span><br><span class="line">    builder.CreateRet(recur_1);</span><br><span class="line">    </span><br><span class="line">    builder.SetInsertPoint(cond_false_2);</span><br><span class="line">    Value* xMinusY = builder.CreateSub(x, y, &quot;tmp&quot;);</span><br><span class="line">    std::vector&lt;Value*&gt; args2;</span><br><span class="line">    args2.push_back(xMinusY);</span><br><span class="line">    args2.push_back(y);</span><br><span class="line">    Value* recur_2 = builder.CreateCall(gcd, args2.begin(), args2.end(), &quot;tmp&quot;);</span><br><span class="line">    builder.CreateRet(recur_2);</span><br><span class="line">    </span><br><span class="line">    return mod;</span><br><span class="line">&#125;</span><br><span class="line">    </span><br><span class="line">    </span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">int main(int argc, char**argv) &#123;</span><br><span class="line">  Module* Mod = makeLLVMModule();</span><br><span class="line"></span><br><span class="line">  verifyModule(*Mod, PrintMessageAction);</span><br><span class="line"></span><br><span class="line">  PassManager PM;</span><br><span class="line">  PM.add(createPrintModulePass(&amp;outs()));</span><br><span class="line">  PM.run(*Mod);</span><br><span class="line"></span><br><span class="line">  delete Mod;</span><br><span class="line">  return 0;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></note></p>
+<h3 id="环境配置-1"><a href="#环境配置-1" class="headerlink" title="环境配置"></a>环境配置</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">apt-get install git</span><br><span class="line">mkdir LLVM &amp;&amp; cd LLVM</span><br><span class="line">git clone https://github.com/llvm-mirror/llvm.git</span><br><span class="line">cd llvm</span><br><span class="line"></span><br><span class="line">cd tools</span><br><span class="line">git clone https://github.com/llvm-mirror/clang.git</span><br><span class="line">cd ..</span><br><span class="line">mkdir build &amp;&amp; cd build</span><br><span class="line"></span><br><span class="line">cd ~</span><br><span class="line">mkdir KLLVM</span><br><span class="line">cd LLVM/llvm/build</span><br><span class="line">cmake -DLLVM_TARGETS_TO_BUILD=host -DCMAKE_INSTALL_PREFIX=~/KLLVM -DCMAKE_BUILD_TYPE=MinSizeRel -DLLVM_EXPERIMENTAL_TARGETS_TO_BUILD=WebAssembly -DLLVM_INCLUDE_EXAMPLES=OFF -DLLVM_INCLUDE_TESTS=OFF -DCLANG_INCLUDE_TESTS=OFF ..</span><br><span class="line"></span><br><span class="line">cmake --build . --target install -- -j3</span><br></pre></td></tr></table></figure>
+<h3 id="CMakeList"><a href="#CMakeList" class="headerlink" title="CMakeList"></a>CMakeList</h3><p>使用cmake<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">&lt;project dir&gt;/</span><br><span class="line">    |</span><br><span class="line">    CMakeLists.txt</span><br><span class="line">    &lt;pass name&gt;/</span><br><span class="line">        |</span><br><span class="line">        CMakeLists.txt</span><br><span class="line">        Pass.cpp</span><br><span class="line">        ...</span><br></pre></td></tr></table></figure></p>
+<p><project dir="">/CMakeLists.txt:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">find_package(LLVM REQUIRED CONFIG)</span><br><span class="line"></span><br><span class="line">add_definitions($&#123;LLVM_DEFINITIONS&#125;)</span><br><span class="line">include_directories($&#123;LLVM_INCLUDE_DIRS&#125;)</span><br><span class="line"></span><br><span class="line">add_subdirectory(&lt;pass name&gt;)</span><br></pre></td></tr></table></figure></project></p>
+<p>cmake1:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">if(NOT DEFINED ENV&#123;LLVM_HOME&#125;)</span><br><span class="line">    message(FATAL_ERROR &quot;$LLVM_HOME is not defined&quot;)</span><br><span class="line">endif()</span><br><span class="line">if(NOT DEFINED ENV&#123;LLVM_DIR&#125;)</span><br><span class="line">    set(ENV&#123;LLVM_DIR&#125; $ENV&#123;LLVM_HOME&#125;/lib/cmake/llvm)</span><br><span class="line">endif()</span><br><span class="line">find_package(LLVM REQUIRED CONFIG)</span><br><span class="line">add_definitions($&#123;LLVM_DEFINITIONS&#125;)</span><br><span class="line">include_directories($&#123;LLVM_INCLUDE_DIRS&#125;)</span><br><span class="line">link_directories($&#123;LLVM_LIBRARY_DIRS&#125;)</span><br><span class="line"> </span><br><span class="line">add_subdirectory(P1umer)  # Use your pass name here.</span><br></pre></td></tr></table></figure></p>
+<p>cmake2:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">add_library(P1umerPass MODULE</span><br><span class="line">    # List your source files here.</span><br><span class="line">    P1umer.cpp</span><br><span class="line">)</span><br><span class="line"></span><br><span class="line"># Use C++11 to compile your pass (i.e., supply -std=c++11).</span><br><span class="line">target_compile_features(P1umerPass PRIVATE cxx_range_for cxx_auto_type)</span><br><span class="line"></span><br><span class="line"># LLVM is (typically) built with no C++ RTTI. We need to match that;</span><br><span class="line"># otherwise, we&apos;ll get linker errors about missing RTTI data.</span><br><span class="line">set_target_properties(P1umerPass PROPERTIES</span><br><span class="line">    COMPILE_FLAGS &quot;-fno-rtti&quot;</span><br><span class="line">)</span><br></pre></td></tr></table></figure></p>
+<h3 id="编写一个入门的pass示例"><a href="#编写一个入门的pass示例" class="headerlink" title="编写一个入门的pass示例"></a>编写一个入门的pass示例</h3><p><img src="https://upload-images.jianshu.io/upload_images/1460317-e7593ef3362b5f55.png?imageMogr2/auto-orient/" alt="image"></p>
+<p>p1umer.cpp:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br></pre></td><td class="code"><pre><span class="line">#include &quot;llvm/Pass.h&quot;</span><br><span class="line">#include &quot;llvm/IR/Function.h&quot;</span><br><span class="line">#include &quot;llvm/Support/raw_ostream.h&quot;</span><br><span class="line">#include &quot;llvm/IR/LegacyPassManager.h&quot;</span><br><span class="line">#include &quot;llvm/Transforms/IPO/PassManagerBuilder.h&quot;</span><br><span class="line">using namespace llvm;</span><br><span class="line"></span><br><span class="line">namespace &#123;</span><br><span class="line">  struct P1umerPass : public FunctionPass &#123;</span><br><span class="line">    static char ID;</span><br><span class="line">    P1umerPass() : FunctionPass(ID) &#123;&#125;</span><br><span class="line"></span><br><span class="line">    virtual bool doInitialization(Module &amp;) override &#123;</span><br><span class="line"></span><br><span class="line">        printf(&quot;11111111111\n&quot;);</span><br><span class="line">	return false;</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    virtual bool doFinalization(Module &amp;) &#123; </span><br><span class="line">	printf(&quot;22222222222\n&quot;);</span><br><span class="line">	return false; </span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    virtual bool runOnFunction(Function &amp;F) &#123;</span><br><span class="line">      errs() &lt;&lt; &quot;I saw a function called &quot; &lt;&lt; F.getName() &lt;&lt; &quot;!\n&quot;;</span><br><span class="line">      return false;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">char P1umerPass::ID = 0;</span><br><span class="line"></span><br><span class="line">// Automatically enable the pass.</span><br><span class="line">// http://adriansampson.net/blog/clangpass.html</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">static RegisterPass&lt;P1umerPass&gt; X(&quot;P1umer&quot;, &quot;Hello P1umer&quot;);</span><br></pre></td></tr></table></figure></p>
+<p>use it:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">clang -c -emit-llvm hello.c -o hello.bc</span><br><span class="line">opt -load ./libP1umerPass.so  -P1umer hello.bc</span><br></pre></td></tr></table></figure></p>
+<p>output:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">11111111111</span><br><span class="line">I saw a function called mul_add!</span><br><span class="line">22222222222</span><br></pre></td></tr></table></figure></p>
+<h3 id="熟悉依照CFG构建代码"><a href="#熟悉依照CFG构建代码" class="headerlink" title="熟悉依照CFG构建代码"></a>熟悉依照CFG构建代码</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br></pre></td><td class="code"><pre><span class="line">using namespace llvm;</span><br><span class="line"></span><br><span class="line">Module* makeLLVMModule() &#123;</span><br><span class="line">  // Module Construction</span><br><span class="line">  Module* mod = new Module(&quot;test&quot;, getGlobalContext());</span><br><span class="line">  Constant* c = mod-&gt;getOrInsertFunction(&quot;mul_add&quot;,</span><br><span class="line">  /*ret type*/                           IntegerType::get(32),</span><br><span class="line">  /*args*/                               IntegerType::get(32),</span><br><span class="line">                                         IntegerType::get(32),</span><br><span class="line">                                         IntegerType::get(32),</span><br><span class="line">  /*varargs terminated with null*/       NULL);</span><br><span class="line">  </span><br><span class="line">  Function* mul_add = cast&lt;Function&gt;(c);</span><br><span class="line">  mul_add-&gt;setCallingConv(CallingConv::C);</span><br><span class="line">  </span><br><span class="line">  Function::arg_iterator args = mul_add-&gt;arg_begin();</span><br><span class="line">  Value* x = args++;</span><br><span class="line">  x-&gt;setName(&quot;x&quot;);</span><br><span class="line">  Value* y = args++;</span><br><span class="line">  y-&gt;setName(&quot;y&quot;);</span><br><span class="line">  Value* z = args++;</span><br><span class="line">  z-&gt;setName(&quot;z&quot;);</span><br><span class="line">  </span><br><span class="line">  BasicBlock* block = BasicBlock::Create(getGlobalContext(), &quot;entry&quot;, mul_add);</span><br><span class="line">  IRBuilder&lt;&gt; builder(block);</span><br><span class="line">  </span><br><span class="line">  Value* tmp = builder.CreateBinOp(Instruction::Mul,</span><br><span class="line">                                   x, y, &quot;tmp&quot;);</span><br><span class="line">  Value* tmp2 = builder.CreateBinOp(Instruction::Add,</span><br><span class="line">                                    tmp, z, &quot;tmp2&quot;);</span><br><span class="line"></span><br><span class="line">  builder.CreateRet(tmp2);</span><br><span class="line">  </span><br><span class="line">  return mod;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">int main(int argc, char**argv) &#123;</span><br><span class="line">  Module* Mod = makeLLVMModule();</span><br><span class="line"></span><br><span class="line">  verifyModule(*Mod, PrintMessageAction);</span><br><span class="line"></span><br><span class="line">  PassManager PM;</span><br><span class="line">  PM.add(createPrintModulePass(&amp;outs()));</span><br><span class="line">  PM.run(*Mod);</span><br><span class="line"></span><br><span class="line">  delete Mod;</span><br><span class="line">  return 0;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>code2:</p>
+<p><note>:llvm 有自动的名称唯一性<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br></pre></td><td class="code"><pre><span class="line">Module* makeLLVMModule() &#123;</span><br><span class="line">    // constract module</span><br><span class="line">    Module* mod = new Module(&quot;test&quot;, getGlobalContext());</span><br><span class="line">    </span><br><span class="line">    // constract func </span><br><span class="line">    Constant* c = mod-&gt;getOrInsertFunction(&quot;mul_add&quot;,</span><br><span class="line">    /*ret type*/                           IntegerType::get(32),</span><br><span class="line">    /*args*/                               IntegerType::get(32),</span><br><span class="line">                                           IntegerType::get(32),</span><br><span class="line">    /*varargs terminated with null*/       NULL);</span><br><span class="line">    </span><br><span class="line">    // cast this function</span><br><span class="line">    Function* gcd = cast&lt;Function&gt;(c);</span><br><span class="line">    </span><br><span class="line">    //set arg</span><br><span class="line">    Function::arg_iterator args = gcd-&gt;arg_begin();</span><br><span class="line">    Value* x = args++;</span><br><span class="line">    x-&gt;setName(&quot;x&quot;);</span><br><span class="line">    Value* y = args++;</span><br><span class="line">    y-&gt;setName(&quot;y&quot;);</span><br><span class="line">    </span><br><span class="line">    //set basic blocks</span><br><span class="line">    BasicBlock* entry = BasicBlock::Create(getGlobalContext(), (&quot;entry&quot;, gcd);</span><br><span class="line">    BasicBlock* ret = BasicBlock::Create(getGlobalContext(), (&quot;return&quot;, gcd);</span><br><span class="line">    BasicBlock* cond_false = BasicBlock::Create(getGlobalContext(), (&quot;cond_false&quot;, gcd);</span><br><span class="line">    BasicBlock* cond_true = BasicBlock::Create(getGlobalContext(), (&quot;cond_true&quot;, gcd);</span><br><span class="line">    BasicBlock* cond_false_2 = BasicBlock::Create(getGlobalContext(), (&quot;cond_false&quot;, gcd);</span><br><span class="line">    </span><br><span class="line">    //use  IRBuild to fill the &lt;entry&gt; basicblocks</span><br><span class="line">    IRBuilder&lt;&gt; builder(entry);</span><br><span class="line">    </span><br><span class="line">    //fill</span><br><span class="line">    Value* xEqualsY = builder.CreateICmpEQ(x, y, &quot;tmp&quot;);</span><br><span class="line">    builder.CreateCondBr(xEqualsY, ret, cond_false);</span><br><span class="line">    </span><br><span class="line">    //use &lt;SetInsertPoint&gt; to retarget the targetBB</span><br><span class="line">    builder.SetInsertPoint(ret);</span><br><span class="line">    </span><br><span class="line">    //fill</span><br><span class="line">    builder.CreateRet(x);</span><br><span class="line">    </span><br><span class="line">    </span><br><span class="line">    builder.SetInsertPoint(cond_true);</span><br><span class="line">    Value* yMinusX = builder.CreateSub(y, x, &quot;tmp&quot;);</span><br><span class="line">    std::vector&lt;Value*&gt; args1;</span><br><span class="line">    args1.push_back(x);</span><br><span class="line">    args1.push_back(yMinusX);</span><br><span class="line">    Value* recur_1 = builder.CreateCall(gcd, args1.begin(), args1.end(), &quot;tmp&quot;);</span><br><span class="line">    builder.CreateRet(recur_1);</span><br><span class="line">    </span><br><span class="line">    builder.SetInsertPoint(cond_false_2);</span><br><span class="line">    Value* xMinusY = builder.CreateSub(x, y, &quot;tmp&quot;);</span><br><span class="line">    std::vector&lt;Value*&gt; args2;</span><br><span class="line">    args2.push_back(xMinusY);</span><br><span class="line">    args2.push_back(y);</span><br><span class="line">    Value* recur_2 = builder.CreateCall(gcd, args2.begin(), args2.end(), &quot;tmp&quot;);</span><br><span class="line">    builder.CreateRet(recur_2);</span><br><span class="line">    </span><br><span class="line">    return mod;</span><br><span class="line">&#125;</span><br><span class="line">    </span><br><span class="line">    </span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">int main(int argc, char**argv) &#123;</span><br><span class="line">  Module* Mod = makeLLVMModule();</span><br><span class="line"></span><br><span class="line">  verifyModule(*Mod, PrintMessageAction);</span><br><span class="line"></span><br><span class="line">  PassManager PM;</span><br><span class="line">  PM.add(createPrintModulePass(&amp;outs()));</span><br><span class="line">  PM.run(*Mod);</span><br><span class="line"></span><br><span class="line">  delete Mod;</span><br><span class="line">  return 0;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></note></p>
+<h3 id="编写一个稍复杂的pass"><a href="#编写一个稍复杂的pass" class="headerlink" title="编写一个稍复杂的pass"></a>编写一个稍复杂的pass</h3><p><a href="http://llvm.org/docs/WritingAnLLVMPass.html" target="_blank" rel="noopener">官方文档</a></p>
+<p>code1:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line">using namespace llvm;</span><br><span class="line"></span><br><span class="line">namespace &#123;</span><br><span class="line">  </span><br><span class="line">  struct IterInsideBB : public FunctionPass &#123;</span><br><span class="line">    static char ID; // Pass identification, replacement for typeid</span><br><span class="line">    IterInsideBB() : FunctionPass(ID) &#123;&#125;  </span><br><span class="line"></span><br><span class="line">    bool runOnFunction(Function &amp;F) override &#123;</span><br><span class="line">    	errs() &lt;&lt; &quot;Function name: &quot;;</span><br><span class="line">    	errs() &lt;&lt; F.getName() &lt;&lt; &apos;\n&apos;;</span><br><span class="line">    	for(Function::iterator bb = F.begin(), e = F.end(); bb!=e; bb++)</span><br><span class="line">    	&#123;</span><br><span class="line">    		errs()&lt;&lt;&quot;BasicBlock name = &quot;&lt;&lt; bb-&gt;getName() &lt;&lt;&quot;\n&quot;;</span><br><span class="line">    		errs()&lt;&lt;&quot;BasicBlock size = &quot;&lt;&lt; bb-&gt;size() &lt;&lt; &quot;\n\n&quot;;</span><br><span class="line"></span><br><span class="line">    		for(BasicBlock::iterator i = bb-&gt;begin(), i2 = bb-&gt;end(); i!=i2; i++)</span><br><span class="line">    		&#123;</span><br><span class="line">    			outs()&lt;&lt;&quot;    &quot;&lt;&lt; *i &lt;&lt;&quot;\n&quot;;</span><br><span class="line">    		&#125;</span><br><span class="line">    	&#125;</span><br><span class="line">    	return false;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">char IterInsideBB::ID = 0;</span><br><span class="line">static RegisterPass&lt;IterInsideBB&gt; X(&quot;IterInsideBB&quot;, &quot;Iterate inside basicblocks inside a Function&quot;);</span><br></pre></td></tr></table></figure></p>
+<p>code2:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line">namespace &#123;</span><br><span class="line">  </span><br><span class="line">  struct UseDef : public FunctionPass &#123;</span><br><span class="line">    static char ID; // Pass identification, replacement for typeid</span><br><span class="line">    UseDef() : FunctionPass(ID) &#123;&#125;</span><br><span class="line"></span><br><span class="line">    bool runOnFunction(Function &amp;F) override &#123;</span><br><span class="line"></span><br><span class="line">    	errs() &lt;&lt; &quot;Function name: &quot;;</span><br><span class="line">    	errs() &lt;&lt; F.getName() &lt;&lt; &apos;\n&apos;;</span><br><span class="line">    	for(Function::iterator bb = F.begin(), e = F.end(); bb!=e; bb++)</span><br><span class="line">    	&#123;</span><br><span class="line">    		for(BasicBlock::iterator i = bb-&gt;begin(), i2 = bb-&gt;end(); i!=i2; i++)</span><br><span class="line">    		&#123;</span><br><span class="line">                Instruction * inst = dyn_cast&lt;Instruction&gt;(i);</span><br><span class="line">                if(inst-&gt;getOpcode() == Instruction::Add)</span><br><span class="line">                &#123;</span><br><span class="line">                    for(Use &amp;U: inst -&gt; operands())</span><br><span class="line">                    &#123;</span><br><span class="line">                        Value * v = U.get();</span><br><span class="line">                        outs()&lt;&lt; *v &lt;&lt;&quot;\n&quot;;</span><br><span class="line">                    &#125;</span><br><span class="line">                &#125;</span><br><span class="line">    		&#125;</span><br><span class="line">    	&#125;</span><br><span class="line">    	return false;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">char UseDef::ID = 0;</span><br><span class="line">static RegisterPass&lt;UseDef&gt; X(&quot;UseDef&quot;, &quot;This is use-def Pass&quot;);</span><br></pre></td></tr></table></figure></p>
+
+    </article>
+    <!-- license  -->
+    
+        <div class="license-wrapper">
+            <p>原文作者：<a href="http://p1umer.club">P1umer sauce</a>
+            <p>原文链接：<a href="http://p1umer.club/2019/02/20/SmallNote/">http://p1umer.club/2019/02/20/SmallNote/</a>
+            <p>发表日期：<a href="http://p1umer.club/2019/02/20/SmallNote/">February 20th 2019, 3:00:54 pm</a>
+            <p>更新日期：<a href="http://p1umer.club/2019/02/20/SmallNote/">February 20th 2019, 5:24:00 pm</a>
+            <p>版权声明：本文采用<a rel="license" href="http://creativecommons.org/licenses/by-nc/4.0/">知识共享署名-非商业性使用 4.0 国际许可协议</a>进行许可</p>
+        </div>
+    
+    <!-- paginator  -->
+    <ul class="post-paginator">
+        <li class="next">
+            
+        </li>
+        <li class="previous">
+            
+                <div class="prevSlogan">Previous Post</div>
+                <a href= "/2018/12/27/P1umer-今天又咸鱼了吗/" title= "P1umer 今天又咸鱼了吗">
+                    <div class="prevTitle">P1umer 今天又咸鱼了吗</div>
+                </a>
+            
+        </li>
+    </ul>
+    <!-- 评论插件 -->
+    <!-- 来必力City版安装代码 -->
+
+    <div id="lv-container" data-id="city" data-uid= MTAyMC8zODMxMi8xNDg0MA==>
+        <script type="text/javascript">
+            (function (d, s) {
+                var j, e = d.getElementsByTagName(s)[0];
+                if (typeof LivereTower === 'function') { return; }
+                j = d.createElement(s);
+                j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+                j.async = true;
+
+                e.parentNode.insertBefore(j, e);
+            })(document, 'script');
+        </script>
+        <noscript>为正常使用来必力评论功能请激活JavaScript</noscript>
+    </div>
+
+<!-- City版安装代码已完成 -->
+    
+    
+    <!-- partial('_partial/comment/changyan') -->
+    <!--PC版-->
+
+
+    
+    
+
+    <!-- 评论 -->
+</main>
+            <!-- profile -->
+            
+        </div>
+        <footer class="footer footer-unloaded">
+    <!-- social  -->
+    
+    <div class="social">
+        
+    
+        
+            
+                <a href="mailto:cz18811105578@gmail.com" class="iconfont-archer email" title=email ></a>
+            
+        
+    
+        
+    
+        
+            
+                <span class="iconfont-archer wechat" title=wechat>
+                  
+                  <img class="profile-qr" src="/assets/mmqrcode1540290021396.png" />
+                </span>
+            
+        
+    
+        
+    
+        
+    
+        
+    
+        
+            
+                <a href="https://www.zhihu.com/people/cz11-96/activities" class="iconfont-archer zhihu" target="_blank" title=zhihu></a>
+            
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+
+    </div>
+    
+    <!-- powered by Hexo  -->
+    <div class="copyright">
+        <span id="hexo-power">Powered by <a href="https://hexo.io/" target="_blank">Hexo</a></span><span class="iconfont-archer power">&#xe635;</span><span id="theme-info">theme <a href="https://github.com/fi3ework/hexo-theme-archer" target="_blank">Archer</a></span>
+    </div>
+    <!-- 不蒜子  -->
+    
+    <div class="busuanzi-container">
+    
+     
+    <span id="busuanzi_container_site_pv">PV: <span id="busuanzi_value_site_pv"></span> :)</span>
+    
+    </div>
+    
+</footer>
+    </div>
+    <!-- toc -->
+    
+    <div class="toc-wrapper" style=
+    
+
+
+
+
+
+
+
+top:50vh;
+
+    >
+        <div class="toc-catalog">
+            <span class="iconfont-archer catalog-icon">&#xe613;</span><span>CATALOG</span>
+        </div>
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#note"><span class="toc-number">1.</span> <span class="toc-text">note</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#libfuzzer-build"><span class="toc-number">2.</span> <span class="toc-text">libfuzzer build</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#编译流程"><span class="toc-number">2.1.</span> <span class="toc-text">编译流程</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#趁着编译的时候去详细了解一下libfuzzer其中的内存监控算法"><span class="toc-number">2.2.</span> <span class="toc-text">趁着编译的时候去详细了解一下libfuzzer其中的内存监控算法</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#addresssanitize-源码分析："><span class="toc-number">3.</span> <span class="toc-text">addresssanitize 源码分析：</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#sum"><span class="toc-number">4.</span> <span class="toc-text">sum</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#radamsa"><span class="toc-number">5.</span> <span class="toc-text">radamsa</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#学习libfuzzer中遇到的种种："><span class="toc-number">6.</span> <span class="toc-text">学习libfuzzer中遇到的种种：</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#练习写第一个fuzzer"><span class="toc-number">7.</span> <span class="toc-text">练习写第一个fuzzer</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#代码："><span class="toc-number">7.1.</span> <span class="toc-text">代码：</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#编译选项："><span class="toc-number">7.2.</span> <span class="toc-text">编译选项：</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#运行选项："><span class="toc-number">7.3.</span> <span class="toc-text">运行选项：</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#第二个"><span class="toc-number">8.</span> <span class="toc-text">第二个</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#第三个"><span class="toc-number">9.</span> <span class="toc-text">第三个</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#第四个"><span class="toc-number">10.</span> <span class="toc-text">第四个</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#build"><span class="toc-number">10.0.1.</span> <span class="toc-text">build</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#llvm-PASS"><span class="toc-number">11.</span> <span class="toc-text">llvm PASS</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#资料"><span class="toc-number">11.1.</span> <span class="toc-text">资料</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#环境配置"><span class="toc-number">11.2.</span> <span class="toc-text">环境配置</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#使用clang"><span class="toc-number">11.3.</span> <span class="toc-text">使用clang</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#常用的编译选项："><span class="toc-number">11.3.1.</span> <span class="toc-text">常用的编译选项：</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#llvm-IR"><span class="toc-number">11.3.2.</span> <span class="toc-text">llvm IR</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#Identifiers"><span class="toc-number">11.3.2.1.</span> <span class="toc-text">Identifiers</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#High-Level-Structure"><span class="toc-number">11.3.2.2.</span> <span class="toc-text">High Level Structure</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#指令"><span class="toc-number">11.3.2.3.</span> <span class="toc-text">指令</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#熟悉-LLVM-API-使用"><span class="toc-number">11.3.2.4.</span> <span class="toc-text">熟悉 LLVM API 使用</span></a></li></ol></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#环境配置-1"><span class="toc-number">11.4.</span> <span class="toc-text">环境配置</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#CMakeList"><span class="toc-number">11.5.</span> <span class="toc-text">CMakeList</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#编写一个入门的pass示例"><span class="toc-number">11.6.</span> <span class="toc-text">编写一个入门的pass示例</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#熟悉依照CFG构建代码"><span class="toc-number">11.7.</span> <span class="toc-text">熟悉依照CFG构建代码</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#编写一个稍复杂的pass"><span class="toc-number">11.8.</span> <span class="toc-text">编写一个稍复杂的pass</span></a></li></ol></li></ol>
+    </div>
+    
+    <div class="back-top iconfont-archer">&#xe639;</div>
+    <div class="sidebar sidebar-hide">
+    <ul class="sidebar-tabs sidebar-tabs-active-0">
+        <li class="sidebar-tab-archives"><span class="iconfont-archer">&#xe67d;</span><span class="tab-name">Archive</span></li>
+        <li class="sidebar-tab-tags"><span class="iconfont-archer">&#xe61b;</span><span class="tab-name">Tag</span></li>
+        <li class="sidebar-tab-categories"><span class="iconfont-archer">&#xe666;</span><span class="tab-name">Cate</span></li>
+    </ul>
+    <div class="sidebar-content sidebar-content-show-archive">
+          <div class="sidebar-panel-archives">
+    <!-- 在ejs中将archive按照时间排序 -->
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <div class="total-and-search">
+        <div class="total-archive">
+        Total : 5
+        </div>
+        <!-- search  -->
+        
+    </div>
+    
+    <div class="post-archive">
+    
+    
+    
+    
+    <div class="archive-year"> 2019 </div>
+    <ul class="year-list">
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">02/20</span><a class="archive-post-title" href= "/2019/02/20/SmallNote/" >SmallNote</a>
+        </li>
+    
+    
+    
+    
+    
+        </ul>
+    
+    <div class="archive-year"> 2018 </div>
+    <ul class="year-list">
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">12/27</span><a class="archive-post-title" href= "/2018/12/27/P1umer-今天又咸鱼了吗/" >P1umer 今天又咸鱼了吗</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">09/03</span><a class="archive-post-title" href= "/2018/09/03/IR's-Journey/" >IR's Journey</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/10</span><a class="archive-post-title" href= "/2018/07/10/V8-Iginition-Interpreter/" >V8 Iginition Interpreter</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/01</span><a class="archive-post-title" href= "/2018/07/01/V8-Environmental-Configuration/" >V8 Environmental Configuration</a>
+        </li>
+    
+    </div>
+  </div>
+        <div class="sidebar-panel-tags">
+    <div class="sidebar-tags-name">
+    
+        <span class="sidebar-tag-name" data-tags="Browser Explore"><span class="iconfont-archer">&#xe606;</span>Browser Explore</span>
+    
+        <span class="sidebar-tag-name" data-tags="Diary"><span class="iconfont-archer">&#xe606;</span>Diary</span>
+    
+    </div>
+    <div class="iconfont-archer sidebar-tags-empty">&#xe678;</div>
+    <div class="tag-load-fail" style="display: none; color: #ccc; font-size: 0.6rem;">
+    缺失模块。<br/>
+    1、请确保node版本大于6.2<br/>
+    2、在博客根目录（注意不是archer根目录）执行以下命令：<br/>
+    <span style="color: #f75357; font-size: 1rem; line-height: 2rem;">npm i hexo-generator-json-content --save</span><br/>
+    3、在根目录_config.yml里添加配置：
+    <pre style="color: #787878; font-size: 0.6rem;">
+jsonContent:
+  meta: false
+  pages: false
+  posts:
+    title: true
+    date: true
+    path: true
+    text: false
+    raw: false
+    content: false
+    slug: false
+    updated: false
+    comments: false
+    link: false
+    permalink: false
+    excerpt: false
+    categories: true
+    tags: true</pre>
+    </div> 
+    <div class="sidebar-tags-list"></div>
+</div>
+        <div class="sidebar-panel-categories">
+    <div class="sidebar-categories-name">
+    
+        <span class="sidebar-category-name" data-categories="Browser-Explore"><span class="iconfont-archer">&#xe60a;</span>Browser-Explore</span>
+    
+        <span class="sidebar-category-name" data-categories="Browser-Explore/V8"><span class="iconfont-archer">&#xe60a;</span>Browser-Explore/V8</span>
+    
+        <span class="sidebar-category-name" data-categories="Browser-Explore/Edge"><span class="iconfont-archer">&#xe60a;</span>Browser-Explore/Edge</span>
+    
+    </div>
+    <div class="iconfont-archer sidebar-categories-empty">&#xe678;</div>
+    <div class="sidebar-categories-list"></div>
+</div>
+    </div>
+</div> 
+    <script>
+    var siteMeta = {
+        root: "/",
+        author: "P1umer sauce"
+    }
+</script>
+    <!-- CDN failover -->
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js"></script>
+    <script type="text/javascript">
+        if (typeof window.$ === 'undefined')
+        {
+            console.warn('jquery load from jsdelivr failed, will load local script')
+            document.write('<script src="/lib/jquery.min.js">\x3C/script>')
+        }
+    </script>
+    <script src="/scripts/main.js"></script>
+    <!-- algolia -->
+    
+    <!-- busuanzi  -->
+    
+    <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    
+    <!-- CNZZ  -->
+    
+    </div>
+    <!-- async load share.js -->
+    
+        <script src="/scripts/share.js" async></script>    
+     
+    </body>
+</html>
+
+
