@@ -346,61 +346,20 @@
     
     
     <article class="index-post">
-        <a class="abstract-title" href = "/2018/07/10/V8-Iginition-Interpreter/" >
+        <a class="abstract-title" href = "/2019/03/20/AFL-初探/" >
             
-                <span>V8 Iginition Interpreter</span>
+                <span>AFL 初探</span>
         </a>
         <div class="abstract-content">
-            什么是字节码解释器？解释器是一种顺序执行源代码的引擎。在过去的V8中，源代码被立即编译到汇编程序并执行，但与之不同，解释器将源代码转换为高级字节指令并按顺序执行字节指令。感觉就像一个 高级汇编程序。
-Ignition概要Ignition是一个基于寄存器的字节码解释器。与Java的堆栈基础不同，它实际上将值分配给CPU的寄存器并执行它们。在Ignition中，预先生成一个名为BytecodeHandler的字节码处理函数，从字节码中获取数组索引，并将生成的处理函数分配给索引，一个接一个地循环Bytecode数组，并使用相应索引的函数执行调用代码。简化版本的js代码如下：1234567891...
+            AFL 初探
+源码分析1234567891011121314151617181920212223242526272829303132333435363738394041424344454647484950515253545556575859606162636465666768697071727374757677787980818283848586878889909192939495969798991001011021031041051061071081091101111121131141151161171181191201211221231241251261271281291301311...
         </div>
         <div class="abstract-post-meta">
             <!-- date  -->
             <div class="abstract-date">
-                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2018/07/10</span>
+                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2019/03/20</span>
             </div>
             <!-- tags  -->
-            
-            <div class= abstract-tags >
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags = "Browser Explore">Browser Explore</a>
-    
-</div>
-            
-        </div>
-    </article>
-    
-    
-    
-    
-    
-    
-    <article class="index-post">
-        <a class="abstract-title" href = "/2018/07/01/V8-Environmental-Configuration/" >
-            
-                <span>V8 Environmental Configuration</span>
-        </a>
-        <div class="abstract-content">
-            <p><img src="https://sakura-1252236262.cos.ap-beijing.myqcloud.com/blog/180904/19ALGmIhjG.png" alt="mark"></p>
-<h2 id="linux"><a href="#linux" class="headerlink" title="linux"></a>linux</h2><h3 id="Pre-Work"><a href="#Pre-Work" class="headerlink" title="Pre Work"></a>Pre Work</h3><ul>
-<li><p>Install Git</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">apt-get install git</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>Install depot_tools</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">git clone https://chromium.googlesource.com/chromium/tools/depot_tools</span><br><span class="line">export PATH=`pwd`/depot_tools:&quot;$PATH&quot;</span><br></pre></td></tr></table></figure>
-        </div>
-        <div class="abstract-post-meta">
-            <!-- date  -->
-            <div class="abstract-date">
-                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2018/07/01</span>
-            </div>
-            <!-- tags  -->
-            
-            <div class= abstract-tags >
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags = "Browser Explore">Browser Explore</a>
-    
-</div>
             
         </div>
     </article>

@@ -1,0 +1,791 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+    <!-- title -->
+
+
+
+
+<!-- keywords -->
+
+
+
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no" >
+    <meta name="author" content="P1umer sauce">
+    <meta name="renderer" content="webkit">
+    <meta name="copyright" content="P1umer sauce">
+    
+    <meta name="keywords" content="Blog">
+    
+    <meta name="description" content="noman">
+    <meta http-equiv="Cache-control" content="no-cache">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
+    <title>AFL 初探 · P1umerのStudio</title>
+    <style type="text/css">
+    @font-face {
+        font-family: 'Oswald-Regular';
+        src: url("/font/Oswald-Regular.ttf");
+    }
+
+    body {
+        margin: 0;
+    }
+
+    header,
+    footer,
+    .back-top,
+    .sidebar,
+    .container,
+    .site-intro-meta,
+    .toc-wrapper {
+        display: none;
+    }
+
+    .site-intro {
+        position: relative;
+        z-index: 3;
+        width: 100%;
+        /* height: 50vh; */
+        overflow: hidden;
+    }
+
+    .site-intro-placeholder {
+        position: absolute;
+        z-index: -2;
+        top: 0;
+        left: 0;
+        width: calc(100% + 300px);
+        height: 100%;
+        background: repeating-linear-gradient(-45deg, #444 0, #444 80px, #333 80px, #333 160px);
+        background-position: center center;
+        transform: translate3d(-226px, 0, 0);
+        animation: gradient-move 2.5s ease-out 0s infinite;
+    }
+
+    @keyframes gradient-move {
+        0% {
+            transform: translate3d(-226px, 0, 0);
+        }
+        100% {
+            transform: translate3d(0, 0, 0);
+        }
+    }
+
+</style>
+
+    <link rel="preload" href= "/css/style.css?v=20180824" as="style" onload="this.onload=null;this.rel='stylesheet'" />
+    <link rel="stylesheet" href= "/css/mobile.css?v=20180824" media="(max-width: 980px)">
+    
+    <link rel="preload" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.2.5/jquery.fancybox.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'" />
+    
+    <!-- /*! loadCSS. [c]2017 Filament Group, Inc. MIT License */
+/* This file is meant as a standalone workflow for
+- testing support for link[rel=preload]
+- enabling async CSS loading in browsers that do not support rel=preload
+- applying rel preload css once loaded, whether supported or not.
+*/ -->
+<script>
+(function( w ){
+	"use strict";
+	// rel=preload support test
+	if( !w.loadCSS ){
+		w.loadCSS = function(){};
+	}
+	// define on the loadCSS obj
+	var rp = loadCSS.relpreload = {};
+	// rel=preload feature support test
+	// runs once and returns a function for compat purposes
+	rp.support = (function(){
+		var ret;
+		try {
+			ret = w.document.createElement( "link" ).relList.supports( "preload" );
+		} catch (e) {
+			ret = false;
+		}
+		return function(){
+			return ret;
+		};
+	})();
+
+	// if preload isn't supported, get an asynchronous load by using a non-matching media attribute
+	// then change that media back to its intended value on load
+	rp.bindMediaToggle = function( link ){
+		// remember existing media attr for ultimate state, or default to 'all'
+		var finalMedia = link.media || "all";
+
+		function enableStylesheet(){
+			link.media = finalMedia;
+		}
+
+		// bind load handlers to enable media
+		if( link.addEventListener ){
+			link.addEventListener( "load", enableStylesheet );
+		} else if( link.attachEvent ){
+			link.attachEvent( "onload", enableStylesheet );
+		}
+
+		// Set rel and non-applicable media type to start an async request
+		// note: timeout allows this to happen async to let rendering continue in IE
+		setTimeout(function(){
+			link.rel = "stylesheet";
+			link.media = "only x";
+		});
+		// also enable media after 3 seconds,
+		// which will catch very old browsers (android 2.x, old firefox) that don't support onload on link
+		setTimeout( enableStylesheet, 3000 );
+	};
+
+	// loop through link elements in DOM
+	rp.poly = function(){
+		// double check this to prevent external calls from running
+		if( rp.support() ){
+			return;
+		}
+		var links = w.document.getElementsByTagName( "link" );
+		for( var i = 0; i < links.length; i++ ){
+			var link = links[ i ];
+			// qualify links to those with rel=preload and as=style attrs
+			if( link.rel === "preload" && link.getAttribute( "as" ) === "style" && !link.getAttribute( "data-loadcss" ) ){
+				// prevent rerunning on link
+				link.setAttribute( "data-loadcss", true );
+				// bind listeners to toggle media back
+				rp.bindMediaToggle( link );
+			}
+		}
+	};
+
+	// if unsupported, run the polyfill
+	if( !rp.support() ){
+		// run once at least
+		rp.poly();
+
+		// rerun poly on an interval until onload
+		var run = w.setInterval( rp.poly, 500 );
+		if( w.addEventListener ){
+			w.addEventListener( "load", function(){
+				rp.poly();
+				w.clearInterval( run );
+			} );
+		} else if( w.attachEvent ){
+			w.attachEvent( "onload", function(){
+				rp.poly();
+				w.clearInterval( run );
+			} );
+		}
+	}
+
+
+	// commonjs
+	if( typeof exports !== "undefined" ){
+		exports.loadCSS = loadCSS;
+	}
+	else {
+		w.loadCSS = loadCSS;
+	}
+}( typeof global !== "undefined" ? global : this ) );
+</script>
+
+    <link rel="icon" href= "/assets/favicon.ico" />
+    <link rel="preload" href="https://cdn.jsdelivr.net/npm/webfontloader@1.6.28/webfontloader.min.js" as="script" />
+    <link rel="preload" href="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js" as="script" />
+    <link rel="preload" href="/scripts/main.js" as="script" />
+    <link rel="preload" as="font" href="/font/Oswald-Regular.ttf" crossorigin>
+    <link rel="preload" as="font" href="https://at.alicdn.com/t/font_327081_1dta1rlogw17zaor.woff" crossorigin>
+    
+    <!-- fancybox -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.2.5/jquery.fancybox.min.js" defer></script>
+    <!-- 百度统计  -->
+    
+    <!-- 谷歌统计  -->
+    
+</head>
+
+    
+        <body class="post-body">
+    
+    
+<header class="header">
+
+    <div class="read-progress"></div>
+    <div class="header-sidebar-menu">&#xe775;</div>
+    <!-- post页的toggle banner  -->
+    
+    <div class="banner">
+            <div class="blog-title">
+                <a href="/" >P1umerのStudio.</a>
+            </div>
+            <div class="post-title">
+                <a href="#" class="post-name">AFL 初探</a>
+            </div>
+    </div>
+    
+    <a class="home-link" href=/>P1umerのStudio.</a>
+</header>
+    <div class="wrapper">
+        <div class="site-intro" style="
+
+
+
+
+
+
+
+height:50vh;
+">
+    
+    <!-- 主页  -->
+    
+    
+    <!-- 404页  -->
+            
+    <div class="site-intro-placeholder"></div>
+    <div class="site-intro-img" style="background-image: url(/intro/post-bg.jpg)"></div>
+    <div class="site-intro-meta">
+        <!-- 标题  -->
+        <h1 class="intro-title">
+            <!-- 主页  -->
+            
+            AFL 初探
+            <!-- 404 -->
+            
+        </h1>
+        <!-- 副标题 -->
+        <p class="intro-subtitle">
+            <!-- 主页副标题  -->
+            
+            
+            <!-- 404 -->
+            
+        </p>
+        <!-- 文章页meta -->
+        
+            <div class="post-intros">
+                <!-- 文章页标签  -->
+                
+                
+                    <div class="post-intro-read">
+                        <span>字数统计: <span class="post-count word-count">4,347</span>阅读时长: <span class="post-count reading-time">23 min</span></span>
+                    </div>
+                
+                <div class="post-intro-meta">
+                    <span class="post-intro-calander iconfont-archer">&#xe676;</span>
+                    <span class="post-intro-time">2019/03/20</span>
+                    
+                    <span id="busuanzi_container_page_pv" class="busuanzi-pv">
+                        <span class="iconfont-archer">&#xe602;</span>
+                        <span id="busuanzi_value_page_pv"></span>
+                    </span>
+                    
+                    <span class="shareWrapper">
+                        <span class="iconfont-archer shareIcon">&#xe71d;</span>
+                        <span class="shareText">Share</span>
+                        <ul class="shareList">
+                            <li class="iconfont-archer share-qr" data-type="qr">&#xe75b;
+                                <div class="share-qrcode"></div>
+                            </li>
+                            <li class="iconfont-archer" data-type="weibo">&#xe619;</li>
+                            <li class="iconfont-archer" data-type="qzone">&#xe62e;</li>
+                            <li class="iconfont-archer" data-type="twitter">&#xe634;</li>
+                            <li class="iconfont-archer" data-type="facebook">&#xe67a;</li>
+                        </ul>
+                    </span>
+                </div>
+            </div>
+        
+    </div>
+</div>
+        <script>
+ 
+  // get user agent
+  var browser = {
+    versions: function () {
+      var u = window.navigator.userAgent;
+      return {
+        userAgent: u,
+        trident: u.indexOf('Trident') > -1, //IE内核
+        presto: u.indexOf('Presto') > -1, //opera内核
+        webKit: u.indexOf('AppleWebKit') > -1, //苹果、谷歌内核
+        gecko: u.indexOf('Gecko') > -1 && u.indexOf('KHTML') == -1, //火狐内核
+        mobile: !!u.match(/AppleWebKit.*Mobile.*/), //是否为移动终端
+        ios: !!u.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/), //ios终端
+        android: u.indexOf('Android') > -1 || u.indexOf('Linux') > -1, //android终端或者uc浏览器
+        iPhone: u.indexOf('iPhone') > -1 || u.indexOf('Mac') > -1, //是否为iPhone或者安卓QQ浏览器
+        iPad: u.indexOf('iPad') > -1, //是否为iPad
+        webApp: u.indexOf('Safari') == -1, //是否为web应用程序，没有头部与底部
+        weixin: u.indexOf('MicroMessenger') == -1, //是否为微信浏览器
+        uc: u.indexOf('UCBrowser') > -1 //是否为android下的UC浏览器
+      };
+    }()
+  }
+  console.log("userAgent:" + browser.versions.userAgent);
+
+  // callback
+  function fontLoaded() {
+    console.log('font loaded');
+    if (document.getElementsByClassName('site-intro-meta')) {
+      document.getElementsByClassName('intro-title')[0].classList.add('intro-fade-in');
+      document.getElementsByClassName('intro-subtitle')[0].classList.add('intro-fade-in');
+      var postIntros = document.getElementsByClassName('post-intros')[0]
+      if (postIntros) {
+        postIntros.classList.add('post-fade-in');
+      }
+    }
+  }
+
+  // UC不支持跨域，所以直接显示
+  function asyncCb(){
+    if (browser.versions.uc) {
+      console.log("UCBrowser");
+      fontLoaded();
+    } else {
+      WebFont.load({
+        custom: {
+          families: ['Oswald-Regular']
+        },
+        loading: function () {  //所有字体开始加载
+          // console.log('loading');
+        },
+        active: function () {  //所有字体已渲染
+          fontLoaded();
+        },
+        inactive: function () { //字体预加载失败，无效字体或浏览器不支持加载
+          console.log('inactive: timeout');
+          fontLoaded();
+        },
+        timeout: 5000 // Set the timeout to two seconds
+      });
+    }
+  }
+
+  function asyncErr(){
+    console.warn('script load from CDN failed, will load local script')
+  }
+
+  // load webfont-loader async, and add callback function
+  function async(u, cb, err) {
+    var d = document, t = 'script',
+      o = d.createElement(t),
+      s = d.getElementsByTagName(t)[0];
+    o.src = u;
+    if (cb) { o.addEventListener('load', function (e) { cb(null, e); }, false); }
+    if (err) { o.addEventListener('error', function (e) { err(null, e); }, false); }
+    s.parentNode.insertBefore(o, s);
+  }
+
+  var asyncLoadWithFallBack = function(arr, success, reject) {
+      var currReject = function(){
+        reject()
+        arr.shift()
+        if(arr.length)
+          async(arr[0], success, currReject)
+        }
+
+      async(arr[0], success, currReject)
+  }
+
+  asyncLoadWithFallBack([
+    "https://cdn.jsdelivr.net/npm/webfontloader@1.6.28/webfontloader.min.js", 
+    "https://cdn.bootcss.com/webfont/1.6.28/webfontloader.js",
+    "/lib/webfontloader.min.js"
+  ], asyncCb, asyncErr)
+</script>        
+        <img class="loading" src="/assets/loading.svg" style="display: block; margin: 6rem auto 0 auto; width: 6rem; height: 6rem;" />
+        <div class="container container-unloaded">
+            <main class="main post-page">
+    <article class="article-entry">
+        <h2 id="AFL-初探"><a href="#AFL-初探" class="headerlink" title="AFL 初探"></a>AFL 初探</h2><p><img src="https://barro.github.io/2018/06/afl-fuzz-on-different-file-systems/afl-forkserver-visualization-2900.png" alt="image"></p>
+<h3 id="源码分析"><a href="#源码分析" class="headerlink" title="源码分析"></a>源码分析</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br><span class="line">148</span><br><span class="line">149</span><br><span class="line">150</span><br><span class="line">151</span><br><span class="line">152</span><br><span class="line">153</span><br><span class="line">154</span><br><span class="line">155</span><br><span class="line">156</span><br><span class="line">157</span><br><span class="line">158</span><br><span class="line">159</span><br><span class="line">160</span><br><span class="line">161</span><br><span class="line">162</span><br><span class="line">163</span><br><span class="line">164</span><br><span class="line">165</span><br><span class="line">166</span><br><span class="line">167</span><br><span class="line">168</span><br><span class="line">169</span><br><span class="line">170</span><br><span class="line">171</span><br><span class="line">172</span><br><span class="line">173</span><br><span class="line">174</span><br><span class="line">175</span><br><span class="line">176</span><br><span class="line">177</span><br><span class="line">178</span><br><span class="line">179</span><br><span class="line">180</span><br><span class="line">181</span><br><span class="line">182</span><br><span class="line">183</span><br><span class="line">184</span><br><span class="line">185</span><br><span class="line">186</span><br><span class="line">187</span><br><span class="line">188</span><br><span class="line">189</span><br><span class="line">190</span><br><span class="line">191</span><br><span class="line">192</span><br><span class="line">193</span><br><span class="line">194</span><br><span class="line">195</span><br><span class="line">196</span><br><span class="line">197</span><br><span class="line">198</span><br><span class="line">199</span><br><span class="line">200</span><br><span class="line">201</span><br><span class="line">202</span><br><span class="line">203</span><br><span class="line">204</span><br><span class="line">205</span><br><span class="line">206</span><br><span class="line">207</span><br><span class="line">208</span><br><span class="line">209</span><br><span class="line">210</span><br><span class="line">211</span><br><span class="line">212</span><br><span class="line">213</span><br><span class="line">214</span><br><span class="line">215</span><br><span class="line">216</span><br><span class="line">217</span><br><span class="line">218</span><br><span class="line">219</span><br><span class="line">220</span><br><span class="line">221</span><br><span class="line">222</span><br><span class="line">223</span><br><span class="line">224</span><br><span class="line">225</span><br><span class="line">226</span><br><span class="line">227</span><br><span class="line">228</span><br><span class="line">229</span><br><span class="line">230</span><br><span class="line">231</span><br><span class="line">232</span><br><span class="line">233</span><br><span class="line">234</span><br><span class="line">235</span><br><span class="line">236</span><br><span class="line">237</span><br><span class="line">238</span><br><span class="line">239</span><br><span class="line">240</span><br><span class="line">241</span><br><span class="line">242</span><br><span class="line">243</span><br><span class="line">244</span><br><span class="line">245</span><br><span class="line">246</span><br><span class="line">247</span><br><span class="line">248</span><br><span class="line">249</span><br><span class="line">250</span><br><span class="line">251</span><br><span class="line">252</span><br><span class="line">253</span><br><span class="line">254</span><br><span class="line">255</span><br><span class="line">256</span><br><span class="line">257</span><br><span class="line">258</span><br><span class="line">259</span><br></pre></td><td class="code"><pre><span class="line">static void add_instrumentation(void) &#123;</span><br><span class="line"></span><br><span class="line">    </span><br><span class="line">  static u8 line[MAX_LINE];</span><br><span class="line"></span><br><span class="line">  FILE* inf;</span><br><span class="line">  FILE* outf;</span><br><span class="line">  s32 outfd;</span><br><span class="line">  u32 ins_lines = 0;</span><br><span class="line"></span><br><span class="line">  u8  instr_ok = 0, skip_csect = 0, skip_next_label = 0,</span><br><span class="line">      skip_intel = 0, skip_app = 0, instrument_next = 0;</span><br><span class="line"></span><br><span class="line">#ifdef __APPLE__</span><br><span class="line"></span><br><span class="line">  u8* colon_pos;</span><br><span class="line"></span><br><span class="line">#endif /* __APPLE__ */</span><br><span class="line"></span><br><span class="line">//输入文件，gcc生成</span><br><span class="line">  if (input_file) &#123;</span><br><span class="line"></span><br><span class="line">    inf = fopen(input_file, &quot;r&quot;);</span><br><span class="line">    if (!inf) PFATAL(&quot;Unable to read &apos;%s&apos;&quot;, input_file);</span><br><span class="line"></span><br><span class="line">  &#125; else inf = stdin;</span><br><span class="line"></span><br><span class="line">//输出文件</span><br><span class="line">  outfd = open(modified_file, O_WRONLY | O_EXCL | O_CREAT, 0600);</span><br><span class="line"></span><br><span class="line">  if (outfd &lt; 0) PFATAL(&quot;Unable to write to &apos;%s&apos;&quot;, modified_file);</span><br><span class="line"></span><br><span class="line">  outf = fdopen(outfd, &quot;w&quot;);</span><br><span class="line"></span><br><span class="line">  if (!outf) PFATAL(&quot;fdopen() failed&quot;);  </span><br><span class="line"></span><br><span class="line">//对于inf进行每行的遍历插桩</span><br><span class="line">  while (fgets(line, MAX_LINE, inf)) &#123;</span><br><span class="line"></span><br><span class="line">    /* In some cases, we want to defer writing the instrumentation trampoline</span><br><span class="line">       until after all the labels, macros, comments, etc. If we&apos;re in this</span><br><span class="line">       mode, and if the line starts with a tab followed by a character, dump</span><br><span class="line">       the trampoline now. */</span><br><span class="line"></span><br><span class="line">//满足这些条件就插桩,条件由下面的扫描提供</span><br><span class="line">    if (!pass_thru &amp;&amp; !skip_intel &amp;&amp; !skip_app &amp;&amp; !skip_csect &amp;&amp; instr_ok &amp;&amp;</span><br><span class="line">        instrument_next &amp;&amp; line[0] == &apos;\t&apos; &amp;&amp; isalpha(line[1])) &#123;</span><br><span class="line"></span><br><span class="line">      fprintf(outf, use_64bit ? trampoline_fmt_64 : trampoline_fmt_32,</span><br><span class="line">              R(MAP_SIZE));</span><br><span class="line"></span><br><span class="line">      instrument_next = 0;</span><br><span class="line">      ins_lines++;</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    /* Output the actual line, call it a day in pass-thru mode. */</span><br><span class="line">//把原始的代码写入outf</span><br><span class="line">    fputs(line, outf);</span><br><span class="line"></span><br><span class="line">    if (pass_thru) continue;</span><br><span class="line"></span><br><span class="line">    /* All right, this is where the actual fun begins. For one, we only want to</span><br><span class="line">       instrument the .text section. So, let&apos;s keep track of that in processed</span><br><span class="line">       files - and let&apos;s set instr_ok accordingly. */</span><br><span class="line"></span><br><span class="line">//判断代码段，只插桩.text段</span><br><span class="line">    if (line[0] == &apos;\t&apos; &amp;&amp; line[1] == &apos;.&apos;) &#123;</span><br><span class="line"></span><br><span class="line">      /* OpenBSD puts jump tables directly inline with the code, which is</span><br><span class="line">         a bit annoying. They use a specific format of p2align directives</span><br><span class="line">         around them, so we use that as a signal. */</span><br><span class="line"></span><br><span class="line">      if (!clang_mode &amp;&amp; instr_ok &amp;&amp; !strncmp(line + 2, &quot;p2align &quot;, 8) &amp;&amp;</span><br><span class="line">          isdigit(line[10]) &amp;&amp; line[11] == &apos;\n&apos;) skip_next_label = 1;</span><br><span class="line"></span><br><span class="line">      if (!strncmp(line + 2, &quot;text\n&quot;, 5) ||</span><br><span class="line">          !strncmp(line + 2, &quot;section\t.text&quot;, 13) ||</span><br><span class="line">          !strncmp(line + 2, &quot;section\t__TEXT,__text&quot;, 21) ||</span><br><span class="line">          !strncmp(line + 2, &quot;section __TEXT,__text&quot;, 21)) &#123;</span><br><span class="line">        instr_ok = 1;</span><br><span class="line">        continue; </span><br><span class="line">      &#125;</span><br><span class="line"></span><br><span class="line">      if (!strncmp(line + 2, &quot;section\t&quot;, 8) ||</span><br><span class="line">          !strncmp(line + 2, &quot;section &quot;, 8) ||</span><br><span class="line">          !strncmp(line + 2, &quot;bss\n&quot;, 4) ||</span><br><span class="line">          !strncmp(line + 2, &quot;data\n&quot;, 5)) &#123;</span><br><span class="line">        instr_ok = 0;</span><br><span class="line">        continue;</span><br><span class="line">      &#125;</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    /* Detect off-flavor assembly (rare, happens in gdb). When this is</span><br><span class="line">       encountered, we set skip_csect until the opposite directive is</span><br><span class="line">       seen, and we do not instrument. */</span><br><span class="line"></span><br><span class="line">//判断位数</span><br><span class="line">    if (strstr(line, &quot;.code&quot;)) &#123;</span><br><span class="line"></span><br><span class="line">      if (strstr(line, &quot;.code32&quot;)) skip_csect = use_64bit;</span><br><span class="line">      if (strstr(line, &quot;.code64&quot;)) skip_csect = !use_64bit;</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    /* Detect syntax changes, as could happen with hand-written assembly.</span><br><span class="line">       Skip Intel blocks, resume instrumentation when back to AT&amp;T. */</span><br><span class="line"></span><br><span class="line">    if (strstr(line, &quot;.intel_syntax&quot;)) skip_intel = 1;</span><br><span class="line">    if (strstr(line, &quot;.att_syntax&quot;)) skip_intel = 0;</span><br><span class="line"></span><br><span class="line">    /* Detect and skip ad-hoc __asm__ blocks, likewise skipping them. */</span><br><span class="line"></span><br><span class="line">    if (line[0] == &apos;#&apos; || line[1] == &apos;#&apos;) &#123;</span><br><span class="line"></span><br><span class="line">      if (strstr(line, &quot;#APP&quot;)) skip_app = 1;</span><br><span class="line">      if (strstr(line, &quot;#NO_APP&quot;)) skip_app = 0;</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    /* If we&apos;re in the right mood for instrumenting, check for function</span><br><span class="line">       names or conditional labels. This is a bit messy, but in essence,</span><br><span class="line">       we want to catch:</span><br><span class="line"></span><br><span class="line">         ^main:      - function entry point (always instrumented)</span><br><span class="line">         ^.L0:       - GCC branch label</span><br><span class="line">         ^.LBB0_0:   - clang branch label (but only in clang mode)</span><br><span class="line">         ^\tjnz foo  - conditional branches</span><br><span class="line"></span><br><span class="line">       ...but not:</span><br><span class="line"></span><br><span class="line">         ^# BB#0:    - clang comments</span><br><span class="line">         ^ # BB#0:   - ditto</span><br><span class="line">         ^.Ltmp0:    - clang non-branch labels</span><br><span class="line">         ^.LC0       - GCC non-branch labels</span><br><span class="line">         ^.LBB0_0:   - ditto (when in GCC mode)</span><br><span class="line">         ^\tjmp foo  - non-conditional jumps</span><br><span class="line"></span><br><span class="line">       Additionally, clang and GCC on MacOS X follow a different convention</span><br><span class="line">       with no leading dots on labels, hence the weird maze of #ifdefs</span><br><span class="line">       later on.</span><br><span class="line"></span><br><span class="line">     */</span><br><span class="line"></span><br><span class="line">    if (skip_intel || skip_app || skip_csect || !instr_ok ||</span><br><span class="line">        line[0] == &apos;#&apos; || line[0] == &apos; &apos;) continue;</span><br><span class="line"></span><br><span class="line">    /* Conditional branch instruction (jnz, etc). We append the instrumentation</span><br><span class="line">       right after the branch (to instrument the not-taken path) and at the</span><br><span class="line">       branch destination label (handled later on). */</span><br><span class="line"></span><br><span class="line">//碰到jcc进行无条件插桩</span><br><span class="line">    if (line[0] == &apos;\t&apos;) &#123;</span><br><span class="line"></span><br><span class="line">      if (line[1] == &apos;j&apos; &amp;&amp; line[2] != &apos;m&apos; &amp;&amp; R(100) &lt; inst_ratio) &#123;</span><br><span class="line"></span><br><span class="line">        fprintf(outf, use_64bit ? trampoline_fmt_64 : trampoline_fmt_32,</span><br><span class="line">                R(MAP_SIZE));</span><br><span class="line"></span><br><span class="line">        ins_lines++;</span><br><span class="line"></span><br><span class="line">      &#125;</span><br><span class="line"></span><br><span class="line">      continue;</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">//label中均包含&quot;:&quot;,下面的工作就是匹配各种label</span><br><span class="line">    /* Label of some sort. This may be a branch destination, but we need to</span><br><span class="line">       tread carefully and account for several different formatting</span><br><span class="line">       conventions. */</span><br><span class="line"></span><br><span class="line">#ifdef __APPLE__</span><br><span class="line"></span><br><span class="line">    /* Apple: L&lt;whatever&gt;&lt;digit&gt;: */</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    if ((colon_pos = strstr(line, &quot;:&quot;))) &#123;</span><br><span class="line"></span><br><span class="line">      if (line[0] == &apos;L&apos; &amp;&amp; isdigit(*(colon_pos - 1))) &#123;</span><br><span class="line"></span><br><span class="line">#else</span><br><span class="line"></span><br><span class="line">    /* Everybody else: .L&lt;whatever&gt;: */</span><br><span class="line"></span><br><span class="line">//匹配[.L&lt;wtever&gt;:]</span><br><span class="line">    if (strstr(line, &quot;:&quot;)) &#123;</span><br><span class="line"></span><br><span class="line">      if (line[0] == &apos;.&apos;) &#123;</span><br><span class="line"></span><br><span class="line">#endif /* __APPLE__ */</span><br><span class="line"></span><br><span class="line">        /* .L0: or LBB0_0: style jump destination */</span><br><span class="line"></span><br><span class="line">#ifdef __APPLE__</span><br><span class="line"></span><br><span class="line">        /* Apple: L&lt;num&gt; / LBB&lt;num&gt; */</span><br><span class="line"></span><br><span class="line">        if ((isdigit(line[1]) || (clang_mode &amp;&amp; !strncmp(line, &quot;LBB&quot;, 3)))</span><br><span class="line">            &amp;&amp; R(100) &lt; inst_ratio) &#123;</span><br><span class="line"></span><br><span class="line">#else</span><br><span class="line"></span><br><span class="line">        /* Apple: .L&lt;num&gt; / .LBB&lt;num&gt; */</span><br><span class="line"></span><br><span class="line">        if ((isdigit(line[2]) || (clang_mode &amp;&amp; !strncmp(line + 1, &quot;LBB&quot;, 3)))</span><br><span class="line">            &amp;&amp; R(100) &lt; inst_ratio) &#123;</span><br><span class="line"></span><br><span class="line">#endif /* __APPLE__ */</span><br><span class="line"></span><br><span class="line">          /* An optimization is possible here by adding the code only if the</span><br><span class="line">             label is mentioned in the code in contexts other than call / jmp.</span><br><span class="line">             That said, this complicates the code by requiring two-pass</span><br><span class="line">             processing (messy with stdin), and results in a speed gain</span><br><span class="line">             typically under 10%, because compilers are generally pretty good</span><br><span class="line">             about not generating spurious intra-function jumps.</span><br><span class="line"></span><br><span class="line">             We use deferred output chiefly to avoid disrupting</span><br><span class="line">             .Lfunc_begin0-style exception handling calculations (a problem on</span><br><span class="line">             MacOS X). */</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">          if (!skip_next_label) instrument_next = 1; else skip_next_label = 0;</span><br><span class="line"></span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">      &#125; else &#123;</span><br><span class="line"></span><br><span class="line">        /* Function label (always instrumented, deferred mode). */</span><br><span class="line">//匹配到一个label，instrument_next=1</span><br><span class="line">        instrument_next = 1;</span><br><span class="line">    </span><br><span class="line">      &#125;</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">//最后插入一个 main_payload</span><br><span class="line">  if (ins_lines)</span><br><span class="line">    fputs(use_64bit ? main_payload_64 : main_payload_32, outf);</span><br><span class="line"></span><br><span class="line">  if (input_file) fclose(inf);</span><br><span class="line">  fclose(outf);</span><br><span class="line"></span><br><span class="line">  if (!be_quiet) &#123;</span><br><span class="line"></span><br><span class="line">    if (!ins_lines) WARNF(&quot;No instrumentation targets found%s.&quot;,</span><br><span class="line">                          pass_thru ? &quot; (pass-thru mode)&quot; : &quot;&quot;);</span><br><span class="line">    else OKF(&quot;Instrumented %u locations (%s-bit, %s mode, ratio %u%%).&quot;,</span><br><span class="line">             ins_lines, use_64bit ? &quot;64&quot; : &quot;32&quot;,</span><br><span class="line">             getenv(&quot;AFL_HARDEN&quot;) ? &quot;hardened&quot; : </span><br><span class="line">             (sanitizer ? &quot;ASAN/MSAN&quot; : &quot;non-hardened&quot;),</span><br><span class="line">             inst_ratio);</span><br><span class="line"> </span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>afl-as.c文件中插桩的条件：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">/* In some cases, we want to defer writing the instrumentation trampoline</span><br><span class="line">   until after all the labels, macros, comments, etc. If we&apos;re in this</span><br><span class="line">   mode, and if the line starts with a tab followed by a character, dump</span><br><span class="line">   the trampoline now. */</span><br><span class="line">if (!pass_thru &amp;&amp; !skip_intel &amp;&amp; !skip_app &amp;&amp; !skip_csect &amp;&amp; instr_ok &amp;&amp;</span><br><span class="line">    instrument_next &amp;&amp; line[0] == &apos;\t&apos; &amp;&amp; isalpha(line[1])) &#123;</span><br><span class="line"></span><br><span class="line">  fprintf(outf, use_64bit ? trampoline_fmt_64 : trampoline_fmt_32,</span><br><span class="line">          R(MAP_SIZE));</span><br><span class="line"></span><br><span class="line">  instrument_next = 0;</span><br><span class="line">  ins_lines++;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>具体看一下插进去的代码是什么：</p>
+<p>通过fprintf()将格式化字符串添加到汇编文件的相应位置，只分析32位的情况，trampoline_fmt_32的具体内容如下：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line">static const u8* trampoline_fmt_32 =</span><br><span class="line"></span><br><span class="line">  &quot;\n&quot;</span><br><span class="line">  &quot;/* --- AFL TRAMPOLINE (32-BIT) --- */\n&quot;</span><br><span class="line">  &quot;\n&quot;</span><br><span class="line">  &quot;.align 4\n&quot;</span><br><span class="line">  &quot;\n&quot;</span><br><span class="line">  &quot;leal -16(%%esp), %%esp\n&quot;</span><br><span class="line">  &quot;movl %%edi,  0(%%esp)\n&quot;</span><br><span class="line">  &quot;movl %%edx,  4(%%esp)\n&quot;</span><br><span class="line">  &quot;movl %%ecx,  8(%%esp)\n&quot;</span><br><span class="line">  &quot;movl %%eax, 12(%%esp)\n&quot;</span><br><span class="line">  &quot;movl $0x%08x, %%ecx\n&quot;</span><br><span class="line">  &quot;call __afl_maybe_log\n&quot;</span><br><span class="line">  &quot;movl 12(%%esp), %%eax\n&quot;</span><br><span class="line">  &quot;movl  8(%%esp), %%ecx\n&quot;</span><br><span class="line">  &quot;movl  4(%%esp), %%edx\n&quot;</span><br><span class="line">  &quot;movl  0(%%esp), %%edi\n&quot;</span><br><span class="line">  &quot;leal 16(%%esp), %%esp\n&quot;</span><br><span class="line">  &quot;\n&quot;</span><br><span class="line">  &quot;/* --- END --- */\n&quot;</span><br><span class="line">  &quot;\n&quot;;</span><br></pre></td></tr></table></figure></p>
+<p>其中，<code>movl $0x%08x, %%ecx\n</code> 为将R(x)生成的随机数给ecx作为标识代码段的key。然后调用__afl_maybe_log，调用完之后，把栈上保存的值恢复回去，再把栈恢复。</p>
+<p>main_payload_32:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br><span class="line">148</span><br><span class="line">149</span><br><span class="line">150</span><br><span class="line">151</span><br><span class="line">152</span><br><span class="line">153</span><br><span class="line">154</span><br><span class="line">155</span><br><span class="line">156</span><br><span class="line">157</span><br><span class="line">158</span><br><span class="line">159</span><br><span class="line">160</span><br><span class="line">161</span><br><span class="line">162</span><br><span class="line">163</span><br><span class="line">164</span><br><span class="line">165</span><br><span class="line">166</span><br><span class="line">167</span><br><span class="line">168</span><br><span class="line">169</span><br><span class="line">170</span><br><span class="line">171</span><br><span class="line">172</span><br><span class="line">173</span><br><span class="line">174</span><br><span class="line">175</span><br><span class="line">176</span><br><span class="line">177</span><br><span class="line">178</span><br><span class="line">179</span><br><span class="line">180</span><br><span class="line">181</span><br><span class="line">182</span><br><span class="line">183</span><br><span class="line">184</span><br><span class="line">185</span><br><span class="line">186</span><br><span class="line">187</span><br><span class="line">188</span><br><span class="line">189</span><br><span class="line">190</span><br><span class="line">191</span><br><span class="line">192</span><br><span class="line">193</span><br><span class="line">194</span><br><span class="line">195</span><br><span class="line">196</span><br><span class="line">197</span><br><span class="line">198</span><br><span class="line">199</span><br><span class="line">200</span><br><span class="line">201</span><br><span class="line">202</span><br><span class="line">203</span><br><span class="line">204</span><br><span class="line">205</span><br><span class="line">206</span><br><span class="line">207</span><br><span class="line">208</span><br><span class="line">209</span><br><span class="line">210</span><br><span class="line">211</span><br><span class="line">212</span><br><span class="line">213</span><br><span class="line">214</span><br><span class="line">215</span><br><span class="line">216</span><br><span class="line">217</span><br><span class="line">218</span><br><span class="line">219</span><br><span class="line">220</span><br><span class="line">221</span><br><span class="line">222</span><br><span class="line">223</span><br><span class="line">224</span><br><span class="line">225</span><br><span class="line">226</span><br><span class="line">227</span><br><span class="line">228</span><br><span class="line">229</span><br><span class="line">230</span><br><span class="line">231</span><br><span class="line">232</span><br><span class="line">233</span><br><span class="line">234</span><br><span class="line">235</span><br><span class="line">236</span><br><span class="line">237</span><br><span class="line">238</span><br><span class="line">239</span><br><span class="line">240</span><br><span class="line">241</span><br><span class="line">242</span><br><span class="line">243</span><br><span class="line">244</span><br><span class="line">245</span><br><span class="line">246</span><br><span class="line">247</span><br><span class="line">248</span><br><span class="line">249</span><br><span class="line">250</span><br><span class="line">251</span><br><span class="line">252</span><br><span class="line">253</span><br><span class="line">254</span><br><span class="line">255</span><br><span class="line">256</span><br><span class="line">257</span><br><span class="line">258</span><br><span class="line">259</span><br><span class="line">260</span><br><span class="line">261</span><br><span class="line">262</span><br><span class="line">263</span><br></pre></td><td class="code"><pre><span class="line">static const u8* main_payload_32 = </span><br><span class="line"></span><br><span class="line">  &quot;\n&quot;</span><br><span class="line">  &quot;/* --- AFL MAIN PAYLOAD (32-BIT) --- */\n&quot;</span><br><span class="line">  &quot;\n&quot;</span><br><span class="line">  &quot;.text\n&quot;</span><br><span class="line">  &quot;.att_syntax\n&quot;</span><br><span class="line">  &quot;.code32\n&quot;</span><br><span class="line">  &quot;.align 8\n&quot;</span><br><span class="line">  &quot;\n&quot;</span><br><span class="line">---</span><br><span class="line">//__afl_maybe_log:</span><br><span class="line">  &quot;__afl_maybe_log:\n&quot;</span><br><span class="line">  &quot;\n&quot;</span><br><span class="line">  &quot;  lahf\n&quot;</span><br><span class="line">  &quot;  seto %al\n&quot;</span><br><span class="line">  &quot;\n&quot;</span><br><span class="line">  &quot;  /* Check if SHM region is already mapped. */\n&quot;</span><br><span class="line">---</span><br><span class="line">//判断共享内存是否加载，edx中存储SHM(__afl_area_ptr)</span><br><span class="line">  &quot;\n&quot;</span><br><span class="line">  &quot;  movl  __afl_area_ptr, %edx\n&quot;</span><br><span class="line">  &quot;  testl %edx, %edx\n&quot;</span><br><span class="line">  &quot;  je    __afl_setup\n&quot;</span><br><span class="line">  &quot;\n&quot;</span><br><span class="line">---</span><br><span class="line">//__afl_store:</span><br><span class="line">  &quot;__afl_store:\n&quot;</span><br><span class="line">  &quot;\n&quot;</span><br><span class="line">  &quot;  /* Calculate and store hit for the code location specified in ecx. There\n&quot;</span><br><span class="line">  &quot;     is a double-XOR way of doing this without tainting another register,\n&quot;</span><br><span class="line">  &quot;     and we use it on 64-bit systems; but it&apos;s slower for 32-bit ones. */\n&quot;</span><br><span class="line">  &quot;\n&quot;</span><br><span class="line">---</span><br><span class="line">//将pre和当前代码块的key进行异或，结果存储到edi</span><br><span class="line">#ifndef COVERAGE_ONLY</span><br><span class="line">  &quot;  movl __afl_prev_loc, %edi\n&quot;</span><br><span class="line">  &quot;  xorl %ecx, %edi\n&quot;</span><br><span class="line">  &quot;  shrl $1, %ecx\n&quot;</span><br><span class="line">  &quot;  movl %ecx, __afl_prev_loc\n&quot;</span><br><span class="line">#else</span><br><span class="line">  &quot;  movl %ecx, %edi\n&quot;</span><br><span class="line">#endif /* ^!COVERAGE_ONLY */</span><br><span class="line">  &quot;\n&quot;</span><br><span class="line">---</span><br><span class="line">//内存映射：edi为索引，edx为map，体现edge命中逻辑</span><br><span class="line">#ifdef SKIP_COUNTS</span><br><span class="line">  &quot;  orb  $1, (%edx, %edi, 1)\n&quot;</span><br><span class="line">#else</span><br><span class="line">  &quot;  incb (%edx, %edi, 1)\n&quot;</span><br><span class="line">#endif /* ^SKIP_COUNTS */</span><br><span class="line">  &quot;\n&quot;</span><br><span class="line">---</span><br><span class="line">//__afl_return</span><br><span class="line">  &quot;__afl_return:\n&quot;</span><br><span class="line">  &quot;\n&quot;</span><br><span class="line">  &quot;  addb $127, %al\n&quot;</span><br><span class="line">  &quot;  sahf\n&quot;</span><br><span class="line">  &quot;  ret\n&quot;</span><br><span class="line">  &quot;\n&quot;</span><br><span class="line">  &quot;.align 8\n&quot;</span><br><span class="line">  &quot;\n&quot;</span><br><span class="line">---</span><br><span class="line">//__afl_setup </span><br><span class="line">  &quot;__afl_setup:\n&quot;</span><br><span class="line">  &quot;\n&quot;</span><br><span class="line">  &quot;  /* Do not retry setup if we had previous failures. */\n&quot;</span><br><span class="line">  &quot;\n&quot;</span><br><span class="line">  &quot;  cmpb $0, __afl_setup_failure\n&quot;</span><br><span class="line">  &quot;  jne  __afl_return\n&quot;</span><br><span class="line">  &quot;\n&quot;</span><br><span class="line">  &quot;  /* Map SHM, jumping to __afl_setup_abort if something goes wrong.\n&quot;</span><br><span class="line">  &quot;     We do not save FPU/MMX/SSE registers here, but hopefully, nobody\n&quot;</span><br><span class="line">  &quot;     will notice this early in the game. */\n&quot;</span><br><span class="line">  &quot;\n&quot;</span><br><span class="line">---</span><br><span class="line">//寻找 SHM 共享内存</span><br><span class="line">  &quot;  pushl %eax\n&quot;</span><br><span class="line">  &quot;  pushl %ecx\n&quot;</span><br><span class="line">  &quot;\n&quot;</span><br><span class="line">  &quot;  pushl $.AFL_SHM_ENV\n&quot;</span><br><span class="line">  &quot;  call  getenv\n&quot;</span><br><span class="line">  &quot;  addl  $4, %esp\n&quot;</span><br><span class="line">  &quot;\n&quot;</span><br><span class="line">  &quot;  testl %eax, %eax\n&quot;</span><br><span class="line">  &quot;  je    __afl_setup_abort\n&quot;</span><br><span class="line">  &quot;\n&quot;</span><br><span class="line">  &quot;  pushl %eax\n&quot;</span><br><span class="line">  &quot;  call  atoi\n&quot;</span><br><span class="line">  &quot;  addl  $4, %esp\n&quot;</span><br><span class="line">  &quot;\n&quot;</span><br><span class="line">---</span><br><span class="line">//shmat参数:SHM ID = getenv(.AFL_SHM_ENV)</span><br><span class="line">  &quot;  pushl $0          /* shmat flags    */\n&quot;</span><br><span class="line">  &quot;  pushl $0          /* requested addr */\n&quot;</span><br><span class="line">  &quot;  pushl %eax        /* SHM ID         */\n&quot;</span><br><span class="line">  &quot;  call  shmat\n&quot;</span><br><span class="line">  &quot;  addl  $12, %esp\n&quot;</span><br><span class="line">  &quot;\n&quot;</span><br><span class="line">  &quot;  cmpl $-1, %eax\n&quot;</span><br><span class="line">  &quot;  je   __afl_setup_abort\n&quot;</span><br><span class="line">  &quot;\n&quot;</span><br><span class="line">---</span><br><span class="line">//储存 SHM 地址到 __afl_area_ptr</span><br><span class="line">  &quot;  /* Store the address of the SHM region. */\n&quot;</span><br><span class="line">  &quot;\n&quot;</span><br><span class="line">  &quot;  movl %eax, __afl_area_ptr\n&quot;</span><br><span class="line">  &quot;  movl %eax, %edx\n&quot;</span><br><span class="line">  &quot;\n&quot;</span><br><span class="line">  &quot;  popl %ecx\n&quot;</span><br><span class="line">  &quot;  popl %eax\n&quot;</span><br><span class="line">  &quot;\n&quot;</span><br><span class="line">---</span><br><span class="line">//__afl_forkserver</span><br><span class="line">  &quot;__afl_forkserver:\n&quot;</span><br><span class="line">  &quot;\n&quot;</span><br><span class="line">  &quot;  /* Enter the fork server mode to avoid the overhead of execve() calls. */\n&quot;</span><br><span class="line">  &quot;\n&quot;</span><br><span class="line">  &quot;  pushl %eax\n&quot;</span><br><span class="line">  &quot;  pushl %ecx\n&quot;</span><br><span class="line">  &quot;  pushl %edx\n&quot;</span><br><span class="line">  &quot;\n&quot;</span><br><span class="line">  &quot;  /* Phone home and tell the parent that we&apos;re OK. (Note that signals with\n&quot;</span><br><span class="line">  &quot;     no SA_RESTART will mess it up). If this fails, assume that the fd is\n&quot;</span><br><span class="line">  &quot;     closed because we were execve()d from an instrumented binary, or because\n&quot; </span><br><span class="line">  &quot;     the parent doesn&apos;t want to use the fork server. */\n&quot;</span><br><span class="line">  &quot;\n&quot;</span><br><span class="line">//将__afl_temp中的4个字节写到提前开好的管道中</span><br><span class="line">  &quot;  pushl $4          /* length    */\n&quot;</span><br><span class="line">  &quot;  pushl $__afl_temp /* data      */\n&quot;</span><br><span class="line">  &quot;  pushl $&quot; STRINGIFY((FORKSRV_FD + 1)) &quot;  /* file desc */\n&quot;</span><br><span class="line">  &quot;  call  write\n&quot;</span><br><span class="line">  &quot;  addl  $12, %esp\n&quot;</span><br><span class="line">  &quot;\n&quot;</span><br><span class="line">  &quot;  cmpl  $4, %eax\n&quot;</span><br><span class="line">//jne：不相等跳转，即fail跳转-&gt;__afl_fork_resume</span><br><span class="line">  &quot;  jne   __afl_fork_resume\n&quot;</span><br><span class="line">  &quot;\n&quot;</span><br><span class="line">---</span><br><span class="line">//__afl_fork_wait_loop:</span><br><span class="line">  &quot;__afl_fork_wait_loop:\n&quot;</span><br><span class="line">  &quot;\n&quot;</span><br><span class="line">  &quot;  /* Wait for parent by reading from the pipe. Abort if read fails. */\n&quot;</span><br><span class="line">  &quot;\n&quot;</span><br><span class="line">//不断地从管道中读取内容，假如读取到的字节数不为4就会跳到__afl_die</span><br><span class="line">  &quot;  pushl $4          /* length    */\n&quot;</span><br><span class="line">  &quot;  pushl $__afl_temp /* data      */\n&quot;</span><br><span class="line">  &quot;  pushl $&quot; STRINGIFY(FORKSRV_FD) &quot;        /* file desc */\n&quot;</span><br><span class="line">  &quot;  call  read\n&quot;</span><br><span class="line">  &quot;  addl  $12, %esp\n&quot;</span><br><span class="line">  &quot;\n&quot;</span><br><span class="line">  &quot;  cmpl  $4, %eax\n&quot;</span><br><span class="line">  &quot;  jne   __afl_die\n&quot;</span><br><span class="line">  &quot;\n&quot;</span><br><span class="line">  &quot;  /* Once woken up, create a clone of our process. This is an excellent use\n&quot;</span><br><span class="line">  &quot;     case for syscall(__NR_clone, 0, CLONE_PARENT), but glibc boneheadedly\n&quot;</span><br><span class="line">  &quot;     caches getpid() results and offers no way to update the value, breaking\n&quot;</span><br><span class="line">  &quot;     abort(), raise(), and a bunch of other things :-( */\n&quot;</span><br><span class="line">  &quot;\n&quot;</span><br><span class="line">//fork，判断fork是否成功，如果成功，子进程跳到__afl_fork_resume</span><br><span class="line">  &quot;  call fork\n&quot;</span><br><span class="line">  &quot;\n&quot;</span><br><span class="line">  &quot;  cmpl $0, %eax\n&quot;</span><br><span class="line">  &quot;  jl   __afl_die\n&quot;</span><br><span class="line">  &quot;  je   __afl_fork_resume\n&quot;</span><br><span class="line">  &quot;\n&quot;</span><br><span class="line">//父进程 write PID to pipe，传给 fuzzer</span><br><span class="line">  &quot;  /* In parent process: write PID to pipe, then wait for child. */\n&quot;</span><br><span class="line">  &quot;\n&quot;</span><br><span class="line">  &quot;  movl  %eax, __afl_fork_pid\n&quot;</span><br><span class="line">  &quot;\n&quot;</span><br><span class="line">  &quot;  pushl $4              /* length    */\n&quot;</span><br><span class="line">  &quot;  pushl $__afl_fork_pid /* data      */\n&quot;</span><br><span class="line">  &quot;  pushl $&quot; STRINGIFY((FORKSRV_FD + 1)) &quot;      /* file desc */\n&quot;</span><br><span class="line">  &quot;  call  write\n&quot;</span><br><span class="line">  &quot;  addl  $12, %esp\n&quot;</span><br><span class="line">  &quot;\n&quot;</span><br><span class="line">//如果waitpid返回的结果小于等于0，就会跳到afl_die，同时状态传入__afl_temp</span><br><span class="line">  &quot;  pushl $0             /* no flags  */\n&quot;</span><br><span class="line">  &quot;  pushl $__afl_temp    /* status    */\n&quot;</span><br><span class="line">  &quot;  pushl __afl_fork_pid /* PID       */\n&quot;</span><br><span class="line">  &quot;  call  waitpid\n&quot;</span><br><span class="line">  &quot;  addl  $12, %esp\n&quot;</span><br><span class="line">  &quot;\n&quot;</span><br><span class="line">  &quot;  cmpl  $0, %eax\n&quot;</span><br><span class="line">  &quot;  jle   __afl_die\n&quot;</span><br><span class="line">  &quot;\n&quot;</span><br><span class="line">  &quot;  /* Relay wait status to pipe, then loop back. */\n&quot;</span><br><span class="line">//状态通过管道传回fuzzer，同时启动新一轮等待</span><br><span class="line">  &quot;\n&quot;</span><br><span class="line">  &quot;  pushl $4          /* length    */\n&quot;</span><br><span class="line">  &quot;  pushl $__afl_temp /* data      */\n&quot;</span><br><span class="line">  &quot;  pushl $&quot; STRINGIFY((FORKSRV_FD + 1)) &quot;  /* file desc */\n&quot;</span><br><span class="line">  &quot;  call  write\n&quot;</span><br><span class="line">  &quot;  addl  $12, %esp\n&quot;</span><br><span class="line">  &quot;\n&quot;</span><br><span class="line">  &quot;  jmp __afl_fork_wait_loop\n&quot;</span><br><span class="line">  &quot;\n&quot;</span><br><span class="line">---</span><br><span class="line">//__afl_fork_resume：</span><br><span class="line">  &quot;__afl_fork_resume:\n&quot;</span><br><span class="line">  &quot;\n&quot;</span><br><span class="line">//管道关闭，寄存器恢复</span><br><span class="line">  &quot;  /* In child process: close fds, resume execution. */\n&quot;</span><br><span class="line">  &quot;\n&quot;</span><br><span class="line">  &quot;  pushl $&quot; STRINGIFY(FORKSRV_FD) &quot;\n&quot;</span><br><span class="line">  &quot;  call  close\n&quot;</span><br><span class="line">  &quot;\n&quot;</span><br><span class="line">  &quot;  pushl $&quot; STRINGIFY((FORKSRV_FD + 1)) &quot;\n&quot;</span><br><span class="line">  &quot;  call  close\n&quot;</span><br><span class="line">  &quot;\n&quot;</span><br><span class="line">  &quot;  addl  $8, %esp\n&quot;</span><br><span class="line">  &quot;\n&quot;</span><br><span class="line">  &quot;  popl %edx\n&quot;</span><br><span class="line">  &quot;  popl %ecx\n&quot;</span><br><span class="line">  &quot;  popl %eax\n&quot;</span><br><span class="line">//跳转到__afl_store：</span><br><span class="line">  &quot;  jmp  __afl_store\n&quot;</span><br><span class="line">  &quot;\n&quot;</span><br><span class="line">  &quot;__afl_die:\n&quot;</span><br><span class="line">  &quot;\n&quot;</span><br><span class="line">  &quot;  xorl %eax, %eax\n&quot;</span><br><span class="line">  &quot;  call _exit\n&quot;</span><br><span class="line">  &quot;\n&quot;</span><br><span class="line">  &quot;__afl_setup_abort:\n&quot;</span><br><span class="line">  &quot;\n&quot;</span><br><span class="line">  &quot;  /* Record setup failure so that we don&apos;t keep calling\n&quot;</span><br><span class="line">  &quot;     shmget() / shmat() over and over again. */\n&quot;</span><br><span class="line">  &quot;\n&quot;</span><br><span class="line">  &quot;  incb __afl_setup_failure\n&quot;</span><br><span class="line">  &quot;  popl %ecx\n&quot;</span><br><span class="line">  &quot;  popl %eax\n&quot;</span><br><span class="line">  &quot;  jmp __afl_return\n&quot;</span><br><span class="line">  &quot;\n&quot;</span><br><span class="line">  &quot;.AFL_VARS:\n&quot;</span><br><span class="line">  &quot;\n&quot;</span><br><span class="line">  &quot;  .comm   __afl_area_ptr, 4, 32\n&quot;</span><br><span class="line">  &quot;  .comm   __afl_setup_failure, 1, 32\n&quot;</span><br><span class="line">#ifndef COVERAGE_ONLY</span><br><span class="line">  &quot;  .comm   __afl_prev_loc, 4, 32\n&quot;</span><br><span class="line">#endif /* !COVERAGE_ONLY */</span><br><span class="line">  &quot;  .comm   __afl_fork_pid, 4, 32\n&quot;</span><br><span class="line">  &quot;  .comm   __afl_temp, 4, 32\n&quot;</span><br><span class="line">  &quot;\n&quot;</span><br><span class="line">  &quot;.AFL_SHM_ENV:\n&quot;</span><br><span class="line">  &quot;  .asciz \&quot;&quot; SHM_ENV_VAR &quot;\&quot;\n&quot;</span><br><span class="line">  &quot;\n&quot;</span><br><span class="line">  &quot;/* --- END --- */\n&quot;</span><br><span class="line">  &quot;\n&quot;;</span><br><span class="line"></span><br><span class="line">/* The OpenBSD hack is due to lahf and sahf not being recognized by some</span><br><span class="line">   versions of binutils: http://marc.info/?l=openbsd-cvs&amp;m=141636589924400</span><br><span class="line"></span><br><span class="line">   The Apple code is a bit different when calling libc functions because</span><br><span class="line">   they are doing relocations differently from everybody else. We also need</span><br><span class="line">   to work around the crash issue with .lcomm and the fact that they don&apos;t</span><br><span class="line">   recognize .string. */</span><br><span class="line"></span><br><span class="line">#ifdef __APPLE__</span><br><span class="line">#  define CALL_L64(str)		&quot;call _&quot; str &quot;\n&quot;</span><br><span class="line">#else</span><br><span class="line">#  define CALL_L64(str)		&quot;call &quot; str &quot;@PLT\n&quot;</span><br><span class="line">#endif /* ^__APPLE__ */</span><br></pre></td></tr></table></figure>
+<p>特别的，对于llvm模式，代码插桩仅需一个modulepass，对每个 BB 进行 IRB 的辅助插桩即可<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br></pre></td><td class="code"><pre><span class="line">for (auto &amp;F : M)</span><br><span class="line">  for (auto &amp;BB : F) &#123;</span><br><span class="line"></span><br><span class="line">    BasicBlock::iterator IP = BB.getFirstInsertionPt();</span><br><span class="line">    IRBuilder&lt;&gt; IRB(&amp;(*IP));</span><br><span class="line"></span><br><span class="line">    if (AFL_R(100) &gt;= inst_ratio) continue;</span><br><span class="line"></span><br><span class="line">    /* Make up cur_loc */</span><br><span class="line"></span><br><span class="line">    unsigned int cur_loc = AFL_R(MAP_SIZE);</span><br><span class="line"></span><br><span class="line">    ConstantInt *CurLoc = ConstantInt::get(Int32Ty, cur_loc);</span><br><span class="line"></span><br><span class="line">    /* Load prev_loc */</span><br><span class="line"></span><br><span class="line">    LoadInst *PrevLoc = IRB.CreateLoad(AFLPrevLoc);</span><br><span class="line">    PrevLoc-&gt;setMetadata(M.getMDKindID(&quot;nosanitize&quot;), MDNode::get(C, None));</span><br><span class="line">    Value *PrevLocCasted = IRB.CreateZExt(PrevLoc, IRB.getInt32Ty());</span><br><span class="line"></span><br><span class="line">    /* Load SHM pointer */</span><br><span class="line">    //shared memory table</span><br><span class="line"></span><br><span class="line">    LoadInst *MapPtr = IRB.CreateLoad(AFLMapPtr);</span><br><span class="line">    MapPtr-&gt;setMetadata(M.getMDKindID(&quot;nosanitize&quot;), MDNode::get(C, None));</span><br><span class="line">    Value *MapPtrIdx =</span><br><span class="line">        IRB.CreateGEP(MapPtr, IRB.CreateXor(PrevLocCasted, CurLoc));</span><br><span class="line"></span><br><span class="line">    /* Update bitmap */</span><br><span class="line"></span><br><span class="line">    LoadInst *Counter = IRB.CreateLoad(MapPtrIdx);</span><br><span class="line">    Counter-&gt;setMetadata(M.getMDKindID(&quot;nosanitize&quot;), MDNode::get(C, None));</span><br><span class="line">    Value *Incr = IRB.CreateAdd(Counter, ConstantInt::get(Int8Ty, 1));</span><br><span class="line">    IRB.CreateStore(Incr, MapPtrIdx)</span><br><span class="line">        -&gt;setMetadata(M.getMDKindID(&quot;nosanitize&quot;), MDNode::get(C, None));</span><br><span class="line"></span><br><span class="line">    /* Set prev_loc to cur_loc &gt;&gt; 1 */</span><br><span class="line"></span><br><span class="line">    StoreInst *Store =</span><br><span class="line">        IRB.CreateStore(ConstantInt::get(Int32Ty, cur_loc &gt;&gt; 1), AFLPrevLoc);</span><br><span class="line">    Store-&gt;setMetadata(M.getMDKindID(&quot;nosanitize&quot;), MDNode::get(C, None));</span><br><span class="line"></span><br><span class="line">    inst_blocks++;</span><br><span class="line"></span><br><span class="line">  &#125;</span><br></pre></td></tr></table></figure></p>
+<p>现在在回到fuzz侧，还记得forksrv的wait状态吗？fuzzer对于wait状态的解除是通过进行用例测试，在fork server启动完成后，一旦需要执行某个测试用例，则fuzzer会调用run_target()方法，在此方法中，便是通过命令管道，通知fork_server准备fork；并通过状态管道，获取子进程pid：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">if ((res = write(fsrv_ctl_fd, &amp;prev_timed_out, 4)) != 4) &#123;</span><br><span class="line"></span><br><span class="line">  if (stop_soon) return 0;</span><br><span class="line">  RPFATAL(res, &quot;Unable to request new process from fork server (OOM?)&quot;);</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">if ((res = read(fsrv_st_fd, &amp;child_pid, 4)) != 4) &#123;</span><br><span class="line"></span><br><span class="line">  if (stop_soon) return 0;</span><br><span class="line">  RPFATAL(res, &quot;Unable to request new process from fork server (OOM?)&quot;);</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">if (child_pid &lt;= 0) FATAL(&quot;Fork server is misbehaving (OOM?)&quot;);</span><br></pre></td></tr></table></figure></p>
+<p>随后，fuzzer再次读取状态管道，获取子进程退出状态，并由此来判断子进程结束的原因，例如正常退出、超时、崩溃等，并进行相应的记录。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">    if ((res = read(fsrv_st_fd, &amp;status, 4)) != 4) &#123;</span><br><span class="line">...</span><br><span class="line">  /* Report outcome to caller. */</span><br><span class="line"></span><br><span class="line">  if (WIFSIGNALED(status) &amp;&amp; !stop_soon) &#123;</span><br><span class="line"></span><br><span class="line">    kill_signal = WTERMSIG(status);</span><br><span class="line"></span><br><span class="line">    if (child_timed_out &amp;&amp; kill_signal == SIGKILL) return FAULT_TMOUT;</span><br><span class="line"></span><br><span class="line">    return FAULT_CRASH;</span><br><span class="line"></span><br><span class="line">  &#125;</span><br></pre></td></tr></table></figure></p>
+<h3 id="Fork-Server（结合上述源码）"><a href="#Fork-Server（结合上述源码）" class="headerlink" title="Fork Server（结合上述源码）"></a>Fork Server（结合上述源码）</h3><ul>
+<li><p>【afl-fuzz.cc:!forksrv_pid】fuzzer进程执行fork()得到fork server进程，然后重定向两个管道作为通信接口，并关闭不必要的管道。其中设置了 SAN。然后执行 target。此为forksrv_init</p>
+   <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">   if (!forksrv_pid) &#123;</span><br><span class="line">...</span><br><span class="line">    if (dup2(ctl_pipe[0], FORKSRV_FD) &lt; 0) PFATAL(&quot;dup2() failed&quot;);</span><br><span class="line">    if (dup2(st_pipe[1], FORKSRV_FD + 1) &lt; 0) PFATAL(&quot;dup2() failed&quot;);</span><br><span class="line">...</span><br><span class="line">    close(ctl_pipe[0]);</span><br><span class="line">    close(ctl_pipe[1]);</span><br><span class="line">    close(st_pipe[0]);</span><br><span class="line">    close(st_pipe[1]);</span><br><span class="line">...</span><br><span class="line">    setenv(&quot;ASAN_OPTIONS&quot;, &quot;abort_on_error=1:&quot;</span><br><span class="line">                       &quot;detect_leaks=0:&quot;</span><br><span class="line">                       &quot;symbolize=0:&quot;</span><br><span class="line">                       &quot;allocator_may_return_null=1&quot;, 0);</span><br><span class="line">...</span><br><span class="line">    execv(target_path, argv);</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>对于父进程（fuzzer），则会读取状态管道的信息，如果一切正常，则说明fork server创建完成。</p>
+   <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">  fsrv_st_fd  = st_pipe[0]</span><br><span class="line">...</span><br><span class="line">  rlen = read(fsrv_st_fd, &amp;status, 4);</span><br><span class="line">...</span><br><span class="line">  /* If we have a four-byte &quot;hello&quot; message from the server, we&apos;re all set. Otherwise, try to figure out what went wrong. */</span><br><span class="line"></span><br><span class="line">  if (rlen == 4) &#123;</span><br><span class="line">    OKF(&quot;All right - fork server is up.&quot;);</span><br><span class="line">    return;</span><br><span class="line">  &#125;</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<h3 id="共享内存"><a href="#共享内存" class="headerlink" title="共享内存"></a>共享内存</h3><p>作为fuzzer，AFL并不是像无头苍蝇那样对输入文件无脑地随机变化（其实也支持这种方式，即dumb模式），其最大特点就是会对target进行插桩，以辅助mutated input的生成。具体地，插桩后的target，会记录执行过程中的分支信息；随后，fuzzer便可以根据这些信息，判断这次执行的整体流程和代码覆盖情况。</p>
+<p>AFL使用共享内存，来完成以上信息在fuzzer和target之间的传递。具体地，fuzzer在启动时，会执行setup_shm()方法进行配置。其首先调用shemget()分配一块共享内存，大小MAP_SIZE为64K:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">shm_id = shmget(IPC_PRIVATE, MAP_SIZE, IPC_CREAT | IPC_EXCL | 0600);</span><br></pre></td></tr></table></figure></p>
+<p>分配成功后，该共享内存的标志符会被设置到环境变量中，从而之后fork()得到的子进程可以通过该环境变量，得到这块共享内存的标志符：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">shm_str = alloc_printf(&quot;%d&quot;, shm_id);</span><br><span class="line">if (!dumb_mode) setenv(SHM_ENV_VAR, shm_str, 1);</span><br></pre></td></tr></table></figure></p>
+<p>并且，fuzzer本身，会使用变量trace_bits来保存共享内存的地址：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">trace_bits = shmat(shm_id, NULL, 0);</span><br></pre></td></tr></table></figure></p>
+<p>在每次target执行之前，fuzzer首先将该共享内容清零：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">memset(trace_bits, 0, MAP_SIZE);</span><br></pre></td></tr></table></figure></p>
+<p>接下来，我们再来看看target是如何获取并使用这块共享内存的。相关代码同样也在上面提到的方法__afl_maybe_log()中。首先，会检查是否已经将共享内存映射完成：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"></span><br></pre></td></tr></table></figure></p>
+<h3 id="分支信息的记录"><a href="#分支信息的记录" class="headerlink" title="分支信息的记录"></a>分支信息的记录</h3><p>[warning] AFL 保存的是 edges 执行次数而不是 blocks 执行次数,AFL是根据二元tuple(跳转的源地址和目标地址)来记录分支信息，从而获取target的执行流程和代码覆盖情况，其伪代码如下：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">cur_location = &lt;COMPILE_TIME_RANDOM&gt;;</span><br><span class="line">shared_mem[cur_location ^ prev_location]++; </span><br><span class="line">prev_location = cur_location &gt;&gt; 1;</span><br></pre></td></tr></table></figure></p>
+<p>其中的代码在上述源码分析中可以找到（包含llvm_pass）</p>
+<h3 id="AFL文件变异"><a href="#AFL文件变异" class="headerlink" title="AFL文件变异"></a>AFL文件变异</h3><p>这一部分先挖坑，因为没有具体阅读源码，只是收集到的资料，源码部分之后会补上</p>
+<h4 id="bitflip"><a href="#bitflip" class="headerlink" title="bitflip"></a>bitflip</h4><ul>
+<li>[自动检测token]: 在进行bitflip 1/1变异时，对于每个byte的最低位(least significant bit)翻转还进行了额外的处理：如果连续多个bytes的最低位被翻转后，程序的执行路径都未变化，而且与原始执行路径不一致，那么就把这一段连续的bytes判断是一条token。</li>
+<li>[生成effector map]: 在对每个byte进行翻转时，如果其造成执行路径与原始路径不一致，就将该byte在effector map中标记为1，即“有效”的，否则标记为0，即“无效”的。</li>
+</ul>
+<h4 id="arithmetic"><a href="#arithmetic" class="headerlink" title="arithmetic"></a>arithmetic</h4><p>加减</p>
+<h4 id="interest"><a href="#interest" class="headerlink" title="interest"></a>interest</h4><p>特殊语料库的替换</p>
+<h4 id="dictionary"><a href="#dictionary" class="headerlink" title="dictionary"></a>dictionary</h4><h4 id="havoc"><a href="#havoc" class="headerlink" title="havoc"></a>havoc</h4><h4 id="splice"><a href="#splice" class="headerlink" title="splice"></a>splice</h4><h4 id="cycle"><a href="#cycle" class="headerlink" title="cycle"></a>cycle</h4><h3 id="一个AFL优化策略"><a href="#一个AFL优化策略" class="headerlink" title="一个AFL优化策略"></a>一个AFL优化策略</h3><p>引用：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">为此，我对ELF文件变异和objdump执行路径变异进行了简单的试验，发现许多”数据“bytes被翻</span><br><span class="line">转后，确实能够引起执行路径的变化。但是，这些”数据“bytes往往是一块块分布在文件中的，</span><br><span class="line">而每一块”数据“中的每个bytes被翻转后，执行路径往往是相同的。所以，我们就有了一个朴素</span><br><span class="line">的想法：如果翻转一个byte引起执行路径变化，而且翻转该byte与翻转其前一个byte的执行路</span><br><span class="line">径不同，此时才将其视为“有效”的。</span><br></pre></td></tr></table></figure></p>
+
+    </article>
+    <!-- license  -->
+    
+        <div class="license-wrapper">
+            <p>原文作者：<a href="http://p1umer.club">P1umer sauce</a>
+            <p>原文链接：<a href="http://p1umer.club/2019/03/20/AFL-初探/">http://p1umer.club/2019/03/20/AFL-初探/</a>
+            <p>发表日期：<a href="http://p1umer.club/2019/03/20/AFL-初探/">March 20th 2019, 1:39:12 am</a>
+            <p>更新日期：<a href="http://p1umer.club/2019/03/20/AFL-初探/">March 20th 2019, 1:39:26 am</a>
+            <p>版权声明：本文采用<a rel="license" href="http://creativecommons.org/licenses/by-nc/4.0/">知识共享署名-非商业性使用 4.0 国际许可协议</a>进行许可</p>
+        </div>
+    
+    <!-- paginator  -->
+    <ul class="post-paginator">
+        <li class="next">
+            
+        </li>
+        <li class="previous">
+            
+                <div class="prevSlogan">Previous Post</div>
+                <a href= "/2019/02/20/SmallNote/" title= "SmallNote">
+                    <div class="prevTitle">SmallNote</div>
+                </a>
+            
+        </li>
+    </ul>
+    <!-- 评论插件 -->
+    <!-- 来必力City版安装代码 -->
+
+    <div id="lv-container" data-id="city" data-uid= MTAyMC8zODMxMi8xNDg0MA==>
+        <script type="text/javascript">
+            (function (d, s) {
+                var j, e = d.getElementsByTagName(s)[0];
+                if (typeof LivereTower === 'function') { return; }
+                j = d.createElement(s);
+                j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+                j.async = true;
+
+                e.parentNode.insertBefore(j, e);
+            })(document, 'script');
+        </script>
+        <noscript>为正常使用来必力评论功能请激活JavaScript</noscript>
+    </div>
+
+<!-- City版安装代码已完成 -->
+    
+    
+    <!-- partial('_partial/comment/changyan') -->
+    <!--PC版-->
+
+
+    
+    
+
+    <!-- 评论 -->
+</main>
+            <!-- profile -->
+            
+        </div>
+        <footer class="footer footer-unloaded">
+    <!-- social  -->
+    
+    <div class="social">
+        
+    
+        
+            
+                <a href="mailto:cz18811105578@gmail.com" class="iconfont-archer email" title=email ></a>
+            
+        
+    
+        
+    
+        
+            
+                <span class="iconfont-archer wechat" title=wechat>
+                  
+                  <img class="profile-qr" src="/assets/mmqrcode1540290021396.png" />
+                </span>
+            
+        
+    
+        
+    
+        
+    
+        
+    
+        
+            
+                <a href="https://www.zhihu.com/people/cz11-96/activities" class="iconfont-archer zhihu" target="_blank" title=zhihu></a>
+            
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+
+    </div>
+    
+    <!-- powered by Hexo  -->
+    <div class="copyright">
+        <span id="hexo-power">Powered by <a href="https://hexo.io/" target="_blank">Hexo</a></span><span class="iconfont-archer power">&#xe635;</span><span id="theme-info">theme <a href="https://github.com/fi3ework/hexo-theme-archer" target="_blank">Archer</a></span>
+    </div>
+    <!-- 不蒜子  -->
+    
+    <div class="busuanzi-container">
+    
+     
+    <span id="busuanzi_container_site_pv">PV: <span id="busuanzi_value_site_pv"></span> :)</span>
+    
+    </div>
+    
+</footer>
+    </div>
+    <!-- toc -->
+    
+    <div class="toc-wrapper" style=
+    
+
+
+
+
+
+
+
+top:50vh;
+
+    >
+        <div class="toc-catalog">
+            <span class="iconfont-archer catalog-icon">&#xe613;</span><span>CATALOG</span>
+        </div>
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#AFL-初探"><span class="toc-number">1.</span> <span class="toc-text">AFL 初探</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#源码分析"><span class="toc-number">1.1.</span> <span class="toc-text">源码分析</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Fork-Server（结合上述源码）"><span class="toc-number">1.2.</span> <span class="toc-text">Fork Server（结合上述源码）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#共享内存"><span class="toc-number">1.3.</span> <span class="toc-text">共享内存</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#分支信息的记录"><span class="toc-number">1.4.</span> <span class="toc-text">分支信息的记录</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#AFL文件变异"><span class="toc-number">1.5.</span> <span class="toc-text">AFL文件变异</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#bitflip"><span class="toc-number">1.5.1.</span> <span class="toc-text">bitflip</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#arithmetic"><span class="toc-number">1.5.2.</span> <span class="toc-text">arithmetic</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#interest"><span class="toc-number">1.5.3.</span> <span class="toc-text">interest</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#dictionary"><span class="toc-number">1.5.4.</span> <span class="toc-text">dictionary</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#havoc"><span class="toc-number">1.5.5.</span> <span class="toc-text">havoc</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#splice"><span class="toc-number">1.5.6.</span> <span class="toc-text">splice</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#cycle"><span class="toc-number">1.5.7.</span> <span class="toc-text">cycle</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#一个AFL优化策略"><span class="toc-number">1.6.</span> <span class="toc-text">一个AFL优化策略</span></a></li></ol></li></ol>
+    </div>
+    
+    <div class="back-top iconfont-archer">&#xe639;</div>
+    <div class="sidebar sidebar-hide">
+    <ul class="sidebar-tabs sidebar-tabs-active-0">
+        <li class="sidebar-tab-archives"><span class="iconfont-archer">&#xe67d;</span><span class="tab-name">Archive</span></li>
+        <li class="sidebar-tab-tags"><span class="iconfont-archer">&#xe61b;</span><span class="tab-name">Tag</span></li>
+        <li class="sidebar-tab-categories"><span class="iconfont-archer">&#xe666;</span><span class="tab-name">Cate</span></li>
+    </ul>
+    <div class="sidebar-content sidebar-content-show-archive">
+          <div class="sidebar-panel-archives">
+    <!-- 在ejs中将archive按照时间排序 -->
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <div class="total-and-search">
+        <div class="total-archive">
+        Total : 6
+        </div>
+        <!-- search  -->
+        
+    </div>
+    
+    <div class="post-archive">
+    
+    
+    
+    
+    <div class="archive-year"> 2019 </div>
+    <ul class="year-list">
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">03/20</span><a class="archive-post-title" href= "/2019/03/20/AFL-初探/" >AFL 初探</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">02/20</span><a class="archive-post-title" href= "/2019/02/20/SmallNote/" >SmallNote</a>
+        </li>
+    
+    
+    
+    
+    
+        </ul>
+    
+    <div class="archive-year"> 2018 </div>
+    <ul class="year-list">
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">12/27</span><a class="archive-post-title" href= "/2018/12/27/P1umer-今天又咸鱼了吗/" >P1umer 今天又咸鱼了吗</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">09/03</span><a class="archive-post-title" href= "/2018/09/03/IR's-Journey/" >IR's Journey</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/10</span><a class="archive-post-title" href= "/2018/07/10/V8-Iginition-Interpreter/" >V8 Iginition Interpreter</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/01</span><a class="archive-post-title" href= "/2018/07/01/V8-Environmental-Configuration/" >V8 Environmental Configuration</a>
+        </li>
+    
+    </div>
+  </div>
+        <div class="sidebar-panel-tags">
+    <div class="sidebar-tags-name">
+    
+        <span class="sidebar-tag-name" data-tags="Diary"><span class="iconfont-archer">&#xe606;</span>Diary</span>
+    
+        <span class="sidebar-tag-name" data-tags="Browser Explore"><span class="iconfont-archer">&#xe606;</span>Browser Explore</span>
+    
+    </div>
+    <div class="iconfont-archer sidebar-tags-empty">&#xe678;</div>
+    <div class="tag-load-fail" style="display: none; color: #ccc; font-size: 0.6rem;">
+    缺失模块。<br/>
+    1、请确保node版本大于6.2<br/>
+    2、在博客根目录（注意不是archer根目录）执行以下命令：<br/>
+    <span style="color: #f75357; font-size: 1rem; line-height: 2rem;">npm i hexo-generator-json-content --save</span><br/>
+    3、在根目录_config.yml里添加配置：
+    <pre style="color: #787878; font-size: 0.6rem;">
+jsonContent:
+  meta: false
+  pages: false
+  posts:
+    title: true
+    date: true
+    path: true
+    text: false
+    raw: false
+    content: false
+    slug: false
+    updated: false
+    comments: false
+    link: false
+    permalink: false
+    excerpt: false
+    categories: true
+    tags: true</pre>
+    </div> 
+    <div class="sidebar-tags-list"></div>
+</div>
+        <div class="sidebar-panel-categories">
+    <div class="sidebar-categories-name">
+    
+        <span class="sidebar-category-name" data-categories="Browser-Explore"><span class="iconfont-archer">&#xe60a;</span>Browser-Explore</span>
+    
+        <span class="sidebar-category-name" data-categories="Browser-Explore/V8"><span class="iconfont-archer">&#xe60a;</span>Browser-Explore/V8</span>
+    
+        <span class="sidebar-category-name" data-categories="Browser-Explore/Edge"><span class="iconfont-archer">&#xe60a;</span>Browser-Explore/Edge</span>
+    
+    </div>
+    <div class="iconfont-archer sidebar-categories-empty">&#xe678;</div>
+    <div class="sidebar-categories-list"></div>
+</div>
+    </div>
+</div> 
+    <script>
+    var siteMeta = {
+        root: "/",
+        author: "P1umer sauce"
+    }
+</script>
+    <!-- CDN failover -->
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js"></script>
+    <script type="text/javascript">
+        if (typeof window.$ === 'undefined')
+        {
+            console.warn('jquery load from jsdelivr failed, will load local script')
+            document.write('<script src="/lib/jquery.min.js">\x3C/script>')
+        }
+    </script>
+    <script src="/scripts/main.js"></script>
+    <!-- algolia -->
+    
+    <!-- busuanzi  -->
+    
+    <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    
+    <!-- CNZZ  -->
+    
+    </div>
+    <!-- async load share.js -->
+    
+        <script src="/scripts/share.js" async></script>    
+     
+    </body>
+</html>
+
+
