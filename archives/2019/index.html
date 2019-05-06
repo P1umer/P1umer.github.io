@@ -346,6 +346,36 @@
     
     
     <article class="index-post">
+        <a class="abstract-title" href = "/2019/05/06/Star-CTF-OOB-writeup/" >
+            
+                <span>StarCTF OOB writeup</span>
+        </a>
+        <div class="abstract-content">
+            *CTF OOB写在前面借着 *CTF 的机会更新一篇有关 v8 引擎漏洞利用相关的博客。前不久刚刚结束的Star CTF上拿到了 OOB 的三血，下面为 WriteUp.
+分析patch123456789101112131415161718192021+BUILTIN(ArrayOob)&#123;+    uint32_t len = args.length();+    if(len &gt; 2) return ReadOnlyRoots(isolate).undefined_value();//check len&lt;=2,else return undefine+    H...
+        </div>
+        <div class="abstract-post-meta">
+            <!-- date  -->
+            <div class="abstract-date">
+                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2019/05/06</span>
+            </div>
+            <!-- tags  -->
+            
+            <div class= abstract-tags >
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags = "V8">V8</a>
+    
+</div>
+            
+        </div>
+    </article>
+    
+    
+    
+    
+    
+    
+    <article class="index-post">
         <a class="abstract-title" href = "/2019/03/20/AFL-初探/" >
             
                 <span>AFL 初探</span>
@@ -534,9 +564,18 @@ libfuzzer-workship
     
     
     
+    
+    
+    
+    
+    
+    
+    
+    
+    
     <div class="total-and-search">
         <div class="total-archive">
-        Total : 6
+        Total : 7
         </div>
         <!-- search  -->
         
@@ -549,6 +588,11 @@ libfuzzer-workship
     
     <div class="archive-year"> 2019 </div>
     <ul class="year-list">
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">05/06</span><a class="archive-post-title" href= "/2019/05/06/Star-CTF-OOB-writeup/" >StarCTF OOB writeup</a>
+        </li>
     
     
         <li class="archive-post-item">
@@ -594,6 +638,8 @@ libfuzzer-workship
         <div class="sidebar-panel-tags">
     <div class="sidebar-tags-name">
     
+        <span class="sidebar-tag-name" data-tags="V8"><span class="iconfont-archer">&#xe606;</span>V8</span>
+    
         <span class="sidebar-tag-name" data-tags="Diary"><span class="iconfont-archer">&#xe606;</span>Diary</span>
     
         <span class="sidebar-tag-name" data-tags="Browser Explore"><span class="iconfont-archer">&#xe606;</span>Browser Explore</span>
@@ -633,9 +679,9 @@ jsonContent:
     
         <span class="sidebar-category-name" data-categories="Browser-Explore"><span class="iconfont-archer">&#xe60a;</span>Browser-Explore</span>
     
-        <span class="sidebar-category-name" data-categories="Browser-Explore/V8"><span class="iconfont-archer">&#xe60a;</span>Browser-Explore/V8</span>
-    
         <span class="sidebar-category-name" data-categories="Browser-Explore/Edge"><span class="iconfont-archer">&#xe60a;</span>Browser-Explore/Edge</span>
+    
+        <span class="sidebar-category-name" data-categories="Browser-Explore/V8"><span class="iconfont-archer">&#xe60a;</span>Browser-Explore/V8</span>
     
     </div>
     <div class="iconfont-archer sidebar-categories-empty">&#xe678;</div>

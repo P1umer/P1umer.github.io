@@ -346,116 +346,24 @@
     
     
     <article class="index-post">
-        <a class="abstract-title" href = "/2018/12/27/P1umer-今天又咸鱼了吗/" >
+        <a class="abstract-title" href = "/2019/05/06/Star-CTF-OOB-writeup/" >
             
-                <span class="stick-top iconfont-archer">&#xe63d;</span>
-                
-                <span>P1umer 今天又咸鱼了吗</span>
+                <span>StarCTF OOB writeup</span>
         </a>
         <div class="abstract-content">
-            27/12/2018昨晚重新做了个 ubuntu 虚拟机用来跑 libfuzzer，经过了几天的探索感觉对libfuzzer有点初步的认识了，然而意识到写libfuzzer最重要的还是熟悉对应代码的api，于是下一步打算好好看一看chrome ipc里面的函数调用关系(TODO)。但还是先从阅读chrome自带的ned-fuzzer。
-appcache_fuzzer.cc 结构1234567891011121314151617181920212223242526namespace content&#123;    namespace&#123;    ···    &#125;     ...
+            *CTF OOB写在前面借着 *CTF 的机会更新一篇有关 v8 引擎漏洞利用相关的博客。前不久刚刚结束的Star CTF上拿到了 OOB 的三血，下面为 WriteUp.
+分析patch123456789101112131415161718192021+BUILTIN(ArrayOob)&#123;+    uint32_t len = args.length();+    if(len &gt; 2) return ReadOnlyRoots(isolate).undefined_value();//check len&lt;=2,else return undefine+    H...
         </div>
         <div class="abstract-post-meta">
             <!-- date  -->
             <div class="abstract-date">
-                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2018/12/27</span>
+                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2019/05/06</span>
             </div>
             <!-- tags  -->
             
             <div class= abstract-tags >
     
-        <a class="post-tag" href="javascript:void(0);" data-tags = "Diary">Diary</a>
-    
-</div>
-            
-        </div>
-    </article>
-    
-    
-    
-    
-    
-    
-    <article class="index-post">
-        <a class="abstract-title" href = "/2018/09/03/IR's-Journey/" >
-            
-                <span>IR&#39;s Journey</span>
-        </a>
-        <div class="abstract-content">
-            From Quads to Graphs: An Intermediate Representation’s Journey
-1 介绍中间语言不是凭空产生的。中间语言是程序员的表述到具体的机器代码的转换辅助，而且必须弥合大量的语义差异，例如从一个 fortran 90 的机器码操作到一个三地址码表述的 add 语句。在高级语言到机器语言的转化过程中，一个优化编译器会执行很多次的 pass 来优化 IR 。使用者希望优化编译器能把这一过程执行的迅速而又准确；而编译器的编写者则希望优化代码能够尽可能的简单易懂且便于维护。我们的目标是设计轻量级的 IR 来使得简单语句可以得到快速优化。
-本文讲...
-        </div>
-        <div class="abstract-post-meta">
-            <!-- date  -->
-            <div class="abstract-date">
-                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2018/09/03</span>
-            </div>
-            <!-- tags  -->
-            
-        </div>
-    </article>
-    
-    
-    
-    
-    
-    
-    <article class="index-post">
-        <a class="abstract-title" href = "/2018/07/10/V8-Iginition-Interpreter/" >
-            
-                <span>V8 Iginition Interpreter</span>
-        </a>
-        <div class="abstract-content">
-            什么是字节码解释器？解释器是一种顺序执行源代码的引擎。在过去的V8中，源代码被立即编译到汇编程序并执行，但与之不同，解释器将源代码转换为高级字节指令并按顺序执行字节指令。感觉就像一个 高级汇编程序。
-Ignition概要Ignition是一个基于寄存器的字节码解释器。与Java的堆栈基础不同，它实际上将值分配给CPU的寄存器并执行它们。在Ignition中，预先生成一个名为BytecodeHandler的字节码处理函数，从字节码中获取数组索引，并将生成的处理函数分配给索引，一个接一个地循环Bytecode数组，并使用相应索引的函数执行调用代码。简化版本的js代码如下：1234567891...
-        </div>
-        <div class="abstract-post-meta">
-            <!-- date  -->
-            <div class="abstract-date">
-                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2018/07/10</span>
-            </div>
-            <!-- tags  -->
-            
-            <div class= abstract-tags >
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags = "Browser Explore">Browser Explore</a>
-    
-</div>
-            
-        </div>
-    </article>
-    
-    
-    
-    
-    
-    
-    <article class="index-post">
-        <a class="abstract-title" href = "/2018/07/01/V8-Environmental-Configuration/" >
-            
-                <span>V8 Environmental Configuration</span>
-        </a>
-        <div class="abstract-content">
-            <p><img src="https://sakura-1252236262.cos.ap-beijing.myqcloud.com/blog/180904/19ALGmIhjG.png" alt="mark"></p>
-<h2 id="linux"><a href="#linux" class="headerlink" title="linux"></a>linux</h2><h3 id="Pre-Work"><a href="#Pre-Work" class="headerlink" title="Pre Work"></a>Pre Work</h3><ul>
-<li><p>Install Git</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">apt-get install git</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>Install depot_tools</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">git clone https://chromium.googlesource.com/chromium/tools/depot_tools</span><br><span class="line">export PATH=~/depot_tools:&quot;$PATH&quot;</span><br></pre></td></tr></table></figure>
-        </div>
-        <div class="abstract-post-meta">
-            <!-- date  -->
-            <div class="abstract-date">
-                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2018/07/01</span>
-            </div>
-            <!-- tags  -->
-            
-            <div class= abstract-tags >
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags = "Browser Explore">Browser Explore</a>
+        <a class="post-tag" href="javascript:void(0);" data-tags = "V8">V8</a>
     
 </div>
             
