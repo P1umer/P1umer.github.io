@@ -355,11 +355,7 @@
 
 Basic Framestates我们通过使用deoptimization来实现推测性优化，deoptimization将执行主体从优化代码转移到解释器。要做到这一点，需要知道：
 
-想继续解释代码的地方
-如何从优化代码的物理机器状态在延续点重构VM状态。
-
-为了知道我们想要在哪里继续执行，我们保存了对方法的引用和一个字节码索引(bci)(bytecode index,为了让 Ignition 找到准确解释执行点)。对于VM状态，我们将本地变量和操作数堆栈槽映射到它们在IR中的值，当deopt时可以将它们映射到它们的物理位置。
-在IR中，我们跟踪可能对虚拟机的全局状态产生副作用的节点...
+想继续...
         </div>
         <div class="abstract-post-meta">
             <!-- date  -->
@@ -390,8 +386,7 @@ Basic Framestates我们通过使用deoptimization来实现推测性优化，deop
         <div class="abstract-content">
              
 写在前面【+】本文首发于安全客 https://www.anquanke.com/post/id/179161 
-相关链接【+】题目：https://drive.google.com/open?id=1B5EKTB3c2sYHg26f_tvxejrP0HFzj1Qi【+】 https://ctf-wiki.github.io/ctf-wiki/pwn/linux/kernel/basic_knowledge/【+】 http://p4nda.top【+】 https://sunichi.github.io
-题目描述解压题目我们可以拿到以下文件:12345p1umer@ubuntu:~...
+相关链接【+】题目：https://drive.google.com/ope...
         </div>
         <div class="abstract-post-meta">
             <!-- date  -->
@@ -422,7 +417,7 @@ Basic Framestates我们通过使用deoptimization来实现推测性优化，deop
         <div class="abstract-content">
              
 写在前面借着 *CTF 的机会更新一篇有关 v8 引擎漏洞利用相关的博客。前不久刚刚结束的Star CTF上拿到了 OOB 的三血，下面为 WriteUp.
-分析patch123456789101112131415161718192021+BUILTIN(ArrayOob)&#123;+    uint32_t len = args.length();+    if(len &gt; 2) return ReadOnlyRoots(isolate).undefined_value();//check len&lt;=2,else return undefine+    Handle&...
+分析patch123456789...
         </div>
         <div class="abstract-post-meta">
             <!-- date  -->
@@ -453,7 +448,7 @@ Basic Framestates我们通过使用deoptimization来实现推测性优化，deop
         <div class="abstract-content">
              
 AFL 初探
-源码分析12345678910111213141516171819202122232425262728293031323334353637383940414243444546474849505152535455565758596061626364656667686970717273747576777879808182838485868788899091929394959697989910010110210310410510610710810911011111211311411511611711811912012112212312412512612712812913013...
+源码分析123456789101112131415161718192021222324252627282930313233343536373839404142434445464...
         </div>
         <div class="abstract-post-meta">
             <!-- date  -->
@@ -477,9 +472,7 @@ AFL 初探
         </a>
         <div class="abstract-content">
              
-libfuzzer build编译流程环境Ubuntu16.0412345git clone https://github.com/Dor1s/libfuzzer-workshop.gitsudo sh checkout_build_install_llvm.shsudo apt-get install -ymake autoconf automake libtool pkg-config zlib1g-devcd libfuzzer-workshop/libFuzzerFuzzer/build.sh
-libfuzzer-workship
-趁着编译的时候去详细了解一下libfuzze...
+libfuzzer build编译流程环境Ubuntu16.0412345git clone https://github.com/Dor1s/libfuzzer-workshop.gits...
         </div>
         <div class="abstract-post-meta">
             <!-- date  -->
