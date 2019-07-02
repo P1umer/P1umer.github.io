@@ -351,14 +351,15 @@
                 <span>V8 Optimize: FrameState</span>
         </a>
         <div class="abstract-content">
-            
+             
+
 Basic Framestates我们通过使用deoptimization来实现推测性优化，deoptimization将执行主体从优化代码转移到解释器。要做到这一点，需要知道：
 
 想继续解释代码的地方
 如何从优化代码的物理机器状态在延续点重构VM状态。
 
 为了知道我们想要在哪里继续执行，我们保存了对方法的引用和一个字节码索引(bci)(bytecode index,为了让 Ignition 找到准确解释执行点)。对于VM状态，我们将本地变量和操作数堆栈槽映射到它们在IR中的值，当deopt时可以将它们映射到它们的物理位置。
-在IR中，我们跟踪可能对虚拟机的全局状态产生副作用的节点的数...
+在IR中，我们跟踪可能对虚拟机的全局状态产生副作用的节点...
         </div>
         <div class="abstract-post-meta">
             <!-- date  -->
@@ -387,8 +388,9 @@ Basic Framestates我们通过使用deoptimization来实现推测性优化，deop
                 <span>V8 Iginition Interpreter</span>
         </a>
         <div class="abstract-content">
-            什么是字节码解释器？解释器是一种顺序执行源代码的引擎。在过去的V8中，源代码被立即编译到汇编程序并执行，但与之不同，解释器将源代码转换为高级字节指令并按顺序执行字节指令。感觉就像一个 高级汇编程序。
-Ignition概要Ignition是一个基于寄存器的字节码解释器。与Java的堆栈基础不同，它实际上将值分配给CPU的寄存器并执行它们。在Ignition中，预先生成一个名为BytecodeHandler的字节码处理函数，从字节码中获取数组索引，并将生成的处理函数分配给索引，一个接一个地循环Bytecode数组，并使用相应索引的函数执行调用代码。简化版本的js代码如下：1234567891...
+             
+什么是字节码解释器？解释器是一种顺序执行源代码的引擎。在过去的V8中，源代码被立即编译到汇编程序并执行，但与之不同，解释器将源代码转换为高级字节指令并按顺序执行字节指令。感觉就像一个高级汇编程序。
+Ignition概要Ignition是一个基于寄存器的字节码解释器。与Java的堆栈基础不同，它实际上将值分配给CPU的寄存器并执行它们。在Ignition中，预先生成一个名为BytecodeHandler的字节码处理函数，从字节码中获取数组索引，并将生成的处理函数分配给索引，一个接一个地循环Bytecode数组，并使用相应索引的函数执行调用代码。简化版本的js代码如下：123456789...
         </div>
         <div class="abstract-post-meta">
             <!-- date  -->
@@ -417,13 +419,19 @@ Ignition概要Ignition是一个基于寄存器的字节码解释器。与Java的
                 <span>V8 &amp; Chrome Setup</span>
         </a>
         <div class="abstract-content">
-            <p><img src="https://sakura-1252236262.cos.ap-beijing.myqcloud.com/blog/180904/19ALGmIhjG.png" alt="mark"></p>
-<h2 id="V8-Build"><a href="#V8-Build" class="headerlink" title="V8 Build"></a>V8 Build</h2><h3 id="linux"><a href="#linux" class="headerlink" title="linux"></a>linux</h3><h4 id="Pre-Work"><a href="#Pre-Work" class="headerlink" title="Pre Work"></a>Pre Work</h4><ul>
-<li><p>Install Git</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">apt-get install git</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>Install depot_tools</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">git clone https://chromium.googlesource.com/chromium/tools/depot_tools</span><br><span class="line">export PATH=~/depot_tools:&quot;$PATH&quot;</span><br></pre></td></tr></table></figure>
+             
+
+V8 BuildlinuxPre Work
+Install Git
+1apt-get install git
+
+Install depot_tools
+12git clone https://chromium.googlesource.com/chromium/tools/depot_toolsexport PATH=~/depot_tools:&quot;$PATH&quot;
+
+
+Key Step
+BUILD.sh
+  123456gclientmkdir v8cd v8fetch v8tools/dev/v8gen.py x64.debugninja -C out.gn/x6...
         </div>
         <div class="abstract-post-meta">
             <!-- date  -->
@@ -621,7 +629,7 @@ Ignition概要Ignition是一个基于寄存器的字节码解释器。与Java的
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">05/30</span><a class="archive-post-title" href= "/2019/05/30/Linux Kernel 初探/" >【Kernel】 Linux Kernel 初探（一）BabyKernel</a>
+            <span class="archive-post-date">05/30</span><a class="archive-post-title" href= "/2019/05/30/Linux Kernel 初探/" >Linux Kernel 初探（一）BabyKernel</a>
         </li>
     
     
