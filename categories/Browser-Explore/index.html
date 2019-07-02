@@ -346,6 +346,42 @@
     
     
     <article class="index-post">
+        <a class="abstract-title" href = "/2019/07/03/V8-Optimize-FrameState/" >
+            
+                <span>V8 Optimize: FrameState</span>
+        </a>
+        <div class="abstract-content">
+            
+V8 Optimize: FramestatesBasic Framestates我们通过使用deoptimization来实现推测性优化，deoptimization将执行主体从优化代码转移到解释器。要做到这一点，需要知道：
+
+想继续解释代码的地方
+如何从优化代码的物理机器状态在延续点重构VM状态。
+
+为了知道我们想要在哪里继续执行，我们保存了对方法的引用和一个字节码索引(bci)(bytecode index,为了让 Ignition 找到准确解释执行点)。对于VM状态，我们将本地变量和操作数堆栈槽映射到它们在IR中的值，当deopt时可以将它们映射到它们的物理位置。
+在IR中，我...
+        </div>
+        <div class="abstract-post-meta">
+            <!-- date  -->
+            <div class="abstract-date">
+                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2019/07/03</span>
+            </div>
+            <!-- tags  -->
+            
+            <div class= abstract-tags >
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags = "Browser Explore">Browser Explore</a>
+    
+</div>
+            
+        </div>
+    </article>
+    
+    
+    
+    
+    
+    
+    <article class="index-post">
         <a class="abstract-title" href = "/2018/07/10/V8-Iginition-Interpreter/" >
             
                 <span>V8 Iginition Interpreter</span>
@@ -378,11 +414,11 @@ Ignition概要Ignition是一个基于寄存器的字节码解释器。与Java的
     <article class="index-post">
         <a class="abstract-title" href = "/2018/07/01/V8-Environmental-Configuration/" >
             
-                <span>V8 &amp; Chrome Environmental Configuration</span>
+                <span>V8 &amp; Chrome Setup</span>
         </a>
         <div class="abstract-content">
             <p><img src="https://sakura-1252236262.cos.ap-beijing.myqcloud.com/blog/180904/19ALGmIhjG.png" alt="mark"></p>
-<h1 id="V8"><a href="#V8" class="headerlink" title="V8"></a>V8</h1><h2 id="linux"><a href="#linux" class="headerlink" title="linux"></a>linux</h2><h3 id="Pre-Work"><a href="#Pre-Work" class="headerlink" title="Pre Work"></a>Pre Work</h3><ul>
+<h2 id="V8-Build"><a href="#V8-Build" class="headerlink" title="V8 Build"></a>V8 Build</h2><h3 id="linux"><a href="#linux" class="headerlink" title="linux"></a>linux</h3><h4 id="Pre-Work"><a href="#Pre-Work" class="headerlink" title="Pre Work"></a>Pre Work</h4><ul>
 <li><p>Install Git</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">apt-get install git</span><br></pre></td></tr></table></figure>
 </li>
@@ -555,9 +591,16 @@ Ignition概要Ignition是一个基于寄存器的字节码解释器。与Java的
     
     
     
+    
+    
+    
+    
+    
+    
+    
     <div class="total-and-search">
         <div class="total-archive">
-        Total : 7
+        Total : 8
         </div>
         <!-- search  -->
         
@@ -570,6 +613,11 @@ Ignition概要Ignition是一个基于寄存器的字节码解释器。与Java的
     
     <div class="archive-year"> 2019 </div>
     <ul class="year-list">
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/03</span><a class="archive-post-title" href= "/2019/07/03/V8-Optimize-FrameState/" >V8 Optimize: FrameState</a>
+        </li>
     
     
         <li class="archive-post-item">
@@ -612,7 +660,7 @@ Ignition概要Ignition是一个基于寄存器的字节码解释器。与Java的
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">07/01</span><a class="archive-post-title" href= "/2018/07/01/V8-Environmental-Configuration/" >V8 & Chrome Environmental Configuration</a>
+            <span class="archive-post-date">07/01</span><a class="archive-post-title" href= "/2018/07/01/V8-Environmental-Configuration/" >V8 & Chrome Setup</a>
         </li>
     
     </div>
@@ -620,13 +668,11 @@ Ignition概要Ignition是一个基于寄存器的字节码解释器。与Java的
         <div class="sidebar-panel-tags">
     <div class="sidebar-tags-name">
     
-        <span class="sidebar-tag-name" data-tags="V8"><span class="iconfont-archer">&#xe606;</span>V8</span>
-    
-        <span class="sidebar-tag-name" data-tags="kernel"><span class="iconfont-archer">&#xe606;</span>kernel</span>
+        <span class="sidebar-tag-name" data-tags="Kernel"><span class="iconfont-archer">&#xe606;</span>Kernel</span>
     
         <span class="sidebar-tag-name" data-tags="Browser Explore"><span class="iconfont-archer">&#xe606;</span>Browser Explore</span>
     
-        <span class="sidebar-tag-name" data-tags="Kernel"><span class="iconfont-archer">&#xe606;</span>Kernel</span>
+        <span class="sidebar-tag-name" data-tags="V8"><span class="iconfont-archer">&#xe606;</span>V8</span>
     
     </div>
     <div class="iconfont-archer sidebar-tags-empty">&#xe678;</div>
@@ -663,9 +709,9 @@ jsonContent:
     
         <span class="sidebar-category-name" data-categories="Browser-Explore"><span class="iconfont-archer">&#xe60a;</span>Browser-Explore</span>
     
-        <span class="sidebar-category-name" data-categories="Browser-Explore/Edge"><span class="iconfont-archer">&#xe60a;</span>Browser-Explore/Edge</span>
-    
         <span class="sidebar-category-name" data-categories="Browser-Explore/V8"><span class="iconfont-archer">&#xe60a;</span>Browser-Explore/V8</span>
+    
+        <span class="sidebar-category-name" data-categories="Browser-Explore/Edge"><span class="iconfont-archer">&#xe60a;</span>Browser-Explore/Edge</span>
     
     </div>
     <div class="iconfont-archer sidebar-categories-empty">&#xe678;</div>

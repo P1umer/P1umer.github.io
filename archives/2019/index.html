@@ -346,6 +346,42 @@
     
     
     <article class="index-post">
+        <a class="abstract-title" href = "/2019/07/03/V8-Optimize-FrameState/" >
+            
+                <span>V8 Optimize: FrameState</span>
+        </a>
+        <div class="abstract-content">
+            
+V8 Optimize: FramestatesBasic Framestates我们通过使用deoptimization来实现推测性优化，deoptimization将执行主体从优化代码转移到解释器。要做到这一点，需要知道：
+
+想继续解释代码的地方
+如何从优化代码的物理机器状态在延续点重构VM状态。
+
+为了知道我们想要在哪里继续执行，我们保存了对方法的引用和一个字节码索引(bci)(bytecode index,为了让 Ignition 找到准确解释执行点)。对于VM状态，我们将本地变量和操作数堆栈槽映射到它们在IR中的值，当deopt时可以将它们映射到它们的物理位置。
+在IR中，我...
+        </div>
+        <div class="abstract-post-meta">
+            <!-- date  -->
+            <div class="abstract-date">
+                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2019/07/03</span>
+            </div>
+            <!-- tags  -->
+            
+            <div class= abstract-tags >
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags = "Browser Explore">Browser Explore</a>
+    
+</div>
+            
+        </div>
+    </article>
+    
+    
+    
+    
+    
+    
+    <article class="index-post">
         <a class="abstract-title" href = "/2019/05/30/Linux Kernel 初探/" >
             
                 <span>【Kernel】 Linux Kernel 初探（一）BabyKernel</span>
@@ -600,9 +636,16 @@ libfuzzer-workship
     
     
     
+    
+    
+    
+    
+    
+    
+    
     <div class="total-and-search">
         <div class="total-archive">
-        Total : 7
+        Total : 8
         </div>
         <!-- search  -->
         
@@ -615,6 +658,11 @@ libfuzzer-workship
     
     <div class="archive-year"> 2019 </div>
     <ul class="year-list">
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/03</span><a class="archive-post-title" href= "/2019/07/03/V8-Optimize-FrameState/" >V8 Optimize: FrameState</a>
+        </li>
     
     
         <li class="archive-post-item">
@@ -657,7 +705,7 @@ libfuzzer-workship
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">07/01</span><a class="archive-post-title" href= "/2018/07/01/V8-Environmental-Configuration/" >V8 & Chrome Environmental Configuration</a>
+            <span class="archive-post-date">07/01</span><a class="archive-post-title" href= "/2018/07/01/V8-Environmental-Configuration/" >V8 & Chrome Setup</a>
         </li>
     
     </div>
@@ -665,13 +713,11 @@ libfuzzer-workship
         <div class="sidebar-panel-tags">
     <div class="sidebar-tags-name">
     
-        <span class="sidebar-tag-name" data-tags="V8"><span class="iconfont-archer">&#xe606;</span>V8</span>
-    
-        <span class="sidebar-tag-name" data-tags="kernel"><span class="iconfont-archer">&#xe606;</span>kernel</span>
+        <span class="sidebar-tag-name" data-tags="Kernel"><span class="iconfont-archer">&#xe606;</span>Kernel</span>
     
         <span class="sidebar-tag-name" data-tags="Browser Explore"><span class="iconfont-archer">&#xe606;</span>Browser Explore</span>
     
-        <span class="sidebar-tag-name" data-tags="Kernel"><span class="iconfont-archer">&#xe606;</span>Kernel</span>
+        <span class="sidebar-tag-name" data-tags="V8"><span class="iconfont-archer">&#xe606;</span>V8</span>
     
     </div>
     <div class="iconfont-archer sidebar-tags-empty">&#xe678;</div>
@@ -708,9 +754,9 @@ jsonContent:
     
         <span class="sidebar-category-name" data-categories="Browser-Explore"><span class="iconfont-archer">&#xe60a;</span>Browser-Explore</span>
     
-        <span class="sidebar-category-name" data-categories="Browser-Explore/Edge"><span class="iconfont-archer">&#xe60a;</span>Browser-Explore/Edge</span>
-    
         <span class="sidebar-category-name" data-categories="Browser-Explore/V8"><span class="iconfont-archer">&#xe60a;</span>Browser-Explore/V8</span>
+    
+        <span class="sidebar-category-name" data-categories="Browser-Explore/Edge"><span class="iconfont-archer">&#xe60a;</span>Browser-Explore/Edge</span>
     
     </div>
     <div class="iconfont-archer sidebar-categories-empty">&#xe678;</div>
