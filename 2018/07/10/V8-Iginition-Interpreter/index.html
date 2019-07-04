@@ -16,7 +16,7 @@
 <meta property="og:description" content="Intro: Analysis of Ignition">
 <meta property="og:locale" content="en">
 <meta property="og:image" content="https://p1umer-1256667851.cos.ap-beijing.myqcloud.com/img/Montreux_ZH-CN5485205583_1920x1080.jpg">
-<meta property="og:updated_time" content="2019-07-04T15:36:56.924Z">
+<meta property="og:updated_time" content="2019-07-04T16:38:29.636Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="V8 Iginition Interpreter">
 <meta name="twitter:description" content="Intro: Analysis of Ignition">
@@ -161,7 +161,7 @@
                 <span class="level-item has-text-grey">
                     
                     
-                    11 minutes read (About 1578 words)
+                    11 minutes read (About 1575 words)
                 </span>
                 
                 
@@ -217,9 +217,9 @@
 </ul>
 <h3><span id="字节码执行">字节码执行</span></h3><h4><span id="bytecodehandler">BytecodeHandler</span></h4><p>字节码处理由BytecodeHandler完成。<br>BytecodeHandler在v8初始化时将被生成。</p>
 <p>以下是BytecodeHandler的示例。<br><figure class="highlight plain hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">IGNITION_HANDLER(LdaZero, InterpreterAssembler) &#123;</span><br><span class="line">  Node* zero_value = NumberConstant(0.0);</span><br><span class="line">  SetAccumulator(zero_value);</span><br><span class="line">  Dispatch();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
-<p>在BytecoeHandler load zero的过程中，将累加器设置为0。实际上，每组字节码都将有一个这样的BytecodeHandler。每个BytecodeHandler通过depatch直接调用下一个BytecodeHandler。下图显示了BytecodeHandler的生成<br><img src="http://sakura-1252236262.cos.ap-beijing.myqcloud.com/blog/180809/5EKEACljA5.png" alt="mark"></p>
+<p>在BytecoeHandler load zero的过程中，将累加器设置为0。实际上，每组字节码都将有一个这样的BytecodeHandler。每个BytecodeHandler通过depatch直接调用下一个BytecodeHandler。下图显示了BytecodeHandler的生成<br><img src="https://p1umer-1256667851.cos.ap-beijing.myqcloud.com/img/20190705003811.png" alt></p>
 <h4><span id="interpreterentrytrampoline">InterpreterEntryTrampoline</span></h4><p>在Ignition终于生成了BytecodeArray之后，从使用InterpreterEntryTrampoline代码构建的代码中点燃DispatchTable of Ignition，它从BytecodeArray中检索字节码并执行相应DispatchTable的处理并转发。下图显示了Ignition的执行方式</p>
-<p><img src="http://sakura-1252236262.cos.ap-beijing.myqcloud.com/blog/180809/LD4DkmKggA.png" alt="mark"></p>
+<p><img src="https://p1umer-1256667851.cos.ap-beijing.myqcloud.com/img/20190705003824.png" alt></p>
 
         </div>
         
