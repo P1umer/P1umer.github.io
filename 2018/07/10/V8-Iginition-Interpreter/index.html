@@ -1,410 +1,183 @@
 <!DOCTYPE html>
-<html lang="zh-Hans">
-    <!-- title -->
-
-
-
-
-<!-- keywords -->
-
-
-
-
-<head>
+<html lang="en">
+<head><meta name="generator" content="Hexo 3.9.0">
     <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no" >
-    <meta name="author" content="P1umer sauce">
-    <meta name="renderer" content="webkit">
-    <meta name="copyright" content="P1umer sauce">
+<title>V8 Iginition Interpreter - P1umerのblog</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+
+
+    <meta name="description" content="Intro: Analysis of Ignition">
+<meta name="keywords" content="Browser Explore,V8,Basic">
+<meta property="og:type" content="article">
+<meta property="og:title" content="V8 Iginition Interpreter">
+<meta property="og:url" content="http://p1umer.gituhb.io/2018/07/10/V8-Iginition-Interpreter/index.html">
+<meta property="og:site_name" content="P1umerのblog">
+<meta property="og:description" content="Intro: Analysis of Ignition">
+<meta property="og:locale" content="en">
+<meta property="og:image" content="https://p1umer-1256667851.cos.ap-beijing.myqcloud.com/img/Montreux_ZH-CN5485205583_1920x1080.jpg">
+<meta property="og:updated_time" content="2019-07-04T15:36:56.924Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="V8 Iginition Interpreter">
+<meta name="twitter:description" content="Intro: Analysis of Ignition">
+<meta name="twitter:image" content="https://p1umer-1256667851.cos.ap-beijing.myqcloud.com/img/Montreux_ZH-CN5485205583_1920x1080.jpg">
+
+
+
+
+
+
+
+<link rel="icon" href="/avatar/111.png">
+
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.7.2/css/bulma.css">
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.4.1/css/all.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Ubuntu:400,600|Source+Code+Pro">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@9.12.0/styles/atom-one-light.css">
+
+
     
-    <meta name="keywords" content="Blog">
     
-    <meta name="description" content="noman">
-    <meta http-equiv="Cache-control" content="no-cache">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
-    <title>V8 Iginition Interpreter · P1umerのStudio</title>
-    <style type="text/css">
-    @font-face {
-        font-family: 'Oswald-Regular';
-        src: url("/font/Oswald-Regular.ttf");
-    }
-
-    body {
-        margin: 0;
-    }
-
-    header,
-    footer,
-    .back-top,
-    .sidebar,
-    .container,
-    .site-intro-meta,
-    .toc-wrapper {
-        display: none;
-    }
-
-    .site-intro {
-        position: relative;
-        z-index: 3;
-        width: 100%;
-        /* height: 50vh; */
-        overflow: hidden;
-    }
-
-    .site-intro-placeholder {
-        position: absolute;
-        z-index: -2;
-        top: 0;
-        left: 0;
-        width: calc(100% + 300px);
-        height: 100%;
-        background: repeating-linear-gradient(-45deg, #444 0, #444 80px, #333 80px, #333 160px);
-        background-position: center center;
-        transform: translate3d(-226px, 0, 0);
-        animation: gradient-move 2.5s ease-out 0s infinite;
-    }
-
-    @keyframes gradient-move {
-        0% {
-            transform: translate3d(-226px, 0, 0);
-        }
-        100% {
-            transform: translate3d(0, 0, 0);
-        }
-    }
-
-</style>
-
-    <link rel="preload" href= "/css/style.css?v=20180824" as="style" onload="this.onload=null;this.rel='stylesheet'" />
-    <link rel="stylesheet" href= "/css/mobile.css?v=20180824" media="(max-width: 980px)">
     
-    <link rel="preload" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.2.5/jquery.fancybox.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'" />
+    <style>body>.footer,body>.navbar,body>.section{opacity:0}</style>
     
-    <!-- /*! loadCSS. [c]2017 Filament Group, Inc. MIT License */
-/* This file is meant as a standalone workflow for
-- testing support for link[rel=preload]
-- enabling async CSS loading in browsers that do not support rel=preload
-- applying rel preload css once loaded, whether supported or not.
-*/ -->
-<script>
-(function( w ){
-	"use strict";
-	// rel=preload support test
-	if( !w.loadCSS ){
-		w.loadCSS = function(){};
-	}
-	// define on the loadCSS obj
-	var rp = loadCSS.relpreload = {};
-	// rel=preload feature support test
-	// runs once and returns a function for compat purposes
-	rp.support = (function(){
-		var ret;
-		try {
-			ret = w.document.createElement( "link" ).relList.supports( "preload" );
-		} catch (e) {
-			ret = false;
-		}
-		return function(){
-			return ret;
-		};
-	})();
 
-	// if preload isn't supported, get an asynchronous load by using a non-matching media attribute
-	// then change that media back to its intended value on load
-	rp.bindMediaToggle = function( link ){
-		// remember existing media attr for ultimate state, or default to 'all'
-		var finalMedia = link.media || "all";
-
-		function enableStylesheet(){
-			link.media = finalMedia;
-		}
-
-		// bind load handlers to enable media
-		if( link.addEventListener ){
-			link.addEventListener( "load", enableStylesheet );
-		} else if( link.attachEvent ){
-			link.attachEvent( "onload", enableStylesheet );
-		}
-
-		// Set rel and non-applicable media type to start an async request
-		// note: timeout allows this to happen async to let rendering continue in IE
-		setTimeout(function(){
-			link.rel = "stylesheet";
-			link.media = "only x";
-		});
-		// also enable media after 3 seconds,
-		// which will catch very old browsers (android 2.x, old firefox) that don't support onload on link
-		setTimeout( enableStylesheet, 3000 );
-	};
-
-	// loop through link elements in DOM
-	rp.poly = function(){
-		// double check this to prevent external calls from running
-		if( rp.support() ){
-			return;
-		}
-		var links = w.document.getElementsByTagName( "link" );
-		for( var i = 0; i < links.length; i++ ){
-			var link = links[ i ];
-			// qualify links to those with rel=preload and as=style attrs
-			if( link.rel === "preload" && link.getAttribute( "as" ) === "style" && !link.getAttribute( "data-loadcss" ) ){
-				// prevent rerunning on link
-				link.setAttribute( "data-loadcss", true );
-				// bind listeners to toggle media back
-				rp.bindMediaToggle( link );
-			}
-		}
-	};
-
-	// if unsupported, run the polyfill
-	if( !rp.support() ){
-		// run once at least
-		rp.poly();
-
-		// rerun poly on an interval until onload
-		var run = w.setInterval( rp.poly, 500 );
-		if( w.addEventListener ){
-			w.addEventListener( "load", function(){
-				rp.poly();
-				w.clearInterval( run );
-			} );
-		} else if( w.attachEvent ){
-			w.attachEvent( "onload", function(){
-				rp.poly();
-				w.clearInterval( run );
-			} );
-		}
-	}
-
-
-	// commonjs
-	if( typeof exports !== "undefined" ){
-		exports.loadCSS = loadCSS;
-	}
-	else {
-		w.loadCSS = loadCSS;
-	}
-}( typeof global !== "undefined" ? global : this ) );
-</script>
-
-    <link rel="icon" href= "/assets/favicon.ico" />
-    <link rel="preload" href="https://cdn.jsdelivr.net/npm/webfontloader@1.6.28/webfontloader.min.js" as="script" />
-    <link rel="preload" href="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js" as="script" />
-    <link rel="preload" href="/scripts/main.js" as="script" />
-    <link rel="preload" as="font" href="/font/Oswald-Regular.ttf" crossorigin>
-    <link rel="preload" as="font" href="https://at.alicdn.com/t/font_327081_1dta1rlogw17zaor.woff" crossorigin>
     
-    <!-- fancybox -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.2.5/jquery.fancybox.min.js" defer></script>
-    <!-- 百度统计  -->
     
-    <!-- 谷歌统计  -->
     
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lightgallery@1.6.8/dist/css/lightgallery.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/justifiedGallery@3.7.0/dist/css/justifiedGallery.min.css">
+    
+
+    
+    
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/outdatedbrowser@1.1.5/outdatedbrowser/outdatedbrowser.min.css">
+
+
+    
+    
+    
+    
+
+<link rel="stylesheet" href="/css/back-to-top.css">
+
+
+    
+    
+
+    
+    
+    
+    
+
+    
+    
+<link rel="stylesheet" href="/css/progressbar.css">
+<script src="https://cdn.jsdelivr.net/npm/pace-js@1.0.2/pace.min.js"></script>
+
+    
+    
+    
+
+    
+    
+    
+
+
+<link rel="stylesheet" href="/css/style.css">
 </head>
-
-    
-        <body class="post-body">
-    
-    
-<header class="header">
-
-    <div class="read-progress"></div>
-    <div class="header-sidebar-menu">&#xe775;</div>
-    <!-- post页的toggle banner  -->
-    
-    <div class="banner">
-            <div class="blog-title">
-                <a href="/" >P1umerのStudio.</a>
+<body class="is-3-column">
+    <nav class="navbar navbar-main">
+    <div class="container">
+        <div class="navbar-brand is-flex-center">
+            <a class="navbar-item navbar-logo" href="/">
+            
+                <img src="/avatar/111.png" alt="V8 Iginition Interpreter" height="28">
+            
+            </a>
+        </div>
+        <div class="navbar-menu">
+            
+            <div class="navbar-start">
+                
+                <a class="navbar-item" href="/">Home</a>
+                
+                <a class="navbar-item" href="/archives">Archives</a>
+                
+                <a class="navbar-item" href="/categories">Categories</a>
+                
+                <a class="navbar-item" href="/tags">Tags</a>
+                
+                <a class="navbar-item" href="/about">About</a>
+                
             </div>
-            <div class="post-title">
-                <a href="#" class="post-name">V8 Iginition Interpreter</a>
+            
+            <div class="navbar-end">
+                
+                    
+                    
+                    <a class="navbar-item" target="_blank" title="github" href="https://github.com/p1umer">
+                        
+                        <i class="fab fa-github"></i>
+                        
+                    </a>
+                    
+                
+                
+                
+                <a class="navbar-item search" title="Search" href="javascript:;">
+                    <i class="fas fa-search"></i>
+                </a>
+                
             </div>
+        </div>
+    </div>
+</nav>
+    
+    <section class="section">
+        <div class="container">
+            <div class="columns">
+                <div class="column is-8-tablet is-8-desktop is-6-widescreen has-order-2 column-main"><div class="card">
+    
+    <div class="card-image">
+        <span class="image is-7by1">
+            <img class="thumbnail" src="https://p1umer-1256667851.cos.ap-beijing.myqcloud.com/img/Montreux_ZH-CN5485205583_1920x1080.jpg" alt="V8 Iginition Interpreter">
+        </span>
     </div>
     
-    <a class="home-link" href=/>P1umerのStudio.</a>
-</header>
-    <div class="wrapper">
-        <div class="site-intro" style="
-
-
-
-
-
-
-
-height:50vh;
-">
-    
-    <!-- 主页  -->
-    
-    
-    <!-- 404页  -->
+    <div class="card-content article ">
+        
+        <div class="level article-meta is-size-7 is-uppercase is-mobile is-overflow-x-auto">
+            <div class="level-left">
+                <time class="level-item has-text-grey" datetime="2018-07-10T06:45:19.000Z">2018-07-10</time>
+                
+                <div class="level-item">
+                <a class="has-link-grey -link" href="/categories/Browser-Explore/">Browser Explore</a>&nbsp;/&nbsp;<a class="has-link-grey -link" href="/categories/Browser-Explore/V8/">V8</a>&nbsp;/&nbsp;<a class="has-link-grey -link" href="/categories/Browser-Explore/V8/Basic/">Basic</a>
+                </div>
+                
+                
+                <span class="level-item has-text-grey">
+                    
+                    
+                    11 minutes read (About 1578 words)
+                </span>
+                
+                
+            </div>
+        </div>
+        
+        <h1 class="title is-size-3 is-size-4-mobile has-text-weight-normal">
             
-    <div class="site-intro-placeholder"></div>
-    <div class="site-intro-img" style="background-image: url(/intro/post-bg.jpg)"></div>
-    <div class="site-intro-meta">
-        <!-- 标题  -->
-        <h1 class="intro-title">
-            <!-- 主页  -->
-            
-            V8 Iginition Interpreter
-            <!-- 404 -->
+                V8 Iginition Interpreter
             
         </h1>
-        <!-- 副标题 -->
-        <p class="intro-subtitle">
-            <!-- 主页副标题  -->
-            
-            
-            <!-- 404 -->
-            
-        </p>
-        <!-- 文章页meta -->
-        
-            <div class="post-intros">
-                <!-- 文章页标签  -->
-                
-                    <div class= post-intro-tags >
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags = "Browser Explore">Browser Explore</a>
-    
-</div>
-                
-                
-                    <div class="post-intro-read">
-                        <span>字数统计: <span class="post-count word-count">1,629</span>阅读时长: <span class="post-count reading-time">7 min</span></span>
-                    </div>
-                
-                <div class="post-intro-meta">
-                    <span class="post-intro-calander iconfont-archer">&#xe676;</span>
-                    <span class="post-intro-time">2018/07/10</span>
-                    
-                    <span id="busuanzi_container_page_pv" class="busuanzi-pv">
-                        <span class="iconfont-archer">&#xe602;</span>
-                        <span id="busuanzi_value_page_pv"></span>
-                    </span>
-                    
-                    <span class="shareWrapper">
-                        <span class="iconfont-archer shareIcon">&#xe71d;</span>
-                        <span class="shareText">Share</span>
-                        <ul class="shareList">
-                            <li class="iconfont-archer share-qr" data-type="qr">&#xe75b;
-                                <div class="share-qrcode"></div>
-                            </li>
-                            <li class="iconfont-archer" data-type="weibo">&#xe619;</li>
-                            <li class="iconfont-archer" data-type="qzone">&#xe62e;</li>
-                            <li class="iconfont-archer" data-type="twitter">&#xe634;</li>
-                            <li class="iconfont-archer" data-type="facebook">&#xe67a;</li>
-                        </ul>
-                    </span>
-                </div>
-            </div>
-        
-    </div>
-</div>
-        <script>
- 
-  // get user agent
-  var browser = {
-    versions: function () {
-      var u = window.navigator.userAgent;
-      return {
-        userAgent: u,
-        trident: u.indexOf('Trident') > -1, //IE内核
-        presto: u.indexOf('Presto') > -1, //opera内核
-        webKit: u.indexOf('AppleWebKit') > -1, //苹果、谷歌内核
-        gecko: u.indexOf('Gecko') > -1 && u.indexOf('KHTML') == -1, //火狐内核
-        mobile: !!u.match(/AppleWebKit.*Mobile.*/), //是否为移动终端
-        ios: !!u.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/), //ios终端
-        android: u.indexOf('Android') > -1 || u.indexOf('Linux') > -1, //android终端或者uc浏览器
-        iPhone: u.indexOf('iPhone') > -1 || u.indexOf('Mac') > -1, //是否为iPhone或者安卓QQ浏览器
-        iPad: u.indexOf('iPad') > -1, //是否为iPad
-        webApp: u.indexOf('Safari') == -1, //是否为web应用程序，没有头部与底部
-        weixin: u.indexOf('MicroMessenger') == -1, //是否为微信浏览器
-        uc: u.indexOf('UCBrowser') > -1 //是否为android下的UC浏览器
-      };
-    }()
-  }
-  console.log("userAgent:" + browser.versions.userAgent);
-
-  // callback
-  function fontLoaded() {
-    console.log('font loaded');
-    if (document.getElementsByClassName('site-intro-meta')) {
-      document.getElementsByClassName('intro-title')[0].classList.add('intro-fade-in');
-      document.getElementsByClassName('intro-subtitle')[0].classList.add('intro-fade-in');
-      var postIntros = document.getElementsByClassName('post-intros')[0]
-      if (postIntros) {
-        postIntros.classList.add('post-fade-in');
-      }
-    }
-  }
-
-  // UC不支持跨域，所以直接显示
-  function asyncCb(){
-    if (browser.versions.uc) {
-      console.log("UCBrowser");
-      fontLoaded();
-    } else {
-      WebFont.load({
-        custom: {
-          families: ['Oswald-Regular']
-        },
-        loading: function () {  //所有字体开始加载
-          // console.log('loading');
-        },
-        active: function () {  //所有字体已渲染
-          fontLoaded();
-        },
-        inactive: function () { //字体预加载失败，无效字体或浏览器不支持加载
-          console.log('inactive: timeout');
-          fontLoaded();
-        },
-        timeout: 5000 // Set the timeout to two seconds
-      });
-    }
-  }
-
-  function asyncErr(){
-    console.warn('script load from CDN failed, will load local script')
-  }
-
-  // load webfont-loader async, and add callback function
-  function async(u, cb, err) {
-    var d = document, t = 'script',
-      o = d.createElement(t),
-      s = d.getElementsByTagName(t)[0];
-    o.src = u;
-    if (cb) { o.addEventListener('load', function (e) { cb(null, e); }, false); }
-    if (err) { o.addEventListener('error', function (e) { err(null, e); }, false); }
-    s.parentNode.insertBefore(o, s);
-  }
-
-  var asyncLoadWithFallBack = function(arr, success, reject) {
-      var currReject = function(){
-        reject()
-        arr.shift()
-        if(arr.length)
-          async(arr[0], success, currReject)
-        }
-
-      async(arr[0], success, currReject)
-  }
-
-  asyncLoadWithFallBack([
-    "https://cdn.jsdelivr.net/npm/webfontloader@1.6.28/webfontloader.min.js", 
-    "https://cdn.bootcss.com/webfont/1.6.28/webfontloader.js",
-    "/lib/webfontloader.min.js"
-  ], asyncCb, asyncErr)
-</script>        
-        <img class="loading" src="/assets/loading.svg" style="display: block; margin: 6rem auto 0 auto; width: 6rem; height: 6rem;" />
-        <div class="container container-unloaded">
-            <main class="main post-page">
-    <article class="article-entry">
-         <a id="more"></a>
-<h2 id="什么是字节码解释器？"><a href="#什么是字节码解释器？" class="headerlink" title="什么是字节码解释器？"></a>什么是字节码解释器？</h2><p>解释器是一种顺序执行源代码的引擎。在过去的V8中，源代码被立即编译到汇编程序并执行，但与之不同，解释器将源代码转换为高级字节指令并按顺序执行字节指令。感觉就像一个高级汇编程序。</p>
-<h2 id="Ignition概要"><a href="#Ignition概要" class="headerlink" title="Ignition概要"></a>Ignition概要</h2><p>Ignition是一个基于寄存器的字节码解释器。与Java的堆栈基础不同，它实际上将值分配给CPU的寄存器并执行它们。在Ignition中，预先生成一个名为BytecodeHandler的字节码处理函数，从字节码中获取数组索引，<br>并将生成的处理函数分配给索引，一个接一个地循环Bytecode数组，并使用相应索引的函数执行调用代码。<br>简化版本的js代码如下：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">var Bytecodes = [0,1,2,3,4,5];</span><br><span class="line">var index = 0;</span><br><span class="line">function dispatch(next) &#123;BytecodeHandlers[next]();&#125;</span><br><span class="line">const BytecodeHandlers = &#123;</span><br><span class="line">  [&apos;0&apos;]() &#123;...; dispatch(Bytecodes[index++])&#125;,</span><br><span class="line">  [&apos;1&apos;]() &#123;...; dispatch(Bytecodes[index++])&#125;,</span><br><span class="line">  [&apos;2&apos;]() &#123;...; dispatch(Bytecodes[index++])&#125;,</span><br><span class="line">  [&apos;3&apos;]() &#123;...; dispatch(Bytecodes[index++])&#125;,</span><br><span class="line">  [&apos;4&apos;]() &#123;...; dispatch(Bytecodes[index++])&#125;,</span><br><span class="line">  [&apos;5&apos;]() &#123;...; dispatch(Bytecodes[index++])&#125;,</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
-<h2 id="Ignition结构"><a href="#Ignition结构" class="headerlink" title="Ignition结构"></a>Ignition结构</h2><h3 id="字节码生成的函数调用"><a href="#字节码生成的函数调用" class="headerlink" title="字节码生成的函数调用"></a>字节码生成的函数调用</h3><p>Ignition 从Javascript AST 生成 bytecodes</p>
+        <div class="content">
+            <h2><span id="intro-analysis-of-ignition">Intro: Analysis of Ignition</span></h2> <a id="more"></a>
+<h2><span id="什么是字节码解释器">什么是字节码解释器？</span></h2><p>解释器是一种顺序执行源代码的引擎。在过去的V8中，源代码被立即编译到汇编程序并执行，但与之不同，解释器将源代码转换为高级字节指令并按顺序执行字节指令。感觉就像一个高级汇编程序。</p>
+<h2><span id="ignition概要">Ignition概要</span></h2><p>Ignition是一个基于寄存器的字节码解释器。与Java的堆栈基础不同，它实际上将值分配给CPU的寄存器并执行它们。在Ignition中，预先生成一个名为BytecodeHandler的字节码处理函数，从字节码中获取数组索引，<br>并将生成的处理函数分配给索引，一个接一个地循环Bytecode数组，并使用相应索引的函数执行调用代码。<br>简化版本的js代码如下：<br><figure class="highlight plain hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">var Bytecodes = [0,1,2,3,4,5];</span><br><span class="line">var index = 0;</span><br><span class="line">function dispatch(next) &#123;BytecodeHandlers[next]();&#125;</span><br><span class="line">const BytecodeHandlers = &#123;</span><br><span class="line">  [&apos;0&apos;]() &#123;...; dispatch(Bytecodes[index++])&#125;,</span><br><span class="line">  [&apos;1&apos;]() &#123;...; dispatch(Bytecodes[index++])&#125;,</span><br><span class="line">  [&apos;2&apos;]() &#123;...; dispatch(Bytecodes[index++])&#125;,</span><br><span class="line">  [&apos;3&apos;]() &#123;...; dispatch(Bytecodes[index++])&#125;,</span><br><span class="line">  [&apos;4&apos;]() &#123;...; dispatch(Bytecodes[index++])&#125;,</span><br><span class="line">  [&apos;5&apos;]() &#123;...; dispatch(Bytecodes[index++])&#125;,</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<h2><span id="ignition结构">Ignition结构</span></h2><h3><span id="字节码生成的函数调用">字节码生成的函数调用</span></h3><p>Ignition 从Javascript AST 生成 bytecodes</p>
 <p>检查这个bytecodes生成步骤。</p>
 <ol>
 <li>由于BytecodeGenerator实现了AstVisitor，在Javascript AST中运行时创建相应的字节码。 </li>
@@ -413,22 +186,22 @@ height:50vh;
 <li>InterpreterCompilationJob :: ExecuteJobImpl（src / interpreter / interpreter.cc）中调用BytecodeGenerator :: GenerateBytecode。</li>
 <li>InterpreterCompilationJob :: ExecuteJobImpl由静态Interpreter :: NewCompilationJob执行。</li>
 </ol>
-<p>Interpreter :: NewCompilationJob的层次结构如下。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">Interpreter::NewCompilationJob</span><br><span class="line">|</span><br><span class="line">InterpreterCompilationJob::ExecuteJobImpl</span><br><span class="line">|</span><br><span class="line">BytecodeGenerator::GenerateBytecode</span><br></pre></td></tr></table></figure></p>
-<p>由于这个静态Interpreter :: NewCompilationJob是一个在编译器管道中生成Job的方法，让我们看一下compiler.cc（src / compiler.cc）。<br>compiler.cc（src / compiler.cc）有一个非常复杂且难以理解的调用层次结构，并且与可选的设置解析器设置一起读取也很困难。<br>调用堆栈如下所示。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">ScriptCompiler::Compile</span><br><span class="line">|</span><br><span class="line">ScriptCompiler::CompileUnboundInternal</span><br><span class="line">|</span><br><span class="line">Compiler::GetSharedFunctionInfoForScript</span><br><span class="line">|</span><br><span class="line">Compiler::CompileToplevel</span><br><span class="line">|</span><br><span class="line">CompileUnoptimizedCode(compiler.cc)</span><br><span class="line">|</span><br><span class="line">CompileUnoptimizedInnerFunctions</span><br><span class="line">|</span><br><span class="line">GenerateUnoptimizedCode</span><br><span class="line">|</span><br><span class="line">GetUnoptimizedCompilationJob</span><br><span class="line">|</span><br><span class="line">---- Iginitionオプションによってfullcodegenと分岐</span><br><span class="line">| |</span><br><span class="line">Interpreter::NewCompilationJob</span><br><span class="line">  |</span><br><span class="line">  FullCodeGenerator::NewCompilationJob</span><br></pre></td></tr></table></figure></p>
+<p>Interpreter :: NewCompilationJob的层次结构如下。<br><figure class="highlight plain hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">Interpreter::NewCompilationJob</span><br><span class="line">|</span><br><span class="line">InterpreterCompilationJob::ExecuteJobImpl</span><br><span class="line">|</span><br><span class="line">BytecodeGenerator::GenerateBytecode</span><br></pre></td></tr></table></figure></p>
+<p>由于这个静态Interpreter :: NewCompilationJob是一个在编译器管道中生成Job的方法，让我们看一下compiler.cc（src / compiler.cc）。<br>compiler.cc（src / compiler.cc）有一个非常复杂且难以理解的调用层次结构，并且与可选的设置解析器设置一起读取也很困难。<br>调用堆栈如下所示。<br><figure class="highlight plain hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">ScriptCompiler::Compile</span><br><span class="line">|</span><br><span class="line">ScriptCompiler::CompileUnboundInternal</span><br><span class="line">|</span><br><span class="line">Compiler::GetSharedFunctionInfoForScript</span><br><span class="line">|</span><br><span class="line">Compiler::CompileToplevel</span><br><span class="line">|</span><br><span class="line">CompileUnoptimizedCode(compiler.cc)</span><br><span class="line">|</span><br><span class="line">CompileUnoptimizedInnerFunctions</span><br><span class="line">|</span><br><span class="line">GenerateUnoptimizedCode</span><br><span class="line">|</span><br><span class="line">GetUnoptimizedCompilationJob</span><br><span class="line">|</span><br><span class="line">---- Iginitionオプションによってfullcodegenと分岐</span><br><span class="line">| |</span><br><span class="line">Interpreter::NewCompilationJob</span><br><span class="line">  |</span><br><span class="line">  FullCodeGenerator::NewCompilationJob</span><br></pre></td></tr></table></figure></p>
 <p>ScriptCompiler :: Compile是V8的Javascript编译器的入口点，并按顺序调用该函数，最后创建Job of Interpreter。</p>
 <p>到最终的BytecodeGenerator :: GenerateBytecode的调用堆栈如下。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line">ScriptCompiler::Compile</span><br><span class="line">|</span><br><span class="line">ScriptCompiler::CompileUnboundInternal</span><br><span class="line">|</span><br><span class="line">Compiler::GetSharedFunctionInfoForScript</span><br><span class="line">|</span><br><span class="line">Compiler::CompileToplevel</span><br><span class="line">|</span><br><span class="line">CompileUnoptimizedCode(compiler.cc)</span><br><span class="line">|</span><br><span class="line">CompileUnoptimizedInnerFunctions</span><br><span class="line">|</span><br><span class="line">GenerateUnoptimizedCode</span><br><span class="line">|</span><br><span class="line">GetUnoptimizedCompilationJob</span><br><span class="line">|</span><br><span class="line">---- Branch with fullcodegen by Iginition option</span><br><span class="line">| |</span><br><span class="line">| FullCodeGenerator::NewCompilationJob</span><br><span class="line">|</span><br><span class="line">Interpreter::NewCompilationJob</span><br><span class="line">|</span><br><span class="line">InterpreterCompilationJob::ExecuteJobImpl</span><br><span class="line">|</span><br><span class="line">BytecodeGenerator::GenerateBytecode</span><br></pre></td></tr></table></figure>
-<h3 id="字节码生成"><a href="#字节码生成" class="headerlink" title="字节码生成"></a>字节码生成</h3><p>现在我们知道调用层次结构，看看如何生成字节码。由于字节码生成继承自前面编写的AstVisitor，因此有Visit必要实现各种方法。<br>JavaScript代码：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">var a = 1;</span><br></pre></td></tr></table></figure></p>
-<p>字节码<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line">0  [generating bytecode for function: ]</span><br><span class="line">1  Parameter count 1</span><br><span class="line">2  Frame size 32</span><br><span class="line">3           0x3f5e20aafdf6 @    0 : 09 00             LdaConstant [0]</span><br><span class="line">4           0x3f5e20aafdf8 @    2 : 1f f9             Star r1</span><br><span class="line">5           0x3f5e20aafdfa @    4 : 02                LdaZero</span><br><span class="line">6           0x3f5e20aafdfb @    5 : 1f f8             Star r2</span><br><span class="line">7           0x3f5e20aafdfd @    7 : 20 fe f7          Mov &lt;closure&gt;, r3</span><br><span class="line">8           0x3f5e20aafe00 @   10 : 55 aa 01 f9 03    CallRuntime [DeclareGlobalsForInterpreter], r1-r3</span><br><span class="line">9      0 E&gt; 0x3f5e20aafe05 @   15 : 92                StackCheck</span><br><span class="line">10   116 S&gt; 0x3f5e20aafe06 @   16 : 09 01             LdaConstant [1]</span><br><span class="line">11          0x3f5e20aafe08 @   18 : 1f f9             Star r1</span><br><span class="line">12          0x3f5e20aafe0a @   20 : 02                LdaZero</span><br><span class="line">13          0x3f5e20aafe0b @   21 : 1f f8             Star r2</span><br><span class="line">14          0x3f5e20aafe0d @   23 : 03 01             LdaSmi [1]</span><br><span class="line">15          0x3f5e20aafe0f @   25 : 1f f7             Star r3</span><br><span class="line">16          0x3f5e20aafe11 @   27 : 55 ab 01 f9 03    CallRuntime [InitializeVarGlobal], r1-r3</span><br><span class="line">17          0x3f5e20aafe16 @   32 : 04                LdaUndefined</span><br><span class="line">18   118 S&gt; 0x3f5e20aafe17 @   33 : 96                Return</span><br><span class="line">19 Constant pool (size = 2)</span><br><span class="line">20 0x3f5e20aafda1: [FixedArray]</span><br><span class="line">21  - map = 0x1cfd2a282309 &lt;Map(FAST_HOLEY_ELEMENTS)&gt;</span><br><span class="line">22  - length: 2</span><br><span class="line">23            0: 0x3f5e20aafd71 &lt;FixedArray[4]&gt;</span><br><span class="line">24            1: 0x2315b1a87ef9 &lt;String[1]: a&gt;</span><br></pre></td></tr></table></figure></p>
+<figure class="highlight plain hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line">ScriptCompiler::Compile</span><br><span class="line">|</span><br><span class="line">ScriptCompiler::CompileUnboundInternal</span><br><span class="line">|</span><br><span class="line">Compiler::GetSharedFunctionInfoForScript</span><br><span class="line">|</span><br><span class="line">Compiler::CompileToplevel</span><br><span class="line">|</span><br><span class="line">CompileUnoptimizedCode(compiler.cc)</span><br><span class="line">|</span><br><span class="line">CompileUnoptimizedInnerFunctions</span><br><span class="line">|</span><br><span class="line">GenerateUnoptimizedCode</span><br><span class="line">|</span><br><span class="line">GetUnoptimizedCompilationJob</span><br><span class="line">|</span><br><span class="line">---- Branch with fullcodegen by Iginition option</span><br><span class="line">| |</span><br><span class="line">| FullCodeGenerator::NewCompilationJob</span><br><span class="line">|</span><br><span class="line">Interpreter::NewCompilationJob</span><br><span class="line">|</span><br><span class="line">InterpreterCompilationJob::ExecuteJobImpl</span><br><span class="line">|</span><br><span class="line">BytecodeGenerator::GenerateBytecode</span><br></pre></td></tr></table></figure>
+<h3><span id="字节码生成">字节码生成</span></h3><p>现在我们知道调用层次结构，看看如何生成字节码。由于字节码生成继承自前面编写的AstVisitor，因此有Visit必要实现各种方法。<br>JavaScript代码：<br><figure class="highlight plain hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">var a = 1;</span><br></pre></td></tr></table></figure></p>
+<p>字节码<br><figure class="highlight plain hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line">0  [generating bytecode for function: ]</span><br><span class="line">1  Parameter count 1</span><br><span class="line">2  Frame size 32</span><br><span class="line">3           0x3f5e20aafdf6 @    0 : 09 00             LdaConstant [0]</span><br><span class="line">4           0x3f5e20aafdf8 @    2 : 1f f9             Star r1</span><br><span class="line">5           0x3f5e20aafdfa @    4 : 02                LdaZero</span><br><span class="line">6           0x3f5e20aafdfb @    5 : 1f f8             Star r2</span><br><span class="line">7           0x3f5e20aafdfd @    7 : 20 fe f7          Mov &lt;closure&gt;, r3</span><br><span class="line">8           0x3f5e20aafe00 @   10 : 55 aa 01 f9 03    CallRuntime [DeclareGlobalsForInterpreter], r1-r3</span><br><span class="line">9      0 E&gt; 0x3f5e20aafe05 @   15 : 92                StackCheck</span><br><span class="line">10   116 S&gt; 0x3f5e20aafe06 @   16 : 09 01             LdaConstant [1]</span><br><span class="line">11          0x3f5e20aafe08 @   18 : 1f f9             Star r1</span><br><span class="line">12          0x3f5e20aafe0a @   20 : 02                LdaZero</span><br><span class="line">13          0x3f5e20aafe0b @   21 : 1f f8             Star r2</span><br><span class="line">14          0x3f5e20aafe0d @   23 : 03 01             LdaSmi [1]</span><br><span class="line">15          0x3f5e20aafe0f @   25 : 1f f7             Star r3</span><br><span class="line">16          0x3f5e20aafe11 @   27 : 55 ab 01 f9 03    CallRuntime [InitializeVarGlobal], r1-r3</span><br><span class="line">17          0x3f5e20aafe16 @   32 : 04                LdaUndefined</span><br><span class="line">18   118 S&gt; 0x3f5e20aafe17 @   33 : 96                Return</span><br><span class="line">19 Constant pool (size = 2)</span><br><span class="line">20 0x3f5e20aafda1: [FixedArray]</span><br><span class="line">21  - map = 0x1cfd2a282309 &lt;Map(FAST_HOLEY_ELEMENTS)&gt;</span><br><span class="line">22  - length: 2</span><br><span class="line">23            0: 0x3f5e20aafd71 &lt;FixedArray[4]&gt;</span><br><span class="line">24            1: 0x2315b1a87ef9 &lt;String[1]: a&gt;</span><br></pre></td></tr></table></figure></p>
 <p>here，函数名称输入到函数字节码中。</p>
 <p><code>0  [generating bytecode for function: ]</code></p>
 <p>这是堆栈的参数数量。该字节码是全局的，所以忽略它。</p>
 <p><code>1  Parameter count 1</code></p>
-<p>FrameSize是已分配寄存器的数量*指针大小。指针大小大致相同，32位为4字节，64位为8字节。在这种情况下，由于分配的寄存器数是4 64位环境，因此指针大小为8字节<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">4 * 8 = 32。</span><br><span class="line">2  Frame size 32</span><br></pre></td></tr></table></figure></p>
-<p>每个字节串是当前地址的偏移字节码的数字字节码名称操作数。<br><code>3  0x3f5e20aafdf6 @    0 : 09 00             LdaConstant [0]</code><br>这是常量值池的内容。在此示例中，变量名称为a。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">19 Constant pool (size = 2)</span><br><span class="line">20 0x3f5e20aafda1: [FixedArray]</span><br><span class="line">21  - map = 0x1cfd2a282309 &lt;Map(FAST_HOLEY_ELEMENTS)&gt;</span><br><span class="line">22  - length: 2</span><br><span class="line">23            0: 0x3f5e20aafd71 &lt;FixedArray[4]&gt;</span><br><span class="line">24            1: 0x2315b1a87ef9 &lt;String[1]: a&gt;</span><br></pre></td></tr></table></figure></p>
-<p>现在看看基于这些信息的源代码和字节码。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">3           0x3f5e20aafdf6 @    0 : 09 00             LdaConstant [0]</span><br><span class="line">4           0x3f5e20aafdf8 @    2 : 1f f9             Star r1</span><br><span class="line">5           0x3f5e20aafdfa @    4 : 02                LdaZero</span><br><span class="line">6           0x3f5e20aafdfb @    5 : 1f f8             Star r2</span><br><span class="line">7           0x3f5e20aafdfd @    7 : 20 fe f7          Mov &lt;closure&gt;, r3</span><br><span class="line">8           0x3f5e20aafe00 @   10 : 55 aa 01 f9 03    CallRuntime [DeclareGlobalsForInterpreter], r1-r3</span><br><span class="line">9      0 E&gt; 0x3f5e20aafe05 @   15 : 92                StackCheck</span><br></pre></td></tr></table></figure></p>
+<p>FrameSize是已分配寄存器的数量*指针大小。指针大小大致相同，32位为4字节，64位为8字节。在这种情况下，由于分配的寄存器数是4 64位环境，因此指针大小为8字节<br><figure class="highlight plain hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">4 * 8 = 32。</span><br><span class="line">2  Frame size 32</span><br></pre></td></tr></table></figure></p>
+<p>每个字节串是当前地址的偏移字节码的数字字节码名称操作数。<br><code>3  0x3f5e20aafdf6 @    0 : 09 00             LdaConstant [0]</code><br>这是常量值池的内容。在此示例中，变量名称为a。<br><figure class="highlight plain hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">19 Constant pool (size = 2)</span><br><span class="line">20 0x3f5e20aafda1: [FixedArray]</span><br><span class="line">21  - map = 0x1cfd2a282309 &lt;Map(FAST_HOLEY_ELEMENTS)&gt;</span><br><span class="line">22  - length: 2</span><br><span class="line">23            0: 0x3f5e20aafd71 &lt;FixedArray[4]&gt;</span><br><span class="line">24            1: 0x2315b1a87ef9 &lt;String[1]: a&gt;</span><br></pre></td></tr></table></figure></p>
+<p>现在看看基于这些信息的源代码和字节码。<br><figure class="highlight plain hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">3           0x3f5e20aafdf6 @    0 : 09 00             LdaConstant [0]</span><br><span class="line">4           0x3f5e20aafdf8 @    2 : 1f f9             Star r1</span><br><span class="line">5           0x3f5e20aafdfa @    4 : 02                LdaZero</span><br><span class="line">6           0x3f5e20aafdfb @    5 : 1f f8             Star r2</span><br><span class="line">7           0x3f5e20aafdfd @    7 : 20 fe f7          Mov &lt;closure&gt;, r3</span><br><span class="line">8           0x3f5e20aafe00 @   10 : 55 aa 01 f9 03    CallRuntime [DeclareGlobalsForInterpreter], r1-r3</span><br><span class="line">9      0 E&gt; 0x3f5e20aafe05 @   15 : 92                StackCheck</span><br></pre></td></tr></table></figure></p>
 <p>从这里真正开始 produce</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">//将常量池中索引1（变量名a）的值加载到累加器中。</span><br><span class="line">10 116 S&gt; 0x3f5e20aafe06 @ 16:09 01 LdaConstant [1]</span><br><span class="line">11 //将累加器的值（变量名a）加载到r1寄存器中。</span><br><span class="line">12 0x3f5e20aafe08 @ 18：1f f9 Star r1</span><br><span class="line">13 //加载累加器0。</span><br><span class="line">14 0x3f5e20aafe0a @ 20:02 LdaZero</span><br><span class="line">15 //将值从累加器（0）加载到r2寄存器中。</span><br><span class="line">16 0x3f5e20aafe0b @ 21：1 f f 8 Star r 2</span><br><span class="line">17 //将立即值1加载到累加器中。</span><br><span class="line">18 0x3f5e20aafe0d @ 23:03 01 Lda Smi [1]</span><br><span class="line">19 //将累加器（1）的值加载到r3寄存器中。</span><br><span class="line">20 0x3f5e20aafe0f @ 25：1 f f 7 Star r 3</span><br><span class="line">21 //使用r1寄存器中的r3寄存器值（a，0,1）调用InitializeVarGlobal运行时。</span><br><span class="line">22 0x3f5e20aafe11 @ 27:55 ab 01 f9 03 CallRuntime [InitializeVarGlobal]，r1-r3</span><br><span class="line">23 //将undefined设置为accumulator</span><br><span class="line">24 0x3f5e20aafe16 @ 32:04  LdaUndefined</span><br><span class="line">25 / /完成</span><br><span class="line">26 118 S&gt; 0x3f5e20aafe17 @ 33:96 Return</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">//将常量池中索引1（变量名a）的值加载到累加器中。</span><br><span class="line">10 116 S&gt; 0x3f5e20aafe06 @ 16:09 01 LdaConstant [1]</span><br><span class="line">11 //将累加器的值（变量名a）加载到r1寄存器中。</span><br><span class="line">12 0x3f5e20aafe08 @ 18：1f f9 Star r1</span><br><span class="line">13 //加载累加器0。</span><br><span class="line">14 0x3f5e20aafe0a @ 20:02 LdaZero</span><br><span class="line">15 //将值从累加器（0）加载到r2寄存器中。</span><br><span class="line">16 0x3f5e20aafe0b @ 21：1 f f 8 Star r 2</span><br><span class="line">17 //将立即值1加载到累加器中。</span><br><span class="line">18 0x3f5e20aafe0d @ 23:03 01 Lda Smi [1]</span><br><span class="line">19 //将累加器（1）的值加载到r3寄存器中。</span><br><span class="line">20 0x3f5e20aafe0f @ 25：1 f f 7 Star r 3</span><br><span class="line">21 //使用r1寄存器中的r3寄存器值（a，0,1）调用InitializeVarGlobal运行时。</span><br><span class="line">22 0x3f5e20aafe11 @ 27:55 ab 01 f9 03 CallRuntime [InitializeVarGlobal]，r1-r3</span><br><span class="line">23 //将undefined设置为accumulator</span><br><span class="line">24 0x3f5e20aafe16 @ 32:04  LdaUndefined</span><br><span class="line">25 / /完成</span><br><span class="line">26 118 S&gt; 0x3f5e20aafe17 @ 33:96 Return</span><br></pre></td></tr></table></figure>
 <p>值得注意的时，在CallRuntime的情况下，需要为每个运行时确定调用约定，因此有必要相应地分配寄存器。</p>
 <p>InitializeVarGlobal运行时调用需要以下寄存器。</p>
 <ul>
@@ -442,409 +215,1030 @@ height:50vh;
 <li>将值加载到寄存器中</li>
 <li>loop</li>
 </ul>
-<h3 id="字节码执行"><a href="#字节码执行" class="headerlink" title="字节码执行"></a>字节码执行</h3><h4 id="BytecodeHandler"><a href="#BytecodeHandler" class="headerlink" title="BytecodeHandler"></a>BytecodeHandler</h4><p>字节码处理由BytecodeHandler完成。<br>BytecodeHandler在v8初始化时将被生成。</p>
-<p>以下是BytecodeHandler的示例。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">IGNITION_HANDLER(LdaZero, InterpreterAssembler) &#123;</span><br><span class="line">  Node* zero_value = NumberConstant(0.0);</span><br><span class="line">  SetAccumulator(zero_value);</span><br><span class="line">  Dispatch();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<h3><span id="字节码执行">字节码执行</span></h3><h4><span id="bytecodehandler">BytecodeHandler</span></h4><p>字节码处理由BytecodeHandler完成。<br>BytecodeHandler在v8初始化时将被生成。</p>
+<p>以下是BytecodeHandler的示例。<br><figure class="highlight plain hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">IGNITION_HANDLER(LdaZero, InterpreterAssembler) &#123;</span><br><span class="line">  Node* zero_value = NumberConstant(0.0);</span><br><span class="line">  SetAccumulator(zero_value);</span><br><span class="line">  Dispatch();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
 <p>在BytecoeHandler load zero的过程中，将累加器设置为0。实际上，每组字节码都将有一个这样的BytecodeHandler。每个BytecodeHandler通过depatch直接调用下一个BytecodeHandler。下图显示了BytecodeHandler的生成<br><img src="http://sakura-1252236262.cos.ap-beijing.myqcloud.com/blog/180809/5EKEACljA5.png" alt="mark"></p>
-<h4 id="InterpreterEntryTrampoline"><a href="#InterpreterEntryTrampoline" class="headerlink" title="InterpreterEntryTrampoline"></a>InterpreterEntryTrampoline</h4><p>在Ignition终于生成了BytecodeArray之后，从使用InterpreterEntryTrampoline代码构建的代码中点燃DispatchTable of Ignition，它从BytecodeArray中检索字节码并执行相应DispatchTable的处理并转发。下图显示了Ignition的执行方式</p>
+<h4><span id="interpreterentrytrampoline">InterpreterEntryTrampoline</span></h4><p>在Ignition终于生成了BytecodeArray之后，从使用InterpreterEntryTrampoline代码构建的代码中点燃DispatchTable of Ignition，它从BytecodeArray中检索字节码并执行相应DispatchTable的处理并转发。下图显示了Ignition的执行方式</p>
 <p><img src="http://sakura-1252236262.cos.ap-beijing.myqcloud.com/blog/180809/LD4DkmKggA.png" alt="mark"></p>
 
-    </article>
-    <!-- license  -->
-    
-        <div class="license-wrapper">
-            <p>原文作者：<a href="http://p1umer.gituhb.io">P1umer sauce</a>
-            <p>原文链接：<a href="http://p1umer.gituhb.io/2018/07/10/V8-Iginition-Interpreter/">http://p1umer.gituhb.io/2018/07/10/V8-Iginition-Interpreter/</a>
-            <p>发表日期：<a href="http://p1umer.gituhb.io/2018/07/10/V8-Iginition-Interpreter/">July 10th 2018, 2:45:19 pm</a>
-            <p>更新日期：<a href="http://p1umer.gituhb.io/2018/07/10/V8-Iginition-Interpreter/">July 3rd 2019, 4:25:07 am</a>
-            <p>版权声明：本文采用<a rel="license" href="http://creativecommons.org/licenses/by-nc/4.0/">知识共享署名-非商业性使用 4.0 国际许可协议</a>进行许可</p>
         </div>
-    
-    <!-- paginator  -->
-    <ul class="post-paginator">
-        <li class="next">
-            
-                <div class="nextSlogan">Next Post</div>
-                <a href= "/2018/09/03/IR's-Journey/" title= "IR's Journey">
-                    <div class="nextTitle">IR's Journey</div>
-                </a>
-            
-        </li>
-        <li class="previous">
-            
-                <div class="prevSlogan">Previous Post</div>
-                <a href= "/2018/07/01/V8-Environmental-Configuration/" title= "V8 & Chrome Setup">
-                    <div class="prevTitle">V8 & Chrome Setup</div>
-                </a>
-            
-        </li>
-    </ul>
-    <!-- 评论插件 -->
-    <!-- 来必力City版安装代码 -->
-
-    <div id="lv-container" data-id="city" data-uid= MTAyMC8zODMxMi8xNDg0MA==>
-        <script type="text/javascript">
-            (function (d, s) {
-                var j, e = d.getElementsByTagName(s)[0];
-                if (typeof LivereTower === 'function') { return; }
-                j = d.createElement(s);
-                j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
-                j.async = true;
-
-                e.parentNode.insertBefore(j, e);
-            })(document, 'script');
-        </script>
-        <noscript>为正常使用来必力评论功能请激活JavaScript</noscript>
-    </div>
-
-<!-- City版安装代码已完成 -->
-    
-    
-    <!-- partial('_partial/comment/changyan') -->
-    <!--PC版-->
-
-
-    
-    
-
-    <!-- 评论 -->
-</main>
-            <!-- profile -->
-            
+        
+        <div class="level is-size-7 is-uppercase">
+            <div class="level-start">
+                <div class="level-item">
+                    <span class="is-size-6 has-text-grey has-mr-7">#</span>
+                    <a class="has-link-grey -link" href="/tags/Basic/">Basic</a>, <a class="has-link-grey -link" href="/tags/Browser-Explore/">Browser Explore</a>, <a class="has-link-grey -link" href="/tags/V8/">V8</a>
+                </div>
+            </div>
         </div>
-        <footer class="footer footer-unloaded">
-    <!-- social  -->
-    
-    <div class="social">
         
-    
         
-            
-                <a href="mailto:cz18811105578@gmail.com" class="iconfont-archer email" title=email ></a>
-            
         
-    
-        
-    
-        
-            
-                <span class="iconfont-archer wechat" title=wechat>
-                  
-                  <img class="profile-qr" src="/assets/mmqrcode1540290021396.png" />
-                </span>
-            
-        
-    
-        
-    
-        
-    
-        
-    
-        
-            
-                <a href="https://www.zhihu.com/people/cz11-96/activities" class="iconfont-archer zhihu" target="_blank" title=zhihu></a>
-            
-        
-    
-        
-    
-        
-    
-        
-    
-        
-    
-        
-    
-        
-    
-        
-    
-        
-    
-        
-    
-        
-    
-        
-    
-        
-    
-        
-    
-
-    </div>
-    
-    <!-- powered by Hexo  -->
-    <div class="copyright">
-        <span id="hexo-power">Powered by <a href="https://hexo.io/" target="_blank">Hexo</a></span><span class="iconfont-archer power">&#xe635;</span><span id="theme-info">theme <a href="https://github.com/fi3ework/hexo-theme-archer" target="_blank">Archer</a></span>
-    </div>
-    <!-- 不蒜子  -->
-    
-    <div class="busuanzi-container">
-    
-     
-    <span id="busuanzi_container_site_pv">PV: <span id="busuanzi_value_site_pv"></span> :)</span>
-    
-    </div>
-    
-</footer>
-    </div>
-    <!-- toc -->
-    
-    <div class="toc-wrapper" style=
-    
-
-
-
-
-
-
-
-top:50vh;
-
-    >
-        <div class="toc-catalog">
-            <span class="iconfont-archer catalog-icon">&#xe613;</span><span>CATALOG</span>
-        </div>
-        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#什么是字节码解释器？"><span class="toc-number">1.</span> <span class="toc-text">什么是字节码解释器？</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Ignition概要"><span class="toc-number">2.</span> <span class="toc-text">Ignition概要</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Ignition结构"><span class="toc-number">3.</span> <span class="toc-text">Ignition结构</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#字节码生成的函数调用"><span class="toc-number">3.1.</span> <span class="toc-text">字节码生成的函数调用</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#字节码生成"><span class="toc-number">3.2.</span> <span class="toc-text">字节码生成</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#字节码执行"><span class="toc-number">3.3.</span> <span class="toc-text">字节码执行</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#BytecodeHandler"><span class="toc-number">3.3.1.</span> <span class="toc-text">BytecodeHandler</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#InterpreterEntryTrampoline"><span class="toc-number">3.3.2.</span> <span class="toc-text">InterpreterEntryTrampoline</span></a></li></ol></li></ol></li></ol>
-    </div>
-    
-    <div class="back-top iconfont-archer">&#xe639;</div>
-    <div class="sidebar sidebar-hide">
-    <ul class="sidebar-tabs sidebar-tabs-active-0">
-        <li class="sidebar-tab-archives"><span class="iconfont-archer">&#xe67d;</span><span class="tab-name">Archive</span></li>
-        <li class="sidebar-tab-tags"><span class="iconfont-archer">&#xe61b;</span><span class="tab-name">Tag</span></li>
-        <li class="sidebar-tab-categories"><span class="iconfont-archer">&#xe666;</span><span class="tab-name">Cate</span></li>
-    </ul>
-    <div class="sidebar-content sidebar-content-show-archive">
-          <div class="sidebar-panel-archives">
-    <!-- 在ejs中将archive按照时间排序 -->
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    <div class="total-and-search">
-        <div class="total-archive">
-        Total : 9
-        </div>
-        <!-- search  -->
-        
-    </div>
-    
-    <div class="post-archive">
-    
-    
-    
-    
-    <div class="archive-year"> 2019 </div>
-    <ul class="year-list">
-    
-    
-        <li class="archive-post-item">
-            <span class="archive-post-date">07/04</span><a class="archive-post-title" href= "/2019/07/04/V8-Optimize-Reduce-Node-Inline/" >V8 Optimize: Reduce Node && Inline</a>
-        </li>
-    
-    
-        <li class="archive-post-item">
-            <span class="archive-post-date">07/03</span><a class="archive-post-title" href= "/2019/07/03/V8-Optimize-FrameState/" >V8 Optimize: FrameState</a>
-        </li>
-    
-    
-        <li class="archive-post-item">
-            <span class="archive-post-date">05/30</span><a class="archive-post-title" href= "/2019/05/30/Linux Kernel 初探/" >Linux Kernel 初探（一）BabyKernel</a>
-        </li>
-    
-    
-        <li class="archive-post-item">
-            <span class="archive-post-date">05/06</span><a class="archive-post-title" href= "/2019/05/06/Star-CTF-OOB-writeup/" >StarCTF OOB writeup</a>
-        </li>
-    
-    
-        <li class="archive-post-item">
-            <span class="archive-post-date">03/20</span><a class="archive-post-title" href= "/2019/03/20/AFL-初探/" >AFL 初探（一）</a>
-        </li>
-    
-    
-        <li class="archive-post-item">
-            <span class="archive-post-date">02/20</span><a class="archive-post-title" href= "/2019/02/20/libfuzzer & LLVM 初探/" >libfuzzer & LLVM 初探</a>
-        </li>
-    
-    
-    
-    
-    
-        </ul>
-    
-    <div class="archive-year"> 2018 </div>
-    <ul class="year-list">
-    
-    
-        <li class="archive-post-item">
-            <span class="archive-post-date">09/03</span><a class="archive-post-title" href= "/2018/09/03/IR's-Journey/" >IR's Journey</a>
-        </li>
-    
-    
-        <li class="archive-post-item">
-            <span class="archive-post-date">07/10</span><a class="archive-post-title" href= "/2018/07/10/V8-Iginition-Interpreter/" >V8 Iginition Interpreter</a>
-        </li>
-    
-    
-        <li class="archive-post-item">
-            <span class="archive-post-date">07/01</span><a class="archive-post-title" href= "/2018/07/01/V8-Environmental-Configuration/" >V8 & Chrome Setup</a>
-        </li>
-    
-    </div>
-  </div>
-        <div class="sidebar-panel-tags">
-    <div class="sidebar-tags-name">
-    
-        <span class="sidebar-tag-name" data-tags="Browser Explore"><span class="iconfont-archer">&#xe606;</span>Browser Explore</span>
-    
-        <span class="sidebar-tag-name" data-tags="Fuzz"><span class="iconfont-archer">&#xe606;</span>Fuzz</span>
-    
-        <span class="sidebar-tag-name" data-tags="Kernel"><span class="iconfont-archer">&#xe606;</span>Kernel</span>
-    
-        <span class="sidebar-tag-name" data-tags="V8"><span class="iconfont-archer">&#xe606;</span>V8</span>
-    
-    </div>
-    <div class="iconfont-archer sidebar-tags-empty">&#xe678;</div>
-    <div class="tag-load-fail" style="display: none; color: #ccc; font-size: 0.6rem;">
-    缺失模块。<br/>
-    1、请确保node版本大于6.2<br/>
-    2、在博客根目录（注意不是archer根目录）执行以下命令：<br/>
-    <span style="color: #f75357; font-size: 1rem; line-height: 2rem;">npm i hexo-generator-json-content --save</span><br/>
-    3、在根目录_config.yml里添加配置：
-    <pre style="color: #787878; font-size: 0.6rem;">
-jsonContent:
-  meta: false
-  pages: false
-  posts:
-    title: true
-    date: true
-    path: true
-    text: false
-    raw: false
-    content: false
-    slug: false
-    updated: false
-    comments: false
-    link: false
-    permalink: false
-    excerpt: false
-    categories: true
-    tags: true</pre>
-    </div> 
-    <div class="sidebar-tags-list"></div>
+        <div class="bdsharebuttonbox">
+    <a href="#" class="bds_more" data-cmd="more"></a>
+    <a href="#" class="bds_qzone" data-cmd="qzone" title="分享到QQ空间"></a>
+    <a href="#" class="bds_tsina" data-cmd="tsina" title="分享到新浪微博"></a>
+    <a href="#" class="bds_tqq" data-cmd="tqq" title="分享到腾讯微博"></a>
+    <a href="#" class="bds_renren" data-cmd="renren" title="分享到人人网"></a>
+    <a href="#" class="bds_weixin" data-cmd="weixin" title="分享到微信"></a>
 </div>
-        <div class="sidebar-panel-categories">
-    <div class="sidebar-categories-name">
-    
-        <span class="sidebar-category-name" data-categories="Browser-Explore"><span class="iconfont-archer">&#xe60a;</span>Browser-Explore</span>
-    
-        <span class="sidebar-category-name" data-categories="Browser-Explore/V8"><span class="iconfont-archer">&#xe60a;</span>Browser-Explore/V8</span>
-    
-        <span class="sidebar-category-name" data-categories="Browser-Explore/Edge"><span class="iconfont-archer">&#xe60a;</span>Browser-Explore/Edge</span>
-    
+<script>window._bd_share_config = { "common": { "bdSnsKey": {}, "bdText": "", "bdMini": "2", "bdPic": "", "bdStyle": "0", "bdSize": "16" }, "share": {} }; with (document) 0[(getElementsByTagName('head')[0] || body).appendChild(createElement('script')).src = 'http://bdimg.share.baidu.com/static/api/js/share.js?v=89860593.js?cdnversion=' + ~(-new Date() / 36e5)];</script>
+        
     </div>
-    <div class="iconfont-archer sidebar-categories-empty">&#xe678;</div>
-    <div class="sidebar-categories-list"></div>
 </div>
+
+
+
+
+
+<div class="card card-transparent">
+    <div class="level post-navigation is-flex-wrap is-mobile">
+        
+        <div class="level-start">
+            <a class="level level-item has-link-grey  article-nav-prev" href="/2018/09/03/IR's-Journey/">
+                <i class="level-item fas fa-chevron-left"></i>
+                <span class="level-item">IR&#39;s Journey</span>
+            </a>
+        </div>
+        
+        
+        <div class="level-end">
+            <a class="level level-item has-link-grey  article-nav-next" href="/2018/07/01/V8-Environmental-Configuration/">
+                <span class="level-item">V8 &amp; Chrome Setup</span>
+                <i class="level-item fas fa-chevron-right"></i>
+            </a>
+        </div>
+        
     </div>
-</div> 
-    <script>
-    var siteMeta = {
-        root: "/",
-        author: "P1umer sauce"
-    }
-</script>
-    <!-- CDN failover -->
-    <script src="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js"></script>
+</div>
+
+
+
+<div class="card">
+    <div class="card-content">
+        <h3 class="title is-5 has-text-weight-normal">Comments</h3>
+        
+<div id="lv-container" data-id="city" data-uid="MTAyMC8zODMxMi8xNDg0MA==">
     <script type="text/javascript">
-        if (typeof window.$ === 'undefined')
-        {
-            console.warn('jquery load from jsdelivr failed, will load local script')
-            document.write('<script src="/lib/jquery.min.js">\x3C/script>')
-        }
+        (function(d, s) {
+            var j, e = d.getElementsByTagName(s)[0];
+
+            if (typeof LivereTower === 'function') { return; }
+
+            j = d.createElement(s);
+            j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+            j.async = true;
+
+            e.parentNode.insertBefore(j, e);
+        })(document, 'script');
     </script>
-    <script src="/scripts/main.js"></script>
-    <!-- algolia -->
-    
-    <!-- busuanzi  -->
-    
-    <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
-    
-    <!-- CNZZ  -->
-    
+    <noscript> Please activate JavaScript for write a comment in LiveRe</noscript>
+</div>
+
     </div>
-    <!-- async load share.js -->
+</div>
+</div>
+                
+
+
+
+
+<div class="column is-4-tablet is-4-desktop is-3-widescreen  has-order-1 column-left ">
     
-        <script src="/scripts/share.js" async></script>    
-     
-    </body>
+        
+<div class="card widget">
+    <div class="card-content">
+        <nav class="level">
+            <div class="level-item has-text-centered" style="flex-shrink: 1">
+                <div>
+                    
+                        <figure class="image is-128x128 has-mb-6">
+                            <img class="is-rounded" src="/avatar/111.png" alt="P1umer">
+                        </figure>
+                    
+                    
+                    <p class="is-size-4 is-block">
+                        P1umer
+                    </p>
+                    
+                    
+                    <p class="is-size-6 is-block">
+                        Security Researcher
+                    </p>
+                    
+                    
+                    <p class="is-size-6 is-flex is-flex-center has-text-grey">
+                        <i class="fas fa-map-marker-alt has-mr-7"></i>
+                        <span>Beijing</span>
+                    </p>
+                    
+                </div>
+            </div>
+        </nav>
+        <nav class="level is-mobile">
+            <div class="level-item has-text-centered is-marginless">
+                <div>
+                    <p class="heading">
+                        Posts
+                    </p>
+                    <p class="title has-text-weight-normal">
+                        9
+                    </p>
+                </div>
+            </div>
+            <div class="level-item has-text-centered is-marginless">
+                <div>
+                    <p class="heading">
+                        Categories
+                    </p>
+                    <p class="title has-text-weight-normal">
+                        8
+                    </p>
+                </div>
+            </div>
+            <div class="level-item has-text-centered is-marginless">
+                <div>
+                    <p class="heading">
+                        Tags
+                    </p>
+                    <p class="title has-text-weight-normal">
+                        7
+                    </p>
+                </div>
+            </div>
+        </nav>
+        <div class="level">
+            <a class="level-item button is-link is-rounded" href="https://www.zhihu.com/people/cz11-96/activities" target="_blank">
+                Follow</a>
+        </div>
+        
+        
+        <div class="level is-mobile">
+            
+            <a class="level-item button is-white is-marginless" target="_blank" title="zhihu" href="https://www.zhihu.com/people/cz11-96/activities">
+                
+                <i class="fab fa-zhihu"></i>
+                
+            </a>
+            
+        </div>
+        
+    </div>
+</div>
+    
+        
+    
+        
+
+<div class="card widget">
+    <div class="card-content">
+        <div class="menu">
+        <h3 class="menu-label">
+            Links
+        </h3>
+        <ul class="menu-list">
+        
+            <li>
+                <a class="level is-mobile" href="https://q1iq.github.io/" target="_blank">
+                    <span class="level-left">
+                        <span class="level-item">Q1iq</span>
+                    </span>
+                    <span class="level-right">
+                        <span class="level-item tag">q1iq.github.io</span>
+                    </span>
+                </a>
+            </li>
+        
+            <li>
+                <a class="level is-mobile" href="http://dwfault-blog.imwork.net:30916/" target="_blank">
+                    <span class="level-left">
+                        <span class="level-item">dwfault</span>
+                    </span>
+                    <span class="level-right">
+                        <span class="level-item tag">dwfault-blog.imwork.net</span>
+                    </span>
+                </a>
+            </li>
+        
+            <li>
+                <a class="level is-mobile" href="http://p4nda.top/" target="_blank">
+                    <span class="level-left">
+                        <span class="level-item">p4nda</span>
+                    </span>
+                    <span class="level-right">
+                        <span class="level-item tag">p4nda.top</span>
+                    </span>
+                </a>
+            </li>
+        
+            <li>
+                <a class="level is-mobile" href="http://eternalsakura13.com/" target="_blank">
+                    <span class="level-left">
+                        <span class="level-item">Sakura</span>
+                    </span>
+                    <span class="level-right">
+                        <span class="level-item tag">eternalsakura13.com</span>
+                    </span>
+                </a>
+            </li>
+        
+            <li>
+                <a class="level is-mobile" href="http://misty.moe/" target="_blank">
+                    <span class="level-left">
+                        <span class="level-item">Misty</span>
+                    </span>
+                    <span class="level-right">
+                        <span class="level-item tag">misty.moe</span>
+                    </span>
+                </a>
+            </li>
+        
+            <li>
+                <a class="level is-mobile" href="https://t3ls.club" target="_blank">
+                    <span class="level-left">
+                        <span class="level-item">T3ls</span>
+                    </span>
+                    <span class="level-right">
+                        <span class="level-item tag">t3ls.club</span>
+                    </span>
+                </a>
+            </li>
+        
+            <li>
+                <a class="level is-mobile" href="http://litch1.clu" target="_blank">
+                    <span class="level-left">
+                        <span class="level-item">Litch1</span>
+                    </span>
+                    <span class="level-right">
+                        <span class="level-item tag">litch1.clu</span>
+                    </span>
+                </a>
+            </li>
+        
+        </ul>
+        </div>
+    </div>
+</div>
+
+
+    
+        
+<div class="card widget">
+    <div class="card-content">
+        <div class="menu">
+            <h3 class="menu-label">
+                Categories
+            </h3>
+            <ul class="menu-list">
+            <li>
+        <a class="level is-marginless" href="/categories/Browser-Explore/">
+            <span class="level-start">
+                <span class="level-item">Browser Explore</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">6</span>
+            </span>
+        </a><ul><li>
+        <a class="level is-marginless" href="/categories/Browser-Explore/Basic/">
+            <span class="level-start">
+                <span class="level-item">Basic</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">1</span>
+            </span>
+        </a></li><li>
+        <a class="level is-marginless" href="/categories/Browser-Explore/V8/">
+            <span class="level-start">
+                <span class="level-item">V8</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">5</span>
+            </span>
+        </a></li></ul></li><li>
+        <a class="level is-marginless" href="/categories/Linux-Kernel/">
+            <span class="level-start">
+                <span class="level-item">Linux Kernel</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">1</span>
+            </span>
+        </a></li><li>
+        <a class="level is-marginless" href="/categories/fuzz/">
+            <span class="level-start">
+                <span class="level-item">fuzz</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">2</span>
+            </span>
+        </a></li>
+            </ul>
+        </div>
+    </div>
+</div>
+    
+        
+<div class="card widget">
+    <div class="card-content">
+        <h3 class="menu-label">
+            Tag Cloud
+        </h3>
+        <a href="/tags/Basic/" style="font-size: 16.67px;">Basic</a> <a href="/tags/Browser-Explore/" style="font-size: 20px;">Browser Explore</a> <a href="/tags/Exploit/" style="font-size: 10px;">Exploit</a> <a href="/tags/Fuzz/" style="font-size: 13.33px;">Fuzz</a> <a href="/tags/Kernel/" style="font-size: 10px;">Kernel</a> <a href="/tags/V8/" style="font-size: 16.67px;">V8</a> <a href="/tags/optimize/" style="font-size: 13.33px;">optimize</a>
+    </div>
+</div>
+
+    
+    
+        <div class="column-right-shadow is-hidden-widescreen ">
+        
+            
+<div class="card widget">
+    <div class="card-content">
+        <h3 class="menu-label">
+            Recent
+        </h3>
+        
+        <article class="media">
+            
+            <a href="/2019/07/04/V8-Optimize-Reduce-Node-Inline/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="https://p1umer-1256667851.cos.ap-beijing.myqcloud.com/img/SalcombeDevon_ZH-CN5806331292_1920x1080.jpg" alt="V8 Optimize: Reduce Node &amp;&amp; Inline">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2019-07-04T12:47:23.000Z">2019-07-04</time></div>
+                    <a href="/2019/07/04/V8-Optimize-Reduce-Node-Inline/" class="has-link-black-ter is-size-6">V8 Optimize: Reduce Node &amp;&amp; Inline</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/Browser-Explore/">Browser Explore</a> / <a class="has-link-grey -link" href="/categories/Browser-Explore/V8/">V8</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
+            <a href="/2019/07/03/V8-Optimize-FrameState/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="https://p1umer-1256667851.cos.ap-beijing.myqcloud.com/img/HKreuni_ZH-CN5683726370_1920x1080.jpg" alt="V8 Optimize: FrameState">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2019-07-02T19:48:19.000Z">2019-07-03</time></div>
+                    <a href="/2019/07/03/V8-Optimize-FrameState/" class="has-link-black-ter is-size-6">V8 Optimize: FrameState</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/Browser-Explore/">Browser Explore</a> / <a class="has-link-grey -link" href="/categories/Browser-Explore/V8/">V8</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
+            <a href="/2019/05/30/Linux Kernel 初探/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="https://p1umer-1256667851.cos.ap-beijing.myqcloud.com/img/PeruvianRainforest_ZH-CN4066508593_1920x1080.jpg" alt="Linux Kernel 初探（一）BabyKernel">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2019-05-30T14:04:29.000Z">2019-05-30</time></div>
+                    <a href="/2019/05/30/Linux Kernel 初探/" class="has-link-black-ter is-size-6">Linux Kernel 初探（一）BabyKernel</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/Linux-Kernel/">Linux Kernel</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
+            <a href="/2019/05/06/Star-CTF-OOB-writeup/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="https://p1umer-1256667851.cos.ap-beijing.myqcloud.com/img/TreeFrog_ZH-CN9016355758_1920x1080.jpg" alt="StarCTF OOB writeup">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2019-05-06T14:04:29.000Z">2019-05-06</time></div>
+                    <a href="/2019/05/06/Star-CTF-OOB-writeup/" class="has-link-black-ter is-size-6">StarCTF OOB writeup</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/Browser-Explore/">Browser Explore</a> / <a class="has-link-grey -link" href="/categories/Browser-Explore/V8/">V8</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
+            <a href="/2019/03/20/AFL-初探/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="https://p1umer-1256667851.cos.ap-beijing.myqcloud.com/img/MacmillanForest_ZH-CN5295176479_1920x1080.jpg" alt="AFL 初探（一）">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2019-03-19T17:39:12.000Z">2019-03-20</time></div>
+                    <a href="/2019/03/20/AFL-初探/" class="has-link-black-ter is-size-6">AFL 初探（一）</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/fuzz/">fuzz</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+    </div>
+</div>
+
+        
+            <div class="card widget">
+    <div class="card-content">
+        <div class="menu">
+        <h3 class="menu-label">
+            Archives
+        </h3>
+        <ul class="menu-list">
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2019/07/">
+                <span class="level-start">
+                    <span class="level-item">July 2019</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">2</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2019/05/">
+                <span class="level-start">
+                    <span class="level-item">May 2019</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">2</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2019/03/">
+                <span class="level-start">
+                    <span class="level-item">March 2019</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">1</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2019/02/">
+                <span class="level-start">
+                    <span class="level-item">February 2019</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">1</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2018/09/">
+                <span class="level-start">
+                    <span class="level-item">September 2018</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">1</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2018/07/">
+                <span class="level-start">
+                    <span class="level-item">July 2018</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">2</span>
+                </span>
+            </a>
+        </li>
+        
+        </ul>
+        </div>
+    </div>
+</div>
+        
+            <div class="card widget">
+    <div class="card-content">
+        <div class="menu">
+            <h3 class="menu-label">
+                Tags
+            </h3>
+            <div class="field is-grouped is-grouped-multiline">
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/Basic/">
+                        <span class="tag">Basic</span>
+                        <span class="tag is-grey">3</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/Browser-Explore/">
+                        <span class="tag">Browser Explore</span>
+                        <span class="tag is-grey">6</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/Exploit/">
+                        <span class="tag">Exploit</span>
+                        <span class="tag is-grey">1</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/Fuzz/">
+                        <span class="tag">Fuzz</span>
+                        <span class="tag is-grey">2</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/Kernel/">
+                        <span class="tag">Kernel</span>
+                        <span class="tag is-grey">1</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/V8/">
+                        <span class="tag">V8</span>
+                        <span class="tag is-grey">3</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/optimize/">
+                        <span class="tag">optimize</span>
+                        <span class="tag is-grey">2</span>
+                    </a>
+                </div>
+                
+            </div>
+        </div>
+    </div>
+</div>
+        
+        </div>
+    
+</div>
+
+                
+
+
+
+
+<div class="column is-4-tablet is-4-desktop is-3-widescreen is-hidden-touch is-hidden-desktop-only has-order-3 column-right ">
+    
+        
+<div class="card widget">
+    <div class="card-content">
+        <h3 class="menu-label">
+            Recent
+        </h3>
+        
+        <article class="media">
+            
+            <a href="/2019/07/04/V8-Optimize-Reduce-Node-Inline/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="https://p1umer-1256667851.cos.ap-beijing.myqcloud.com/img/SalcombeDevon_ZH-CN5806331292_1920x1080.jpg" alt="V8 Optimize: Reduce Node &amp;&amp; Inline">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2019-07-04T12:47:23.000Z">2019-07-04</time></div>
+                    <a href="/2019/07/04/V8-Optimize-Reduce-Node-Inline/" class="has-link-black-ter is-size-6">V8 Optimize: Reduce Node &amp;&amp; Inline</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/Browser-Explore/">Browser Explore</a> / <a class="has-link-grey -link" href="/categories/Browser-Explore/V8/">V8</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
+            <a href="/2019/07/03/V8-Optimize-FrameState/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="https://p1umer-1256667851.cos.ap-beijing.myqcloud.com/img/HKreuni_ZH-CN5683726370_1920x1080.jpg" alt="V8 Optimize: FrameState">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2019-07-02T19:48:19.000Z">2019-07-03</time></div>
+                    <a href="/2019/07/03/V8-Optimize-FrameState/" class="has-link-black-ter is-size-6">V8 Optimize: FrameState</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/Browser-Explore/">Browser Explore</a> / <a class="has-link-grey -link" href="/categories/Browser-Explore/V8/">V8</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
+            <a href="/2019/05/30/Linux Kernel 初探/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="https://p1umer-1256667851.cos.ap-beijing.myqcloud.com/img/PeruvianRainforest_ZH-CN4066508593_1920x1080.jpg" alt="Linux Kernel 初探（一）BabyKernel">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2019-05-30T14:04:29.000Z">2019-05-30</time></div>
+                    <a href="/2019/05/30/Linux Kernel 初探/" class="has-link-black-ter is-size-6">Linux Kernel 初探（一）BabyKernel</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/Linux-Kernel/">Linux Kernel</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
+            <a href="/2019/05/06/Star-CTF-OOB-writeup/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="https://p1umer-1256667851.cos.ap-beijing.myqcloud.com/img/TreeFrog_ZH-CN9016355758_1920x1080.jpg" alt="StarCTF OOB writeup">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2019-05-06T14:04:29.000Z">2019-05-06</time></div>
+                    <a href="/2019/05/06/Star-CTF-OOB-writeup/" class="has-link-black-ter is-size-6">StarCTF OOB writeup</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/Browser-Explore/">Browser Explore</a> / <a class="has-link-grey -link" href="/categories/Browser-Explore/V8/">V8</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
+            <a href="/2019/03/20/AFL-初探/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="https://p1umer-1256667851.cos.ap-beijing.myqcloud.com/img/MacmillanForest_ZH-CN5295176479_1920x1080.jpg" alt="AFL 初探（一）">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2019-03-19T17:39:12.000Z">2019-03-20</time></div>
+                    <a href="/2019/03/20/AFL-初探/" class="has-link-black-ter is-size-6">AFL 初探（一）</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/fuzz/">fuzz</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+    </div>
+</div>
+
+    
+        <div class="card widget">
+    <div class="card-content">
+        <div class="menu">
+        <h3 class="menu-label">
+            Archives
+        </h3>
+        <ul class="menu-list">
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2019/07/">
+                <span class="level-start">
+                    <span class="level-item">July 2019</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">2</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2019/05/">
+                <span class="level-start">
+                    <span class="level-item">May 2019</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">2</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2019/03/">
+                <span class="level-start">
+                    <span class="level-item">March 2019</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">1</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2019/02/">
+                <span class="level-start">
+                    <span class="level-item">February 2019</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">1</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2018/09/">
+                <span class="level-start">
+                    <span class="level-item">September 2018</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">1</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2018/07/">
+                <span class="level-start">
+                    <span class="level-item">July 2018</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">2</span>
+                </span>
+            </a>
+        </li>
+        
+        </ul>
+        </div>
+    </div>
+</div>
+    
+        <div class="card widget">
+    <div class="card-content">
+        <div class="menu">
+            <h3 class="menu-label">
+                Tags
+            </h3>
+            <div class="field is-grouped is-grouped-multiline">
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/Basic/">
+                        <span class="tag">Basic</span>
+                        <span class="tag is-grey">3</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/Browser-Explore/">
+                        <span class="tag">Browser Explore</span>
+                        <span class="tag is-grey">6</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/Exploit/">
+                        <span class="tag">Exploit</span>
+                        <span class="tag is-grey">1</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/Fuzz/">
+                        <span class="tag">Fuzz</span>
+                        <span class="tag is-grey">2</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/Kernel/">
+                        <span class="tag">Kernel</span>
+                        <span class="tag is-grey">1</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/V8/">
+                        <span class="tag">V8</span>
+                        <span class="tag is-grey">3</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/optimize/">
+                        <span class="tag">optimize</span>
+                        <span class="tag is-grey">2</span>
+                    </a>
+                </div>
+                
+            </div>
+        </div>
+    </div>
+</div>
+    
+    
+</div>
+
+            </div>
+        </div>
+    </section>
+    <footer class="footer">
+    <div class="container">
+        <div class="level">
+            <div class="level-start has-text-centered-mobile">
+                <a class="footer-logo is-block has-mb-6" href="/">
+                
+                    <img src="/avatar/111.png" alt="V8 Iginition Interpreter" height="28">
+                
+                </a>
+                <p class="is-size-7">
+                &copy; 2019 P1umer sauce&nbsp;
+                Powered by <a href="https://hexo.io/" target="_blank">Hexo</a> & <a href="https://github.com/ppoffice/hexo-theme-icarus" target="_blank">Icarus</a>
+                
+                </p>
+            </div>
+            <div class="level-end">
+            
+                <div class="field has-addons is-flex-center-mobile has-mt-5-mobile is-flex-wrap is-flex-middle">
+                
+                
+                <p class="control">
+                    <a class="button is-white is-large" target="_blank" title="Creative Commons" href="https://creativecommons.org/">
+                        
+                        <i class="fab fa-creative-commons"></i>
+                        
+                    </a>
+                </p>
+                
+                <p class="control">
+                    <a class="button is-white is-large" target="_blank" title="Attribution 4.0 International" href="https://creativecommons.org/licenses/by/4.0/">
+                        
+                        <i class="fab fa-creative-commons-by"></i>
+                        
+                    </a>
+                </p>
+                
+                <p class="control">
+                    <a class="button is-white is-large" target="_blank" title="Download on GitHub" href="https://github.com/ppoffice/hexo-theme-icarus">
+                        
+                        <i class="fab fa-github"></i>
+                        
+                    </a>
+                </p>
+                
+                </div>
+            
+            </div>
+        </div>
+    </div>
+</footer>
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/moment@2.22.2/min/moment-with-locales.min.js"></script>
+<script>moment.locale("en");</script>
+
+
+    
+    
+    
+    <script src="/js/animation.js"></script>
+    
+
+    
+    
+    
+    <script src="https://cdn.jsdelivr.net/npm/lightgallery@1.6.8/dist/js/lightgallery.min.js" defer></script>
+    <script src="https://cdn.jsdelivr.net/npm/justifiedGallery@3.7.0/dist/js/jquery.justifiedGallery.min.js" defer></script>
+    <script src="/js/gallery.js" defer></script>
+    
+
+    
+    
+
+<div id="outdated">
+    <h6>Your browser is out-of-date!</h6>
+    <p>Update your browser to view this website correctly. <a id="btnUpdateBrowser" href="http://outdatedbrowser.com/">Update
+            my browser now </a></p>
+    <p class="last"><a href="#" id="btnCloseUpdateBrowser" title="Close">&times;</a></p>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/outdatedbrowser@1.1.5/outdatedbrowser/outdatedbrowser.min.js" defer></script>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        outdatedBrowser({
+            bgColor: '#f25648',
+            color: '#ffffff',
+            lowerThan: 'flex'
+        });
+    });
+</script>
+
+
+    
+    
+<script src="https://cdn.jsdelivr.net/npm/mathjax@2.7.5/unpacked/MathJax.js?config=TeX-MML-AM_CHTML" defer></script>
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    MathJax.Hub.Config({
+        'HTML-CSS': {
+            matchFontHeight: false
+        },
+        SVG: {
+            matchFontHeight: false
+        },
+        CommonHTML: {
+            matchFontHeight: false
+        },
+        tex2jax: {
+            inlineMath: [
+                ['$','$'],
+                ['\\(','\\)']
+            ]
+        }
+    });
+});
+</script>
+
+    
+    
+
+<a id="back-to-top" title="Back to Top" href="javascript:;">
+    <i class="fas fa-chevron-up"></i>
+</a>
+<script src="/js/back-to-top.js" defer></script>
+
+
+    
+    
+
+    
+    
+    
+    
+
+    
+    
+    
+    
+    
+    <script src="https://cdn.jsdelivr.net/npm/clipboard@2.0.4/dist/clipboard.min.js" defer></script>
+    <script src="/js/clipboard.js" defer></script>
+    
+
+    
+    
+    
+
+
+<script src="/js/main.js" defer></script>
+
+    
+    <div class="searchbox ins-search">
+    <div class="searchbox-container ins-search-container">
+        <div class="searchbox-input-wrapper">
+            <input type="text" class="searchbox-input ins-search-input" placeholder="Type something...">
+            <span class="searchbox-close ins-close ins-selectable"><i class="fa fa-times-circle"></i></span>
+        </div>
+        <div class="searchbox-result-wrapper ins-section-wrapper">
+            <div class="ins-section-container"></div>
+        </div>
+    </div>
+</div>
+<script>
+    (function (window) {
+        var INSIGHT_CONFIG = {
+            TRANSLATION: {
+                POSTS: 'Posts',
+                PAGES: 'Pages',
+                CATEGORIES: 'Categories',
+                TAGS: 'Tags',
+                UNTITLED: '(Untitled)',
+            },
+            CONTENT_URL: '/content.json',
+        };
+        window.INSIGHT_CONFIG = INSIGHT_CONFIG;
+    })(window);
+</script>
+<script src="/js/insight.js" defer></script>
+<link rel="stylesheet" href="/css/search.css">
+<link rel="stylesheet" href="/css/insight.css">
+    
+</body>
 </html>
-
-
