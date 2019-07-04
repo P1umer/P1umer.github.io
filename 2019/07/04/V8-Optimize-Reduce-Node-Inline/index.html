@@ -16,7 +16,7 @@
 <meta property="og:description" content="Intro: Analsis of Turbofan ReduceNode &amp;amp;&amp;amp; Inline">
 <meta property="og:locale" content="en">
 <meta property="og:image" content="https://p1umer-1256667851.cos.ap-beijing.myqcloud.com/img/SalcombeDevon_ZH-CN5806331292_1920x1080.jpg">
-<meta property="og:updated_time" content="2019-07-04T15:55:49.693Z">
+<meta property="og:updated_time" content="2019-07-04T16:20:23.574Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="V8 Optimize: Reduce Node &amp;&amp; Inline">
 <meta name="twitter:description" content="Intro: Analsis of Turbofan ReduceNode &amp;amp;&amp;amp; Inline">
@@ -161,7 +161,7 @@
                 <span class="level-item has-text-grey">
                     
                     
-                    27 minutes read (About 3979 words)
+                    27 minutes read (About 3982 words)
                 </span>
                 
                 
@@ -199,7 +199,7 @@
 <p>【+】 revisit 是需要重复 reduce 的 node 列表，通常是reduced 节点的 use</p>
 <p>【+】 Reduce Top 实现具体的 Node Reduce；接着循环遍历各 pass 的 Reducer。调用层次:</p>
 <p><img src="https://p1umer-1256667851.cos.ap-beijing.myqcloud.com/img/20190701182425.png" alt></p>
-<h2><span id="reduce-node-algorithm">Reduce-node Algorithm</span></h2><p>【+】<a href="https://docs.google.com/presentation/d/1sOEF4MlF7LeO7uq-uThJSulJlTh--wgLeaVibsbb3tc" target="_blank" rel="noopener">https://docs.google.com/presentation/d/1sOEF4MlF7LeO7uq-uThJSulJlTh--wgLeaVibsbb3tc</a></p>
+<h2><span id="reduce-node-algorithm">Reduce-node Algorithm</span></h2><p>【+】<a href="https://docs.google.com/presentation/d/1sOEF4MlF7LeO7uq-uThJSulJlTh--wgLeaVibsbb3tc" target="_blank" rel="noopener">TurboFan JIT Design</a></p>
 <ol>
 <li>使用栈结构的递归<img src="https://p1umer-1256667851.cos.ap-beijing.myqcloud.com/img/20190704220244.png" alt><ul>
 <li>根节点为 graph-&gt;end()</li>
