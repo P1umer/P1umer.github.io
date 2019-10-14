@@ -7,19 +7,19 @@
 
 
 
-    <meta name="description" content="写在前面这道 Realworld pwn 出现在数字经济云安全的线下赛，比赛进行过程中我并没有拿出对应版本 chrome 上可用的 exploit，因此虽然最后天枢申请了挑战，但是 exploit 并没有如期工作，我感到很抱歉。 实际上，比赛结束前半个小时我才在 V8 上弹出了计算器，exp 稳定性也良好。但是由于我个人的疏忽，最开始编译的 V8 并不是比赛提供的 commit，而是我直接 fet">
+    <meta name="description" content="Intro: 一道 Realworld Browser Writeup">
 <meta name="keywords" content="Browser Explore,V8,Exploit">
 <meta property="og:type" content="article">
 <meta property="og:title" content="数字经济线下 Realworld Browser writeup">
 <meta property="og:url" content="http://p1umer.gituhb.io/2019/10/14/数字经济线下-Realworld-Browser-writeup/index.html">
 <meta property="og:site_name" content="P1umerのblog">
-<meta property="og:description" content="写在前面这道 Realworld pwn 出现在数字经济云安全的线下赛，比赛进行过程中我并没有拿出对应版本 chrome 上可用的 exploit，因此虽然最后天枢申请了挑战，但是 exploit 并没有如期工作，我感到很抱歉。 实际上，比赛结束前半个小时我才在 V8 上弹出了计算器，exp 稳定性也良好。但是由于我个人的疏忽，最开始编译的 V8 并不是比赛提供的 commit，而是我直接 fet">
+<meta property="og:description" content="Intro: 一道 Realworld Browser Writeup">
 <meta property="og:locale" content="en">
 <meta property="og:image" content="https://p1umer-1256667851.cos.ap-beijing.myqcloud.com/img/20191014144606.jpg">
-<meta property="og:updated_time" content="2019-10-14T06:46:18.832Z">
+<meta property="og:updated_time" content="2019-10-14T06:47:11.910Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="数字经济线下 Realworld Browser writeup">
-<meta name="twitter:description" content="写在前面这道 Realworld pwn 出现在数字经济云安全的线下赛，比赛进行过程中我并没有拿出对应版本 chrome 上可用的 exploit，因此虽然最后天枢申请了挑战，但是 exploit 并没有如期工作，我感到很抱歉。 实际上，比赛结束前半个小时我才在 V8 上弹出了计算器，exp 稳定性也良好。但是由于我个人的疏忽，最开始编译的 V8 并不是比赛提供的 commit，而是我直接 fet">
+<meta name="twitter:description" content="Intro: 一道 Realworld Browser Writeup">
 <meta name="twitter:image" content="https://p1umer-1256667851.cos.ap-beijing.myqcloud.com/img/20191014144606.jpg">
 
 
@@ -161,7 +161,7 @@
                 <span class="level-item has-text-grey">
                     
                     
-                    17 minutes read (About 2618 words)
+                    18 minutes read (About 2625 words)
                 </span>
                 
                 
@@ -174,7 +174,8 @@
             
         </h1>
         <div class="content">
-            <h2><span id="写在前面">写在前面</span></h2><p>这道 <code>Realworld pwn</code> 出现在数字经济云安全的线下赛，比赛进行过程中我并没有拿出对应版本 <code>chrome</code> 上可用的 <code>exploit</code>，因此虽然最后天枢申请了挑战，但是 <code>exploit</code> 并没有如期工作，我感到很抱歉。</p>
+            <h2><span id="intro-一道-realworld-browser-writeup">Intro: 一道 Realworld Browser Writeup</span></h2> <a id="more"></a>
+<h2><span id="写在前面">写在前面</span></h2><p>这道 <code>Realworld pwn</code> 出现在数字经济云安全的线下赛，比赛进行过程中我并没有拿出对应版本 <code>chrome</code> 上可用的 <code>exploit</code>，因此虽然最后天枢申请了挑战，但是 <code>exploit</code> 并没有如期工作，我感到很抱歉。</p>
 <p>实际上，比赛结束前半个小时我才在 <code>V8</code> 上弹出了计算器，<code>exp</code> 稳定性也良好。但是由于我个人的疏忽，最开始编译的 <code>V8</code> 并不是比赛提供的 <code>commit</code>，而是我直接 <code>fetch v8</code> 拖下的最新版本，因此在移植到比赛用 <code>chrome</code> 的时候偏移没有进行调试。</p>
 <p>这次失败对我来说可以作为一次警觉 : 搞安全的凡事都要有精密的规划，尤其是 <code>exploit</code> 这种在代码上跳舞的艺术。</p>
 <h2><span id="patch">Patch</span></h2><p>关键的 <code>Patch</code> 如下：<br><figure class="highlight plain hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br></pre></td><td class="code"><pre><span class="line">diff --git a/src/builtins/builtins-array.cc b/src/builtins/builtins-array.cc</span><br><span class="line">index e6ab965a7e..9e5eb73c34 100644</span><br><span class="line">--- a/src/builtins/builtins-array.cc</span><br><span class="line">+++ b/src/builtins/builtins-array.cc</span><br><span class="line">@@ -362,6 +362,36 @@ V8_WARN_UNUSED_RESULT Object GenericArrayPush(Isolate* isolate,</span><br><span class="line"> &#125;</span><br><span class="line"> &#125;  // namespace</span><br><span class="line"> </span><br><span class="line">+// Vulnerability is here</span><br><span class="line">+// You can&apos;t use this vulnerability in Debug Build :)</span><br><span class="line">+BUILTIN(ArrayCoin) &#123;</span><br><span class="line">+  uint32_t len = args.length();</span><br><span class="line">+  if (len != 3) &#123;</span><br><span class="line">+     return ReadOnlyRoots(isolate).undefined_value();</span><br><span class="line">+  &#125;</span><br><span class="line">+  Handle&lt;JSReceiver&gt; receiver;</span><br><span class="line">+  ASSIGN_RETURN_FAILURE_ON_EXCEPTION(</span><br><span class="line">+         isolate, receiver, Object::ToObject(isolate, args.receiver()));</span><br><span class="line">+  Handle&lt;JSArray&gt; array = Handle&lt;JSArray&gt;::cast(receiver);</span><br><span class="line">+  FixedDoubleArray elements = FixedDoubleArray::cast(array-&gt;elements());</span><br><span class="line">+</span><br><span class="line">+  Handle&lt;Object&gt; value;</span><br><span class="line">+  Handle&lt;Object&gt; length;</span><br><span class="line">+  ASSIGN_RETURN_FAILURE_ON_EXCEPTION(</span><br><span class="line">+             isolate, length, Object::ToNumber(isolate, args.at&lt;Object&gt;(1)));</span><br><span class="line">+  ASSIGN_RETURN_FAILURE_ON_EXCEPTION(</span><br><span class="line">+             isolate, value, Object::ToNumber(isolate, args.at&lt;Object&gt;(2)));</span><br><span class="line">+</span><br><span class="line">+  uint32_t array_length = static_cast&lt;uint32_t&gt;(array-&gt;length().Number());</span><br><span class="line">+  if(37 &lt; array_length)&#123;</span><br><span class="line">+    elements.set(37, value-&gt;Number());</span><br><span class="line">+    return ReadOnlyRoots(isolate).undefined_value();  </span><br><span class="line">+  &#125;</span><br><span class="line">+  else&#123;</span><br><span class="line">+    return ReadOnlyRoots(isolate).undefined_value();</span><br><span class="line">+  &#125;</span><br><span class="line">+&#125;</span><br><span class="line">+</span><br><span class="line"> BUILTIN(ArrayPush) &#123;</span><br><span class="line">   HandleScope scope(isolate);</span><br><span class="line">   Handle&lt;Object&gt; receiver = args.receiver();</span><br></pre></td></tr></table></figure></p>
